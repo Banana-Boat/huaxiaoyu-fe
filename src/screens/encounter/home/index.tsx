@@ -1,7 +1,7 @@
 import {ScrollView, Text, View} from 'react-native';
 import PageContainer from '~components/page-container';
 
-const Home = () => {
+const HomeScreen = () => {
   return (
     <PageContainer>
       <Text>Encounter/Home</Text>
@@ -9,4 +9,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomeScreen;

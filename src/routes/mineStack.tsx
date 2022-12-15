@@ -1,12 +1,14 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Home from '~screens/mine/home';
+import ProfileScreen from '~screens/mine/profile';
 
 const Stack = createNativeStackNavigator();
 
 const MineStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={Home} options={{title: '我的'}} />
+    <Stack.Navigator
+      initialRouteName="ProfileScreen"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
     </Stack.Navigator>
   );
 };

@@ -1,15 +1,18 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import RouterWithBottomTab from '~routes/routerWithBottomTab';
+import {Box, NativeBaseProvider} from 'native-base';
+import Router from '~routes/router';
 
 const App = () => {
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <RouterWithBottomTab></RouterWithBottomTab>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <NativeBaseProvider>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Router></Router>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </NativeBaseProvider>
   );
 };
 

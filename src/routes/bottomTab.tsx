@@ -6,26 +6,28 @@ Icon.loadFont();
 
 const Tab = createBottomTabNavigator();
 
-const RouterWithBottomTab = () => {
+const BottomTab = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Encounter"
-      screenOptions={{headerShown: false, tabBarActiveTintColor: '#FF8200'}}>
+      initialRouteName="EncounterStack"
+      screenOptions={{tabBarActiveTintColor: '#FF8200'}}>
       <Tab.Screen
-        name="Encounter"
+        name="EncounterStack"
         component={EncounterStack}
         options={{
           tabBarLabel: '遇见',
+          headerTitle: '首页',
           tabBarIcon: ({size, color}) => (
             <Icon name="mountains" size={size} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="Mine"
+        name="MineStack"
         component={MineStack}
         options={{
           tabBarLabel: '我的',
+          headerShown: false,
           tabBarIcon: ({size, color}) => (
             <Icon name="torso" size={size} color={color} />
           ),
@@ -35,4 +37,4 @@ const RouterWithBottomTab = () => {
   );
 };
 
-export default RouterWithBottomTab;
+export default BottomTab;
