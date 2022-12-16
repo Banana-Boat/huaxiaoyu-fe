@@ -1,8 +1,9 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {Box, NativeBaseProvider} from 'native-base';
+import {NativeBaseProvider} from 'native-base';
 import Router from '~routes/router';
+import {observer} from 'mobx-react-lite';
 
 const App = () => {
   return (
@@ -16,4 +17,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default observer(App);
