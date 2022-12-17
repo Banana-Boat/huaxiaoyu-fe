@@ -1,11 +1,11 @@
-import {ScrollView, Text, View} from 'react-native';
-import PageContainer from '~components/page-container';
+import {Box} from 'native-base';
+import {Text} from 'react-native';
 
 const HomeScreen = () => {
   return (
-    <PageContainer>
+    <Box>
       <Text>Encounter/Home</Text>
-    </PageContainer>
+    </Box>
   );
 };
 

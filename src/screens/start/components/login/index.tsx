@@ -11,37 +11,46 @@ import {
   Input,
   WarningOutlineIcon,
   IconButton,
-  Flex,
   SunIcon,
   MoonIcon,
+  Toast,
 } from 'native-base';
-import {useState} from 'react';
+import {memo, useCallback, useState} from 'react';
 import {RootStackParamList} from '~routes/router';
 import {useColorMode} from 'native-base';
-import {Animated} from 'react-native';
+import {login} from './api';
 
 interface IProps {
-  toggleScreenMode: () => any;
-  opacity: Animated.Value;
+  toggleScreenMode: () => void;
 }
 
-const Login: React.FC<IProps> = ({toggleScreenMode, opacity}) => {
+const Login = memo<IProps>(({toggleScreenMode}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const {colorMode, toggleColorMode} = useColorMode();
 
+  // 表单
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const loginBtnPressHandle = useCallback(async () => {
+    if (!password || !username)
+      return Toast.show({description: '信息填写有误', duration: 2000});
+
+    try {
+      const res = await login({username, password});
+      if (res) navigation.replace('Main');
+    } catch (error) {
+      Toast.show({description: '登录失败', duration: 2000});
+    }
+  }, [password, username]);
+
+  // 错误处理
   const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
   const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
 
   return (
-    <Animated.View
-      style={{
-        opacity: opacity,
-        height: '100%',
-        justifyContent: 'space-between',
-      }}>
-      <Box>
+    <>
+      <Box px={6}>
         <Center>
           <Heading
             size="2xl"
@@ -67,7 +76,17 @@ const Login: React.FC<IProps> = ({toggleScreenMode, opacity}) => {
 
         <Center mt={8}>
           <FormControl isInvalid={usernameErrorMsg !== ''}>
-            <Input size="lg" variant="underlined" placeholder="用户名" />
+            <Input
+              value={username}
+              onChangeText={text => setUsername(text)}
+              onBlur={() => {
+                if (!username) setUsernameErrorMsg('用户名不可为空');
+                else setUsernameErrorMsg('');
+              }}
+              size="lg"
+              variant="underlined"
+              placeholder="用户名"
+            />
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}>
               {usernameErrorMsg}
@@ -75,6 +94,12 @@ const Login: React.FC<IProps> = ({toggleScreenMode, opacity}) => {
           </FormControl>
           <FormControl isInvalid={passwordErrorMsg !== ''}>
             <Input
+              value={password}
+              onChangeText={text => setPassword(text)}
+              onBlur={() => {
+                if (!password) setPasswordErrorMsg('密码不可为空');
+                else setPasswordErrorMsg('');
+              }}
               type="password"
               size="lg"
               mt={4}
@@ -88,7 +113,7 @@ const Login: React.FC<IProps> = ({toggleScreenMode, opacity}) => {
           </FormControl>
 
           <Button
-            onPress={() => navigation.navigate('BottomTab')}
+            onPress={loginBtnPressHandle}
             mt={10}
             size="md"
             borderRadius="3xl"
@@ -118,12 +143,10 @@ const Login: React.FC<IProps> = ({toggleScreenMode, opacity}) => {
           onPress={toggleColorMode}
           icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
           rounded="full"
-          shadow={1}
           colorScheme="pink"
         />
       </Box>
-    </Animated.View>
+    </>
   );
-};
-
+});
 export default Login;

@@ -1,67 +1,64 @@
-import {
-  Center,
-  Image,
-  Flex,
-  Box,
-  HStack,
-  Heading,
-  Button,
-  Pressable,
-} from 'native-base';
-import {useRef, useState} from 'react';
-import {Animated, Dimensions, View} from 'react-native';
+import {Center, Flex, Box, Heading, Pressable} from 'native-base';
+import {useCallback, useRef, useState} from 'react';
+import {Animated, Dimensions} from 'react-native';
 import Login from './components/login';
 import Register from './components/register';
 
+// 计算Logo初始宽度
 const {width: screenWidth} = Dimensions.get('window');
-const logoInitialLeft = screenWidth * 0.43 - 70;
+const logoLeftOfLogin = screenWidth * 0.5 - 70;
+const logoLeftOfRegister = 20;
+const logoWidthOfLogin = 140;
+const logoWidthOfRegister = 80;
 
 const StartScreen = () => {
-  const [screenMode, setScreenMode] = useState<'register' | 'login'>('login');
+  const [screenMode, setScreenMode] = useState<'register' | 'login'>('login'); // 页面状态（登录 or 注册）
 
-  const positionXAnim = useRef(new Animated.Value(logoInitialLeft)).current;
-  const scaleAnim = useRef(new Animated.Value(140)).current;
+  // 动画相关
+  const positionXAnim = useRef(new Animated.Value(logoLeftOfLogin)).current;
+  const scaleAnim = useRef(new Animated.Value(logoWidthOfLogin)).current;
   const registerOpacityAnim = useRef(new Animated.Value(0)).current;
   const loginOpacityAnim = useRef(new Animated.Value(1)).current;
 
-  const animToRegister = () => {
+  const animToRegister = useCallback(() => {
     Animated.timing(positionXAnim, {
-      toValue: 0,
-      duration: 600,
+      toValue: logoLeftOfRegister,
+      duration: 700,
       useNativeDriver: false,
     }).start();
     Animated.timing(scaleAnim, {
-      toValue: 80,
-      duration: 600,
+      toValue: logoWidthOfRegister,
+      duration: 700,
       useNativeDriver: false,
     }).start();
     Animated.timing(registerOpacityAnim, {
       toValue: 1,
-      duration: 800,
-      useNativeDriver: false,
+      duration: 900,
+      useNativeDriver: true,
     }).start();
     loginOpacityAnim.setValue(0);
-  };
+  }, []);
 
-  const animToLogin = () => {
+  const animToLogin = useCallback(() => {
     Animated.timing(positionXAnim, {
-      toValue: logoInitialLeft,
-      duration: 600,
+      toValue: logoLeftOfLogin,
+      duration: 700,
       useNativeDriver: false,
     }).start();
     Animated.timing(scaleAnim, {
-      toValue: 140,
-      duration: 600,
+      toValue: logoWidthOfLogin,
+      duration: 700,
       useNativeDriver: false,
     }).start();
     Animated.timing(loginOpacityAnim, {
       toValue: 1,
-      duration: 800,
-      useNativeDriver: false,
+      duration: 900,
+      useNativeDriver: true,
     }).start();
     registerOpacityAnim.setValue(0);
-  };
+  }, []);
 
+  // 切换页面状态
   const toggleScreenMode = () => {
     setScreenMode(val => {
       if (val === 'login') {
@@ -81,7 +78,7 @@ const StartScreen = () => {
       _dark={{
         bg: 'dark.50',
       }}>
-      <Flex safeArea py={2} w="86%" h="100%" justify="space-between">
+      <Flex safeArea py={2} w="100%" h="100%" justify="space-between">
         <Pressable onPress={toggleScreenMode}>
           <Animated.View
             style={{
@@ -105,7 +102,7 @@ const StartScreen = () => {
               <Animated.View
                 style={{
                   position: 'absolute',
-                  left: 88,
+                  left: logoLeftOfRegister + logoWidthOfRegister + 5,
                   opacity: registerOpacityAnim,
                 }}>
                 <Heading
@@ -123,12 +120,23 @@ const StartScreen = () => {
         </Pressable>
         <Box mt={2} flex={1}>
           {screenMode === 'login' ? (
-            <Login
-              opacity={loginOpacityAnim}
-              toggleScreenMode={toggleScreenMode}
-            />
+            <Animated.View
+              style={{
+                opacity: loginOpacityAnim,
+                height: '100%',
+                justifyContent: 'space-between',
+              }}>
+              <Login toggleScreenMode={toggleScreenMode} />
+            </Animated.View>
           ) : (
-            <Register opacity={registerOpacityAnim} />
+            <Animated.View
+              style={{
+                opacity: registerOpacityAnim,
+                height: '100%',
+                justifyContent: 'space-between',
+              }}>
+              <Register />
+            </Animated.View>
           )}
         </Box>
       </Flex>

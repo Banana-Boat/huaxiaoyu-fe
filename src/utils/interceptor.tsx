@@ -1,15 +1,15 @@
 import axios from 'axios';
+import {Toast} from 'native-base';
 // import qs from "qs";
-import {useToast} from 'native-base';
 
 const instance = axios.create({
-  baseURL: 'http://82.157.247.7:9092/',
+  baseURL: 'http://82.157.247.7:9092',
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
   },
 });
 
-const toast = useToast();
+// const toast = useToast();
 
 // instance.interceptors.request.use(
 //   config => {
@@ -30,18 +30,17 @@ const toast = useToast();
 
 instance.interceptors.response.use(
   response => {
-    const {flag, msg} = response.data;
+    const {flag, msg, data} = response.data;
 
     if (!flag) {
-      toast.show({
-        description: msg,
-      });
+      Toast.show({description: msg, duration: 2000});
       return false;
     }
 
-    return response.data;
+    return data;
   },
   error => {
+    Toast.show({description: '网络请求失败', duration: 2000});
     return Promise.reject(error);
   },
 );

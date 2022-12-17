@@ -9,16 +9,20 @@ class UserStore {
   user: IUser = {
     id: '',
     username: '',
-    password: '',
-    nickname: '',
     sex: '',
-    age: null,
-    departmentCode: null,
-    phoneNum: '',
+    departmentCode: 0,
   };
 
   changeUserInfo(user: IUser) {
-    this.user = user;
+    this.user.id = user.id;
+    this.user.username = user.username;
+    this.user.age = user.age;
+    this.user.departmentCode = user.departmentCode;
+    this.user.headPhoto = user.headPhoto;
+    this.user.interestCodeList = user.interestCodeList;
+    this.user.nickname = user.nickname;
+    this.user.phoneNum = user.phoneNum;
+    this.user.sex = user.sex;
   }
 }
 
