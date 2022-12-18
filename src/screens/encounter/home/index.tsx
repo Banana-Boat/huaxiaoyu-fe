@@ -1,11 +1,12 @@
 import {Box} from 'native-base';
 import {Text} from 'react-native';
+import PageContainer from '~components/page-container';
 
 const HomeScreen = () => {
   return (
-    <Box>
+    <PageContainer>
       <Text>Encounter/Home</Text>
-    </Box>
+    </PageContainer>
   );
 };
 
