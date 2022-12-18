@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Box, Button, Text} from 'native-base';
+import {Button, Text} from 'native-base';
 import PageContainer from '~components/page-container';
 import {RootStackParamList} from '~routes/router';
 import {removeData} from '~utils';

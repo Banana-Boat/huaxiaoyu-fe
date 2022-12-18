@@ -17,6 +17,7 @@ const BottomTab = () => {
         tabBarActiveTintColor: '#ec4899',
         tabBarStyle: {
           backgroundColor: colorMode === 'dark' ? '#27272a' : '#fff',
+          borderTopWidth: 0,
         },
       }}>
       <Tab.Screen

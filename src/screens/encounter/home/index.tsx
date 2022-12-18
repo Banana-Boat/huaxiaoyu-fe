@@ -1,5 +1,4 @@
-import {Box} from 'native-base';
-import {Text} from 'react-native';
+import {Box, Text} from 'native-base';
 import PageContainer from '~components/page-container';
 
 const HomeScreen = () => {
