@@ -24,33 +24,58 @@ interface IProps {
   toggleScreenMode: () => void;
 }
 
+interface IFormData {
+  username: string;
+  password: string;
+}
+
 const Login = memo<IProps>(({toggleScreenMode}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const {colorMode, toggleColorMode} = useColorMode();
 
-  // 表单
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  /** 表单 */
+  const [formData, setFormData] = useState<IFormData>({
+    username: '',
+    password: '',
+  });
+
   const loginBtnPressHandle = useCallback(async () => {
-    if (!password || !username)
-      return Toast.show({description: '信息填写有误', duration: 2000});
+    if (!validate()) return;
 
     try {
-      const res = await login({username, password});
-      if (res) navigation.replace('Main');
+      if (await login(formData)) {
+        Toast.show({description: '登录成功', duration: 2000});
+        navigation.replace('Main');
+      }
     } catch (error) {
       Toast.show({description: '登录失败', duration: 2000});
     }
-  }, [password, username]);
+  }, [formData]);
 
-  // 错误处理
-  const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
-  const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
+  const [errors, setErrors] = useState({
+    username: '',
+    password: '',
+  });
+  const validate = useCallback(() => {
+    let res = true;
+
+    if (formData.username === '') {
+      setErrors(errors => ({...errors, username: '用户名不可为空'}));
+      res = false;
+    } else setErrors(errors => ({...errors, username: ''}));
+
+    if (formData.password === '') {
+      setErrors(errors => ({...errors, password: '密码不可为空'}));
+      res = false;
+    } else setErrors(errors => ({...errors, password: ''}));
+
+    return res;
+  }, [formData, errors]);
 
   return (
     <>
-      <Box px={6}>
+      <Box px={10}>
         <Center>
           <Heading
             size="2xl"
@@ -75,31 +100,25 @@ const Login = memo<IProps>(({toggleScreenMode}) => {
         </Center>
 
         <Center mt={8}>
-          <FormControl isInvalid={usernameErrorMsg !== ''}>
+          <FormControl isInvalid={errors.username !== ''}>
             <Input
-              value={username}
-              onChangeText={text => setUsername(text)}
-              onBlur={() => {
-                if (!username) setUsernameErrorMsg('用户名不可为空');
-                else setUsernameErrorMsg('');
-              }}
+              onChangeText={username =>
+                setFormData(data => ({...data, username}))
+              }
               size="lg"
               variant="underlined"
               placeholder="用户名"
             />
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}>
-              {usernameErrorMsg}
+              {errors.username}
             </FormControl.ErrorMessage>
           </FormControl>
-          <FormControl isInvalid={passwordErrorMsg !== ''}>
+          <FormControl isInvalid={errors.password !== ''}>
             <Input
-              value={password}
-              onChangeText={text => setPassword(text)}
-              onBlur={() => {
-                if (!password) setPasswordErrorMsg('密码不可为空');
-                else setPasswordErrorMsg('');
-              }}
+              onChangeText={password =>
+                setFormData(data => ({...data, password}))
+              }
               type="password"
               size="lg"
               mt={4}
@@ -108,7 +127,7 @@ const Login = memo<IProps>(({toggleScreenMode}) => {
             />
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}>
-              {passwordErrorMsg}
+              {errors.password}
             </FormControl.ErrorMessage>
           </FormControl>
 

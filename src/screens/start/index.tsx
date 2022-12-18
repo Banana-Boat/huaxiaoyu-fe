@@ -1,10 +1,12 @@
-import {Center, Flex, Box, Heading, Pressable} from 'native-base';
-import {useCallback, useRef, useState} from 'react';
+import {Center, Flex, Box, Heading, Pressable, Icon, Toast} from 'native-base';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {Animated, Dimensions} from 'react-native';
+import {DictType} from '~utils/types';
+import {getDepartmentDict, getInterestDicts} from './api';
 import Login from './components/login';
 import Register from './components/register';
 
-// 计算Logo初始宽度
+/** Logo相关参数 */
 const {width: screenWidth} = Dimensions.get('window');
 const logoLeftOfLogin = screenWidth * 0.5 - 70;
 const logoLeftOfRegister = 20;
@@ -12,9 +14,43 @@ const logoWidthOfLogin = 140;
 const logoWidthOfRegister = 80;
 
 const StartScreen = () => {
-  const [screenMode, setScreenMode] = useState<'register' | 'login'>('login'); // 页面状态（登录 or 注册）
+  /** 页面状态相关 */
+  const [screenMode, setScreenMode] = useState<'register' | 'login'>('login');
+  const toggleScreenMode = () => {
+    setScreenMode(val => {
+      if (val === 'login') {
+        animToRegister();
+        return 'register';
+      } else {
+        animToLogin();
+        return 'login';
+      }
+    });
+  };
 
-  // 动画相关
+  /** 院系、兴趣字典表 */
+  const [departmentDict, setDepartmentDict] = useState<DictType>([]);
+  const [interestDicts, setInterestDicts] = useState<{
+    sport: DictType;
+    study: DictType;
+    entertainment: DictType;
+  }>({
+    sport: [],
+    study: [],
+    entertainment: [],
+  });
+
+  // 获取院系、兴趣字典表
+  useEffect(() => {
+    try {
+      getInterestDicts().then(dicts => setInterestDicts(dicts));
+      getDepartmentDict().then(dict => setDepartmentDict(dict));
+    } catch {
+      Toast.show({description: '字典表请求失败', duration: 2000});
+    }
+  }, []);
+
+  /** 动画相关 */
   const positionXAnim = useRef(new Animated.Value(logoLeftOfLogin)).current;
   const scaleAnim = useRef(new Animated.Value(logoWidthOfLogin)).current;
   const registerOpacityAnim = useRef(new Animated.Value(0)).current;
@@ -57,19 +93,6 @@ const StartScreen = () => {
     }).start();
     registerOpacityAnim.setValue(0);
   }, []);
-
-  // 切换页面状态
-  const toggleScreenMode = () => {
-    setScreenMode(val => {
-      if (val === 'login') {
-        animToRegister();
-        return 'register';
-      } else {
-        animToLogin();
-        return 'login';
-      }
-    });
-  };
 
   return (
     <Center
@@ -135,7 +158,10 @@ const StartScreen = () => {
                 height: '100%',
                 justifyContent: 'space-between',
               }}>
-              <Register />
+              <Register
+                interestDicts={interestDicts}
+                departmentDict={departmentDict}
+              />
             </Animated.View>
           )}
         </Box>

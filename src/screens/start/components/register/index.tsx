@@ -12,80 +12,130 @@ import {
   Icon,
   Select,
   Flex,
+  Toast,
 } from 'native-base';
-import {memo, useCallback, useEffect, useState} from 'react';
+import {memo, useCallback, useState} from 'react';
 import {RootStackParamList} from '~routes/router';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import {DictType} from '~utils/types';
 import InterestSelect from '~components/interest-select';
-IoniconsIcon.loadFont();
+import {register} from './api';
+import {SexType} from '~stores/user/types';
+import {formatParams} from '~utils';
 
-const Register = memo(() => {
+interface IProps {
+  departmentDict: DictType;
+  interestDicts: {
+    sport: DictType;
+    study: DictType;
+    entertainment: DictType;
+  };
+}
+
+interface IFormData {
+  username: string;
+  password: string;
+  sex: SexType;
+  departmentCode: string;
+}
+
+const Register = memo<IProps>(({departmentDict, interestDicts}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const [selectedInterestCodeList, setSelectedInterestCodeList] = useState<
-    string[]
-  >([]);
+  /** 表单 */
+  const [formData, setFormData] = useState<IFormData>({
+    username: '',
+    password: '',
+    sex: SexType.NONE,
+    departmentCode: '',
+  });
+  const [interestCodeList, setInterestCodeList] = useState<string[]>([]);
 
   const interestBtnPressHandle = useCallback((code: string) => {
-    setSelectedInterestCodeList(codeList => {
+    setInterestCodeList(codeList => {
       if (codeList.indexOf(code) === -1) return [...codeList, code];
       else return codeList.filter(item => item !== code);
     });
   }, []);
 
-  const [departmentDict, setDepartmentDict] = useState<DictType>([]);
-  const [interestDicts, setInterestDicts] = useState<{
-    sport: DictType;
-    study: DictType;
-    entertainment: DictType;
-  }>({
-    sport: [
-      {name: '篮球', code: '0001'},
-      {name: '篮球', code: '0002'},
-      {name: '篮球', code: '0003'},
-      {name: '篮球', code: '0004'},
-      {name: '篮球', code: '0005'},
-      {name: '篮球', code: '0006'},
-    ],
-    study: [
-      {name: '篮球', code: '0101'},
-      {name: '篮球', code: '0102'},
-      {name: '篮球', code: '0103'},
-    ],
-    entertainment: [
-      {name: '篮球', code: '0201'},
-      {name: '篮球', code: '0202'},
-      {name: '篮球', code: '0203'},
-    ],
+  const registerBtnPressHandle = useCallback(async () => {
+    if (!validate()) return;
+
+    const data = formatParams({
+      ...formData,
+      interestCodeList,
+    });
+
+    try {
+      if (await register(data)) {
+        Toast.show({description: '注册成功', duration: 2000});
+        navigation.replace('Main');
+      }
+    } catch {
+      Toast.show({description: '注册失败', duration: 2000});
+    }
+  }, [formData, interestCodeList]);
+
+  const [errors, setErrors] = useState({
+    username: '',
+    password: '',
+    sex: '',
+    departmentCode: '',
   });
 
-  useEffect(() => {
-    // 获取院系、兴趣字典表
-  }, []);
+  const validate = useCallback(() => {
+    let res = true;
 
-  const [usernameErrorMsg, setUsernameErrorMsg] = useState('');
-  const [passwordErrorMsg, setPasswordErrorMsg] = useState('');
-  const [sexErrorMsg, setSexErrorMsg] = useState('');
-  const [departmentCodeErrorMsg, setDepartmentCodeErrorMsg] = useState('');
+    if (formData.username === '') {
+      setErrors(errors => ({...errors, username: '用户名不可为空'}));
+      res = false;
+    } else setErrors(errors => ({...errors, username: ''}));
+
+    if (formData.password === '') {
+      setErrors(errors => ({...errors, password: '密码不可为空'}));
+      res = false;
+    } else setErrors(errors => ({...errors, password: ''}));
+
+    if (formData.sex === SexType.NONE) {
+      setErrors(errors => ({...errors, sex: '性别为必填项'}));
+      res = false;
+    } else setErrors(errors => ({...errors, sex: ''}));
+
+    if (formData.departmentCode === '') {
+      setErrors(errors => ({...errors, departmentCode: '院系为必填项'}));
+      res = false;
+    } else setErrors(errors => ({...errors, departmentCode: ''}));
+
+    return res;
+  }, [formData, errors]);
 
   return (
     <Flex flex={1}>
       <ScrollView px={6} h="80%" mt={4}>
         <VStack alignItems="center" space={4}>
-          <FormControl isInvalid={usernameErrorMsg !== ''}>
+          <FormControl isInvalid={errors.username !== ''}>
             <FormControl.Label>用户名</FormControl.Label>
-            <Input variant="underlined" size="md" placeholder="不少于6个字符" />
+            <Input
+              onChangeText={username =>
+                setFormData(data => ({...data, username}))
+              }
+              variant="underlined"
+              size="md"
+              placeholder="不少于6个字符"
+            />
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}>
-              {usernameErrorMsg}
+              {errors.username}
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={passwordErrorMsg !== ''}>
+          <FormControl isInvalid={errors.password !== ''}>
             <FormControl.Label>密码</FormControl.Label>
             <Input
+              onChangeText={password =>
+                setFormData(data => ({...data, password}))
+              }
               type="password"
               size="md"
               variant="underlined"
@@ -93,31 +143,30 @@ const Register = memo(() => {
             />
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}>
-              {passwordErrorMsg}
+              {errors.password}
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={sexErrorMsg !== ''}>
+          <FormControl isInvalid={errors.sex !== ''}>
             <FormControl.Label>性别</FormControl.Label>
-            <Radio.Group name="sexRadio">
-              <HStack>
+            <Radio.Group
+              name="sex"
+              onChange={sex =>
+                setFormData(data => ({...data, sex: sex as SexType}))
+              }>
+              <HStack mt={1}>
                 <Radio
-                  value="female"
+                  value={SexType.FEMALE}
                   colorScheme="pink"
                   icon={
-                    <Icon
-                      as={IoniconsIcon}
-                      name="female-outline"
-                      size="lg"
-                      color="#fff"
-                    />
+                    <Icon as={IoniconsIcon} name="female-outline" size="lg" />
                   }>
                   女
                 </Radio>
                 <Radio
-                  value="male"
-                  ml={16}
+                  value={SexType.MALE}
                   colorScheme="lightBlue"
+                  ml={8}
                   icon={
                     <Icon as={IoniconsIcon} name="male-outline" size="lg" />
                   }>
@@ -127,20 +176,31 @@ const Register = memo(() => {
             </Radio.Group>
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}>
-              {sexErrorMsg}
+              {errors.sex}
             </FormControl.ErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={departmentCodeErrorMsg !== ''}>
+          <FormControl isInvalid={errors.departmentCode !== ''}>
             <FormControl.Label>院系</FormControl.Label>
-            <Select placeholder="请选择你的院系">
+            <Select
+              placeholder="请选择你的院系"
+              onValueChange={departmentCode =>
+                setFormData(data => ({...data, departmentCode}))
+              }
+              rounded={16}
+              size="md"
+              mt={2}>
               {departmentDict.map(item => (
-                <Select.Item label={item.name} value={item.code} />
+                <Select.Item
+                  label={item.name}
+                  value={item.code}
+                  key={item.code}
+                />
               ))}
             </Select>
             <FormControl.ErrorMessage
               leftIcon={<WarningOutlineIcon size="xs" />}>
-              {departmentCodeErrorMsg}
+              {errors.departmentCode}
             </FormControl.ErrorMessage>
           </FormControl>
 
@@ -148,7 +208,7 @@ const Register = memo(() => {
             <FormControl.Label>兴趣爱好</FormControl.Label>
             <InterestSelect
               interestDicts={interestDicts}
-              selectedCodeList={selectedInterestCodeList}
+              selectedCodeList={interestCodeList}
               interestBtnPressHandle={interestBtnPressHandle}
             />
           </FormControl>
@@ -156,7 +216,7 @@ const Register = memo(() => {
       </ScrollView>
 
       <Button
-        onPress={() => navigation.replace('Main')}
+        onPress={registerBtnPressHandle}
         size="sm"
         my={4}
         alignSelf="center"

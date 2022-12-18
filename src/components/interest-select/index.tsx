@@ -37,7 +37,7 @@ const Selector: React.FC<ISelectorProps> = ({
           rounded={20}
           m={1}
           size="xs"
-          w="16">
+          w="auto">
           {item.name}
         </Button>
       ))}
@@ -60,15 +60,15 @@ const InterestSelect: React.FC<IProps> = ({
       />
       {/* <Divider my={2} /> */}
       <Selector
-        dict={interestDicts.study}
-        colorScheme="green"
+        dict={interestDicts.entertainment}
+        colorScheme="rose"
         selectedCodeList={selectedCodeList}
         interestBtnPressHandle={interestBtnPressHandle}
       />
       {/* <Divider my={2} /> */}
       <Selector
-        dict={interestDicts.entertainment}
-        colorScheme="red"
+        dict={interestDicts.study}
+        colorScheme="lime"
         selectedCodeList={selectedCodeList}
         interestBtnPressHandle={interestBtnPressHandle}
       />

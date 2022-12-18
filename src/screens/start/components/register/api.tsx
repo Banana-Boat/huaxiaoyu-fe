@@ -3,26 +3,26 @@ import userStore from '~stores/user/userStore';
 import {setData} from '~utils';
 import {SexType} from '~stores/user/types';
 
-interface LoginRequest {
+interface RegisterRequest {
   username: string;
   password: string;
+  sex: SexType;
+  departmentCode: string;
+  interestCodeList?: string[];
 }
 
-interface LoginResponse {
+// 待改！！！
+interface RegisterResponse {
   id: string;
   username: string;
+  password: string;
   sex: SexType;
   departmentCode: number;
-  age?: number;
-  nickname?: string;
-  phoneNum?: string;
-  interestCodeList?: string[];
-  headPhoto?: string;
 }
 
-export const login = async (params: LoginRequest) =>
+export const register = async (params: RegisterRequest) =>
   axios
-    .post<LoginRequest, LoginResponse>('/user/login', params)
+    .post<RegisterRequest, RegisterResponse>('/user/register', params)
     .then(async res => {
       if (res) {
         // 用户信息存入userStore

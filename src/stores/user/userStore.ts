@@ -1,5 +1,5 @@
 import {makeObservable, observable, action} from 'mobx';
-import {IUser} from './types';
+import {IUser, SexType} from './types';
 
 class UserStore {
   constructor() {
@@ -9,7 +9,7 @@ class UserStore {
   user: IUser = {
     id: '',
     username: '',
-    sex: '',
+    sex: SexType.NONE,
     departmentCode: 0,
   };
 

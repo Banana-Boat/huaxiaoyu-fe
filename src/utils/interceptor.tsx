@@ -9,8 +9,6 @@ const instance = axios.create({
   },
 });
 
-// const toast = useToast();
-
 // instance.interceptors.request.use(
 //   config => {
 //     // application/x-www-form-urlencoded 需要将data数据进行特殊序列化
@@ -40,7 +38,6 @@ instance.interceptors.response.use(
     return data;
   },
   error => {
-    Toast.show({description: '网络请求失败', duration: 2000});
     return Promise.reject(error);
   },
 );

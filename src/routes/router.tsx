@@ -14,7 +14,6 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Router: React.FC<IProps> = ({isNeedLogin}) => {
-  console.log(isNeedLogin);
   return (
     <Stack.Navigator
       initialRouteName={isNeedLogin ? 'StartScreen' : 'Main'}

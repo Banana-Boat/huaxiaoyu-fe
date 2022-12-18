@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     getData('userInfo')
       .then(res => {
-        console.log(res);
+        console.log('缓存读取成功');
         if (res) setIsNeedLogin(false);
       })
       .catch(err => console.log(err))
