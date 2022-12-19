@@ -1,11 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {extendTheme, INativebaseConfig, NativeBaseProvider} from 'native-base';
+import {
+  extendTheme,
+  INativebaseConfig,
+  NativeBaseProvider,
+  Toast,
+} from 'native-base';
 import Router from '~routes/router';
 import {observer} from 'mobx-react-lite';
 import {getData} from '~utils';
 import LaunchScreen from '~screens/launch';
+import userStore from '~stores/user/userStore';
+import {getInterestDicts, getDepartmentDict} from '~utils/api';
+import {DictType} from '~utils/types';
 
 /** Native Base配置 */
 const customTheme = extendTheme({
@@ -27,11 +35,23 @@ const App = () => {
   useEffect(() => {
     getData('userInfo')
       .then(res => {
-        console.log('缓存读取成功', res);
-        if (res) setIsNeedLogin(false);
+        if (res) {
+          setIsNeedLogin(false);
+          userStore.updateUserInfo(res);
+        }
       })
       .catch(err => console.log(err))
       .finally(() => setTimeout(() => setIsLaunched(true), 2000));
+  }, []);
+
+  /** 获取院系、兴趣字典表 */
+  useEffect(() => {
+    try {
+      getInterestDicts().then(dicts => userStore.updateInterestDicts(dicts));
+      getDepartmentDict().then(dict => userStore.updateDepartmentDict(dict));
+    } catch {
+      Toast.show({description: '字典表请求失败', duration: 2000});
+    }
   }, []);
 
   return (

@@ -1,9 +1,10 @@
 import {makeObservable, observable, action} from 'mobx';
-import {IUser, SexType} from './types';
+import {DictType} from '~utils/types';
+import {IInterestDicts, IUser, SexType} from './types';
 
 class UserStore {
   constructor() {
-    makeObservable(this, {user: observable, changeUserInfo: action});
+    makeObservable(this, {user: observable, updateUserInfo: action});
   }
 
   user: IUser = {
@@ -13,7 +14,15 @@ class UserStore {
     departmentCode: 0,
   };
 
-  changeUserInfo(user: IUser) {
+  interestDicts: IInterestDicts = {
+    sport: [],
+    study: [],
+    entertainment: [],
+  };
+
+  departmentDict: DictType = [];
+
+  updateUserInfo(user: IUser) {
     this.user.id = user.id;
     this.user.username = user.username;
     this.user.age = user.age;
@@ -23,6 +32,14 @@ class UserStore {
     this.user.nickname = user.nickname;
     this.user.phoneNum = user.phoneNum;
     this.user.sex = user.sex;
+  }
+
+  updateInterestDicts(dicts: IInterestDicts) {
+    this.interestDicts = dicts;
+  }
+
+  updateDepartmentDict(dict: DictType) {
+    this.departmentDict = dict;
   }
 }
 

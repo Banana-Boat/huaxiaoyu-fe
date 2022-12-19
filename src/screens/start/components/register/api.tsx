@@ -35,7 +35,7 @@ export const register = async (params: RegisterRequest) =>
         _res.interestCodeList = res.interestCodeList?.split(',');
 
         // 用户信息存入userStore
-        userStore.changeUserInfo(_res);
+        userStore.updateUserInfo(_res);
 
         // 用户信息存入AsyncStorage
         await setData('userInfo', _res);

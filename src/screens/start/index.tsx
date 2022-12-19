@@ -1,9 +1,8 @@
-import {Center, Flex, Box, Heading, Pressable, Icon, Toast} from 'native-base';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {Flex, Box, Heading, Pressable} from 'native-base';
+import {useCallback, useRef, useState} from 'react';
 import {Animated, Dimensions} from 'react-native';
 import PageContainer from '~components/page-container';
-import {DictType} from '~utils/types';
-import {getDepartmentDict, getInterestDicts} from './api';
+import userStore from '~stores/user/userStore';
 import Login from './components/login';
 import Register from './components/register';
 
@@ -28,28 +27,6 @@ const StartScreen = () => {
       }
     });
   };
-
-  /** 院系、兴趣字典表 */
-  const [departmentDict, setDepartmentDict] = useState<DictType>([]);
-  const [interestDicts, setInterestDicts] = useState<{
-    sport: DictType;
-    study: DictType;
-    entertainment: DictType;
-  }>({
-    sport: [],
-    study: [],
-    entertainment: [],
-  });
-
-  // 获取院系、兴趣字典表
-  useEffect(() => {
-    try {
-      getInterestDicts().then(dicts => setInterestDicts(dicts));
-      getDepartmentDict().then(dict => setDepartmentDict(dict));
-    } catch {
-      Toast.show({description: '字典表请求失败', duration: 2000});
-    }
-  }, []);
 
   /** 动画相关 */
   const positionXAnim = useRef(new Animated.Value(logoLeftOfLogin)).current;
@@ -155,8 +132,8 @@ const StartScreen = () => {
                 justifyContent: 'space-between',
               }}>
               <Register
-                interestDicts={interestDicts}
-                departmentDict={departmentDict}
+                interestDicts={userStore.interestDicts}
+                departmentDict={userStore.departmentDict}
               />
             </Animated.View>
           )}
