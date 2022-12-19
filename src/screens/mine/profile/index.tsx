@@ -111,22 +111,22 @@ const ProfileScreen = () => {
   }, [toggleColorMode, navigation, colorMode]);
 
   return (
-    <PageContainer safeAreaTop={0}>
+    <PageContainer safeAreaTop={0} safeAreaBottom={0}>
       <Box h={220}>
         <Box
           roundedBottom={30}
           h={200}
           backgroundColor={{
             linearGradient: {
-              colors: ['rose.100', 'pink.500'],
-              start: [0, 2],
+              colors: ['rose.100', 'pink.700'],
+              start: [0, 3],
               end: [1, 0],
             },
           }}
         />
         <Image
           style={{
-            opacity: 0.6,
+            opacity: 0.7,
             position: 'absolute',
             top: 10,
             right: 15,
@@ -184,9 +184,7 @@ const ProfileScreen = () => {
         </Pressable>
         <Divider orientation="vertical" />
         <Pressable
-          onPress={() =>
-            Toast.show({description: '功能建设中...', duration: 2000})
-          }
+          onPress={() => navigation.navigate('EditInfoScreen')}
           w="50%">
           <Center>
             <Heading size="md">个人信息</Heading>

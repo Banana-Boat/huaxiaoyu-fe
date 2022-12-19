@@ -73,8 +73,8 @@ const StartScreen = () => {
   }, []);
 
   return (
-    <PageContainer safeAreaTop={0}>
-      <Flex safeArea py={2} w="100%" h="100%" justify="space-between">
+    <PageContainer>
+      <Flex py={2} w="100%" h="100%" justify="space-between">
         <Pressable onPress={toggleScreenMode}>
           <Animated.View
             style={{
@@ -131,10 +131,7 @@ const StartScreen = () => {
                 height: '100%',
                 justifyContent: 'space-between',
               }}>
-              <Register
-                interestDicts={userStore.interestDicts}
-                departmentDict={userStore.departmentDict}
-              />
+              <Register />
             </Animated.View>
           )}
         </Box>

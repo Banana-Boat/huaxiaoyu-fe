@@ -3,8 +3,11 @@ import PageContainer from '~components/page-container';
 
 const HomeScreen = () => {
   return (
-    <PageContainer>
-      <Text>Encounter/Home</Text>
+    <PageContainer safeAreaBottom={0}>
+      <Box h="100%" justifyContent="space-between">
+        <Text>Encounter/Home</Text>
+        <Text>Encounter/Home</Text>
+      </Box>
     </PageContainer>
   );
 };

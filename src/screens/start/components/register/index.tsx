@@ -17,20 +17,11 @@ import {
 import {memo, useCallback, useState} from 'react';
 import {RootStackParamList} from '~routes/router';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
-import {DictType} from '~utils/types';
 import InterestSelect from '~components/interest-select';
 import {register} from './api';
 import {SexType} from '~stores/user/types';
 import {formatParams} from '~utils';
-
-interface IProps {
-  departmentDict: DictType;
-  interestDicts: {
-    sport: DictType;
-    study: DictType;
-    entertainment: DictType;
-  };
-}
+import userStore from '~stores/user/userStore';
 
 interface IFormData {
   username: string;
@@ -39,7 +30,7 @@ interface IFormData {
   departmentCode: string;
 }
 
-const Register = memo<IProps>(({departmentDict, interestDicts}) => {
+const Register = memo(() => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -48,7 +39,7 @@ const Register = memo<IProps>(({departmentDict, interestDicts}) => {
     username: '',
     password: '',
     sex: SexType.NONE,
-    departmentCode: '',
+    departmentCode: '0',
   });
   const [interestCodeList, setInterestCodeList] = useState<string[]>([]);
 
@@ -190,7 +181,7 @@ const Register = memo<IProps>(({departmentDict, interestDicts}) => {
               rounded={16}
               size="md"
               mt={2}>
-              {departmentDict.map(item => (
+              {userStore.departmentDict.map(item => (
                 <Select.Item
                   label={item.name}
                   value={item.code}
@@ -207,7 +198,7 @@ const Register = memo<IProps>(({departmentDict, interestDicts}) => {
           <FormControl>
             <FormControl.Label>兴趣爱好</FormControl.Label>
             <InterestSelect
-              interestDicts={interestDicts}
+              interestDicts={userStore.interestDicts}
               selectedCodeList={interestCodeList}
               interestBtnPressHandle={interestBtnPressHandle}
             />

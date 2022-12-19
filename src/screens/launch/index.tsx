@@ -4,7 +4,7 @@ import PageContainer from '~components/page-container';
 
 const LaunchScreen = () => {
   return (
-    <PageContainer safeAreaTop={0}>
+    <PageContainer safeAreaTop={0} safeAreaBottom={0}>
       <Center flex={1}>
         <PresenceTransition
           visible

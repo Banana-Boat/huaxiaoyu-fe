@@ -11,7 +11,6 @@ interface RegisterRequest {
   interestCodeList?: string;
 }
 
-// 待改！！！
 interface RegisterResponse {
   id: string;
   username: string;
@@ -31,8 +30,11 @@ export const register = async (params: RegisterRequest) =>
       if (res) {
         const _res: IUser = JSON.parse(JSON.stringify(res));
 
-        // 处理interestCodeList
-        _res.interestCodeList = res.interestCodeList?.split(',');
+        // 处理interestCodeList & departmentCode
+        _res.interestCodeList = res.interestCodeList
+          ? res.interestCodeList.split(',')
+          : [];
+        _res.departmentCode = res.departmentCode.toString();
 
         // 用户信息存入userStore
         userStore.updateUserInfo(_res);

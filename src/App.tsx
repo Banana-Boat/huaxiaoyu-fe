@@ -36,7 +36,9 @@ const App = () => {
     getData('userInfo')
       .then(res => {
         if (res) {
+          console.log(res);
           setIsNeedLogin(false);
+
           userStore.updateUserInfo(res);
         }
       })

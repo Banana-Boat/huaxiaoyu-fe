@@ -3,16 +3,23 @@ import userStore from '~stores/user/userStore';
 import {setData} from '~utils';
 import {IUser, SexType} from '~stores/user/types';
 
-interface LoginRequest {
+interface UpdateUserInfoRequest {
   username: string;
-  password: string;
+  password?: string;
+  sex?: SexType;
+  departmentCode?: string;
+  interestCodeList?: string;
+  age?: number;
+  nickname?: string;
+  phoneNum?: string;
+  headPhoto?: string;
 }
 
-interface LoginResponse {
+interface UpdateUserInfoResponse {
   id: string;
   username: string;
   sex: SexType;
-  departmentCode: number;
+  departmentCode: string;
   age?: number;
   nickname?: string;
   phoneNum?: string;
@@ -20,14 +27,17 @@ interface LoginResponse {
   headPhoto?: string;
 }
 
-export const login = async (params: LoginRequest) =>
+export const updateUserInfo = async (params: UpdateUserInfoRequest) =>
   axios
-    .post<LoginRequest, LoginResponse>('/user/login', params)
+    .put<UpdateUserInfoRequest, UpdateUserInfoResponse>(
+      '/user/updateUserInfo',
+      params,
+    )
     .then(async res => {
       if (res) {
         const _res: IUser = JSON.parse(JSON.stringify(res));
 
-        // 处理interestCodeList & departmentCode
+        // 处理interestCodeList
         _res.interestCodeList = res.interestCodeList
           ? res.interestCodeList.split(',')
           : [];

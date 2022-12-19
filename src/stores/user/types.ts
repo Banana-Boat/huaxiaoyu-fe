@@ -8,7 +8,7 @@ export interface IUser {
   age?: number;
   nickname?: string;
   phoneNum?: string;
-  interestCodeList?: string[];
+  interestCodeList: string[];
   headPhoto?: string;
 }
 

@@ -1,8 +1,8 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import EncounterStack from './encounterStack';
-import MineStack from './mineStack';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import {Icon, useColorMode} from 'native-base';
+import ProfileScreen from '~screens/mine/profile';
+import HomeScreen from '~screens/encounter/home';
 IoniconsIcon.loadFont();
 
 const Tab = createBottomTabNavigator();
@@ -22,7 +22,7 @@ const BottomTab = () => {
       }}>
       <Tab.Screen
         name="EncounterStack"
-        component={EncounterStack}
+        component={HomeScreen}
         options={{
           tabBarLabel: '遇见',
           headerShown: false,
@@ -33,7 +33,7 @@ const BottomTab = () => {
       />
       <Tab.Screen
         name="MineStack"
-        component={MineStack}
+        component={ProfileScreen}
         options={{
           tabBarLabel: '我的',
           headerShown: false,

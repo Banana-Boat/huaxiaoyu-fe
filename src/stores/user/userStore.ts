@@ -11,7 +11,8 @@ class UserStore {
     id: '',
     username: '',
     sex: SexType.NONE,
-    departmentCode: 0,
+    departmentCode: '0',
+    interestCodeList: [],
   };
 
   interestDicts: IInterestDicts = {
