@@ -1,6 +1,7 @@
 import {Center, Flex, Box, Heading, Pressable, Icon, Toast} from 'native-base';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {Animated, Dimensions} from 'react-native';
+import PageContainer from '~components/page-container';
 import {DictType} from '~utils/types';
 import {getDepartmentDict, getInterestDicts} from './api';
 import Login from './components/login';
@@ -95,12 +96,7 @@ const StartScreen = () => {
   }, []);
 
   return (
-    <Center
-      w="100%"
-      h="100%"
-      _dark={{
-        bg: 'dark.50',
-      }}>
+    <PageContainer safeAreaTop={0}>
       <Flex safeArea py={2} w="100%" h="100%" justify="space-between">
         <Pressable onPress={toggleScreenMode}>
           <Animated.View
@@ -166,7 +162,7 @@ const StartScreen = () => {
           )}
         </Box>
       </Flex>
-    </Center>
+    </PageContainer>
   );
 };
 

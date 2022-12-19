@@ -1,24 +1,33 @@
-import {Box, Center} from 'native-base';
+import {Box, Center, PresenceTransition} from 'native-base';
 import {Image} from 'react-native';
+import PageContainer from '~components/page-container';
 
 const LaunchScreen = () => {
   return (
-    <Center
-      safeArea
-      h="100%"
-      w="100%"
-      _dark={{
-        bg: 'dark.50',
-      }}>
-      <Image
-        source={require('~assets/images/logo.png')}
-        style={{
-          height: 200,
-          width: 200,
-          aspectRatio: 1,
-        }}
-      />
-    </Center>
+    <PageContainer safeAreaTop={0}>
+      <Center flex={1}>
+        <PresenceTransition
+          visible
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+            transition: {
+              duration: 500,
+            },
+          }}>
+          <Image
+            source={require('~assets/images/logo.png')}
+            style={{
+              height: 200,
+              width: 200,
+              aspectRatio: 1,
+            }}
+          />
+        </PresenceTransition>
+      </Center>
+    </PageContainer>
   );
 };
 
