@@ -7,12 +7,12 @@ import {observer} from 'mobx-react-lite';
 import {getData} from '~utils';
 import LaunchScreen from '~screens/launch';
 
+/** Native Base配置 */
 const customTheme = extendTheme({
   config: {
     useSystemColorMode: true,
   },
 });
-
 const config: INativebaseConfig = {
   dependencies: {
     'linear-gradient': require('react-native-linear-gradient').default,
@@ -20,12 +20,14 @@ const config: INativebaseConfig = {
 };
 
 const App = () => {
-  const [isLaunched, setIsLaunched] = useState(false);
-  const [isNeedLogin, setIsNeedLogin] = useState(true);
+  const [isLaunched, setIsLaunched] = useState(false); // 启动页是否启动完毕
+
+  /** 读取本地登录状态信息 */
+  const [isNeedLogin, setIsNeedLogin] = useState(true); // 是否需要登录
   useEffect(() => {
     getData('userInfo')
       .then(res => {
-        console.log('缓存读取成功');
+        console.log('缓存读取成功', res);
         if (res) setIsNeedLogin(false);
       })
       .catch(err => console.log(err))

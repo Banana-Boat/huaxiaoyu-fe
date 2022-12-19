@@ -64,7 +64,7 @@ const Register = memo<IProps>(({departmentDict, interestDicts}) => {
 
     const data = formatParams({
       ...formData,
-      interestCodeList,
+      interestCodeList: interestCodeList.join(','),
     });
 
     try {

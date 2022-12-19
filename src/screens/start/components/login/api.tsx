@@ -1,7 +1,7 @@
 import axios from '~utils/interceptor';
 import userStore from '~stores/user/userStore';
 import {setData} from '~utils';
-import {SexType} from '~stores/user/types';
+import {IUser, SexType} from '~stores/user/types';
 
 interface LoginRequest {
   username: string;
@@ -16,7 +16,7 @@ interface LoginResponse {
   age?: number;
   nickname?: string;
   phoneNum?: string;
-  interestCodeList?: string[];
+  interestCodeList?: string;
   headPhoto?: string;
 }
 
@@ -25,11 +25,16 @@ export const login = async (params: LoginRequest) =>
     .post<LoginRequest, LoginResponse>('/user/login', params)
     .then(async res => {
       if (res) {
+        const _res: IUser = JSON.parse(JSON.stringify(res));
+
+        // 处理interestCodeList
+        _res.interestCodeList = res.interestCodeList?.split(',');
+
         // 用户信息存入userStore
-        userStore.changeUserInfo(res);
+        userStore.changeUserInfo(_res);
 
         // 用户信息存入AsyncStorage
-        await setData('userInfo', res);
+        await setData('userInfo', _res);
 
         return true;
       } else return Promise.reject();
