@@ -37,8 +37,6 @@ interface IFormData {
 }
 
 const EditInfoScreen = memo(() => {
-  console.log(userStore.user);
-
   /** 表单 */
   const [formData, setFormData] = useState<IFormData>({
     sex: userStore.user.sex,
