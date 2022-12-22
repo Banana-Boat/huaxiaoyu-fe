@@ -93,7 +93,7 @@ const Register = memo(() => {
       res = false;
     } else setErrors(errors => ({...errors, sex: ''}));
 
-    if (formData.departmentCode === '') {
+    if (formData.departmentCode === '0') {
       setErrors(errors => ({...errors, departmentCode: '院系为必填项'}));
       res = false;
     } else setErrors(errors => ({...errors, departmentCode: ''}));

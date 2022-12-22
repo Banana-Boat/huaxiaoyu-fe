@@ -36,17 +36,17 @@ const StartScreen = () => {
   const animToRegister = useCallback(() => {
     Animated.timing(positionXAnim, {
       toValue: logoLeftOfRegister,
-      duration: 600,
+      duration: 500,
       useNativeDriver: false,
     }).start();
     Animated.timing(scaleAnim, {
       toValue: logoWidthOfRegister,
-      duration: 600,
+      duration: 500,
       useNativeDriver: false,
     }).start();
     Animated.timing(registerOpacityAnim, {
       toValue: 1,
-      duration: 600,
+      duration: 500,
       useNativeDriver: true,
     }).start();
     loginOpacityAnim.setValue(0);
@@ -55,17 +55,17 @@ const StartScreen = () => {
   const animToLogin = useCallback(() => {
     Animated.timing(positionXAnim, {
       toValue: logoLeftOfLogin,
-      duration: 600,
+      duration: 500,
       useNativeDriver: false,
     }).start();
     Animated.timing(scaleAnim, {
       toValue: logoWidthOfLogin,
-      duration: 600,
+      duration: 500,
       useNativeDriver: false,
     }).start();
     Animated.timing(loginOpacityAnim, {
       toValue: 1,
-      duration: 600,
+      duration: 500,
       useNativeDriver: true,
     }).start();
     registerOpacityAnim.setValue(0);
@@ -101,7 +101,7 @@ const StartScreen = () => {
                   opacity: registerOpacityAnim,
                 }}>
                 <Heading
-                  color="coolGray.600"
+                  color="coolGray.800"
                   _dark={{
                     color: 'warmGray.50',
                   }}
