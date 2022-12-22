@@ -71,6 +71,17 @@ const ProfileScreen = () => {
       {
         data: [
           {
+            name: '聊天记录',
+            icon: 'chatbubbles',
+            hasArrow: true,
+            action: () =>
+              Toast.show({description: '功能建设中...', duration: 2000}),
+          },
+        ],
+      },
+      {
+        data: [
+          {
             name: '颜色主题',
             value: colorMode === 'dark' ? '深色模式' : '浅色模式',
             icon: 'contrast',

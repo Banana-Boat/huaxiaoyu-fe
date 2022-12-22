@@ -98,7 +98,7 @@ const EditInfoScreen = memo(() => {
   }, [formData, errors]);
 
   return (
-    <PageContainer safeAreaTop={0}>
+    <PageContainer>
       <ScrollView px={6} h="80%" mt={4}>
         <VStack alignItems="center" space={4}>
           <FormControl>
