@@ -14,7 +14,7 @@ const LaunchScreen = () => {
           animate={{
             opacity: 1,
             transition: {
-              duration: 500,
+              duration: 600,
             },
           }}>
           <Image
