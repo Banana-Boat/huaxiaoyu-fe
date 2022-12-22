@@ -3,6 +3,11 @@ import {useNavigation} from '@react-navigation/native';
 import {Box, Flex, Icon, Text} from 'native-base';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
+/**
+ * 深色模式： back->dark.50 fore->dark.100
+ * 浅色模式： back->coolGray.100 fore->coolGray.50
+ */
+
 interface IProps extends PropsWithChildren {
   safeAreaTop?: number; // false不起作用，取消顶部空间直接传入0
   safeAreaBottom?: number;
@@ -24,15 +29,11 @@ const PageContainer: React.FC<IProps> = ({
   const navigation = useNavigation();
 
   return hasHeader ? (
-    <Box
-      safeAreaBottom
-      h="100%"
-      w="100%"
-      flex={1}
-      bg="coolGray.100"
-      _dark={{bg: 'dark.50'}}>
+    <Box safeAreaBottom flex={1} bg="coolGray.100" _dark={{bg: 'dark.50'}}>
       <Flex
         safeAreaTop
+        position="relative"
+        zIndex={4}
         direction="row"
         justify="space-between"
         align="center"
@@ -62,15 +63,13 @@ const PageContainer: React.FC<IProps> = ({
           _dark={{color: 'coolGray.200'}}
         />
       </Flex>
-      <Box>{children}</Box>
+      <Box flex={1}>{children}</Box>
     </Box>
   ) : (
     <Box
       safeArea
       safeAreaTop={safeAreaTop}
       safeAreaBottom={safeAreaBottom}
-      h="100%"
-      w="100%"
       flex={1}
       bg="coolGray.100"
       _dark={{bg: 'dark.50'}}>

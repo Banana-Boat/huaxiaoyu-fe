@@ -1,66 +1,84 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {AlertDialog, Button, Text} from 'native-base';
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {BackHandler} from 'react-native';
+import {GiftedChat, IMessage} from 'react-native-gifted-chat';
 import PageContainer from '~components/page-container';
 import {RootStackParamList} from '~routes/router';
+import AssistBoard from './components/assist-board';
+import QuitAlert from './components/quit-alert';
 
 const ChatScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   /** 退出页面提醒 */
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const cancelRef = useRef(null);
-
+  const [isShowAlert, setIsShowAlert] = useState(false);
   // 处理android端系统级返回按键
   useFocusEffect(
     useCallback(() => {
       const subscription = BackHandler.addEventListener(
         'hardwareBackPress',
         () => {
-          setIsAlertOpen(true);
+          setIsShowAlert(true);
           return true;
         },
       );
       return () => subscription.remove();
     }, []),
   );
-
   const quit = useCallback(() => {
     // 退出处理逻辑...
 
-    setIsAlertOpen(false);
+    setIsShowAlert(false);
     navigation.goBack();
   }, [navigation]);
+
+  /** 对话相关 */
+  const [messageList, setMessageList] = useState<IMessage[]>([]);
+
+  const onSend = useCallback((messageList: IMessage[]) => {
+    setMessageList(_messageList =>
+      GiftedChat.append(_messageList, messageList),
+    );
+  }, []);
+
+  useEffect(() => {
+    setMessageList([
+      {
+        _id: 1,
+        text: 'Hello developer',
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: 'React Native',
+          avatar: require('~assets/images/avatar2.png'),
+        },
+      },
+    ]);
+  }, []);
 
   return (
     <PageContainer
       hasHeader
       title="猪皮香蕉船"
-      leftAction={() => setIsAlertOpen(true)}>
-      <AlertDialog leastDestructiveRef={cancelRef} isOpen={isAlertOpen}>
-        <AlertDialog.Content>
-          <AlertDialog.Header>退出提醒</AlertDialog.Header>
-          <AlertDialog.Body>
-            退出聊天后将不能再次向 她/他 发起聊天，你确定要退出吗？
-          </AlertDialog.Body>
-          <AlertDialog.Footer py={2}>
-            <Button.Group>
-              <Button
-                onPress={() => setIsAlertOpen(false)}
-                variant="ghost"
-                colorScheme="primary">
-                取消
-              </Button>
-              <Button onPress={quit} variant="ghost" colorScheme="danger">
-                确定
-              </Button>
-            </Button.Group>
-          </AlertDialog.Footer>
-        </AlertDialog.Content>
-      </AlertDialog>
+      leftAction={() => setIsShowAlert(true)}>
+      <QuitAlert
+        isOpen={isShowAlert}
+        toggleIsOpen={flag => setIsShowAlert(flag)}
+        quit={quit}
+      />
+
+      <AssistBoard />
+
+      <GiftedChat
+        wrapInSafeArea={false}
+        messages={messageList}
+        onSend={messages => onSend(messages)}
+        user={{
+          _id: 1,
+        }}
+      />
     </PageContainer>
   );
 };
