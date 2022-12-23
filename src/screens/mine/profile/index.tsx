@@ -109,7 +109,7 @@ const ProfileScreen = () => {
           {
             name: '退出登录',
             icon: 'log-out',
-            color: 'rose.400',
+            color: 'red.400',
             hasArrow: true,
             action: async () => {
               await removeData('userInfo');

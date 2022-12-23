@@ -17,12 +17,12 @@ const QuitAlert: React.FC<IProps> = ({isOpen, toggleIsOpen, quit}) => {
         <AlertDialog.Body>
           退出聊天后将不能再次向 她/他 发起聊天，你确定要退出吗？
         </AlertDialog.Body>
-        <AlertDialog.Footer py={2}>
+        <AlertDialog.Footer pb={2} pt={1}>
           <Button.Group>
             <Button
               onPress={() => toggleIsOpen(false)}
               variant="ghost"
-              colorScheme="primary">
+              colorScheme="gray">
               取消
             </Button>
             <Button onPress={quit} variant="ghost" colorScheme="danger">

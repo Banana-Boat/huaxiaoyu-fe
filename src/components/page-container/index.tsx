@@ -29,7 +29,11 @@ const PageContainer: React.FC<IProps> = ({
   const navigation = useNavigation();
 
   return hasHeader ? (
-    <Box safeAreaBottom flex={1} bg="coolGray.100" _dark={{bg: 'dark.50'}}>
+    <Box
+      safeAreaBottom={safeAreaBottom}
+      flex={1}
+      bg="coolGray.100"
+      _dark={{bg: 'dark.50'}}>
       <Flex
         safeAreaTop
         position="relative"

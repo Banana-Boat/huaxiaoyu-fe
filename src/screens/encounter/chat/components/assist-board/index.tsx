@@ -55,6 +55,7 @@ const AssistBoard: React.FC<IProps> = () => {
   return (
     <Animated.View
       style={{
+        opacity: 0.95,
         position: 'absolute',
         zIndex: 3,
         width: '100%',
