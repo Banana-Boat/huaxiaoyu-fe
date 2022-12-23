@@ -1,4 +1,6 @@
-import {getColor, Icon, Toast, useColorMode, useSafeArea} from 'native-base';
+import {Icon, Toast, useColorMode} from 'native-base';
+import {useState} from 'react';
+import {Keyboard} from 'react-native';
 import {
   Actions,
   Avatar,
@@ -9,17 +11,22 @@ import {
   InputToolbar,
   Send,
 } from 'react-native-gifted-chat';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 const MyGiftedChat: React.FC<GiftedChatProps> = props => {
   const {colorMode} = useColorMode();
+
+  // 处理 IOS 输入框安全区域
   const {bottom: safePaddingBottom} = useSafeAreaInsets();
+  const [isNeedSafePB, setIsNeedSafePB] = useState(1);
+  Keyboard.addListener('keyboardWillShow', () => setIsNeedSafePB(0));
+  Keyboard.addListener('keyboardWillHide', () => setIsNeedSafePB(1));
 
   return (
     <GiftedChat
       {...props}
-      minInputToolbarHeight={safePaddingBottom + 44 + 10}
+      minInputToolbarHeight={safePaddingBottom * isNeedSafePB + 44 + 10}
       renderInputToolbar={props => (
         <InputToolbar
           {...props}
@@ -27,8 +34,9 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
             justifyContent: 'center',
             alignItems: 'center',
             paddingTop: 5,
-            paddingBottom: safePaddingBottom + 5,
+            paddingBottom: safePaddingBottom * isNeedSafePB + 5,
             backgroundColor: colorMode === 'dark' ? '#27272a' : '#fff',
+            borderTopWidth: 0,
           }}
         />
       )}
@@ -36,7 +44,7 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
         <Actions
           {...props}
           onPressActionButton={() =>
-            Toast.show({description: '功能建设中', duration: 2000})
+            Toast.show({description: '功能建设中...', duration: 2000})
           }
           containerStyle={{
             justifyContent: 'center',
@@ -47,7 +55,12 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
             marginLeft: 0,
           }}
           icon={() => (
-            <Icon as={Ionicon} name="add-circle" size="lg" color="pink.600" />
+            <Icon
+              as={Ionicon}
+              name="add-circle"
+              size="lg"
+              color={colorMode === 'dark' ? 'warmGray.600' : 'warmGray.300'}
+            />
           )}
         />
       )}
