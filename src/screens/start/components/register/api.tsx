@@ -12,7 +12,7 @@ interface RegisterRequest {
 }
 
 interface RegisterResponse {
-  id: string;
+  id: number;
   username: string;
   sex: SexType;
   departmentCode: number;

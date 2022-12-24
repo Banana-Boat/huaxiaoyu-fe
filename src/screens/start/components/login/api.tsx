@@ -9,7 +9,7 @@ interface LoginRequest {
 }
 
 interface LoginResponse {
-  id: string;
+  id: number;
   username: string;
   sex: SexType;
   departmentCode: number;

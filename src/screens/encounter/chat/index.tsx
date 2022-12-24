@@ -8,6 +8,8 @@ import {RootStackParamList} from '~routes/router';
 import AssistBoard from './components/assist-board';
 import QuitAlert from './components/quit-alert';
 import MyGiftedChat from './components/my-gifted-chat';
+import chatStore from '~stores/chat/chatStore';
+import {observer} from 'mobx-react-lite';
 
 const ChatScreen = () => {
   const navigation =
@@ -29,7 +31,7 @@ const ChatScreen = () => {
     }, []),
   );
   const quit = useCallback(() => {
-    // 退出处理逻辑...
+    chatStore.finishChat();
 
     setIsShowAlert(false);
     navigation.goBack();
@@ -176,7 +178,7 @@ const ChatScreen = () => {
     <PageContainer
       safeAreaBottom={0}
       hasHeader
-      title="猪皮香蕉船"
+      title={chatStore.opponent?.nickname ?? 'Hust_宇航员'}
       leftAction={() => setIsShowAlert(true)}>
       <QuitAlert
         isOpen={isShowAlert}
@@ -197,4 +199,4 @@ const ChatScreen = () => {
   );
 };
 
-export default ChatScreen;
+export default observer(ChatScreen);

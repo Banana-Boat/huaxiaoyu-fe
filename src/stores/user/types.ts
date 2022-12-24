@@ -1,7 +1,7 @@
 import {DictType} from '~utils/types';
 
 export interface IUser {
-  id: string;
+  id: number;
   username: string;
   sex: SexType;
   departmentCode: string;

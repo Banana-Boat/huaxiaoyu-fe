@@ -8,7 +8,7 @@ class UserStore {
   }
 
   user: IUser = {
-    id: '',
+    id: -1,
     username: '',
     sex: SexType.NONE,
     departmentCode: '0',

@@ -8,12 +8,10 @@ import {
   Toast,
 } from 'native-base';
 import Router from '~routes/router';
-import {observer} from 'mobx-react-lite';
 import {getData} from '~utils';
 import LaunchScreen from '~screens/launch';
 import userStore from '~stores/user/userStore';
 import {getInterestDicts, getDepartmentDict} from '~utils/api';
-import {DictType} from '~utils/types';
 
 /** Native Base配置 */
 const customTheme = extendTheme({
@@ -36,7 +34,6 @@ const App = () => {
     getData('userInfo')
       .then(res => {
         if (res) {
-          console.log(res);
           setIsNeedLogin(false);
 
           userStore.updateUserInfo(res);
@@ -71,4 +68,4 @@ const App = () => {
   );
 };
 
-export default observer(App);
+export default App;
