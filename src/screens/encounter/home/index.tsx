@@ -38,14 +38,6 @@ const HomeScreen = () => {
           </Text>
         </HStack>
       </Button>
-      {/* <Button
-        onPress={() => chatStore.detectState()}
-        alignSelf="center"
-        colorScheme="red"
-        w="60%"
-        rounded={20}>
-        心跳检测
-      </Button> */}
     </PageContainer>
   );
 };

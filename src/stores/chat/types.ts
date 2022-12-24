@@ -1,3 +1,4 @@
+import {IMessage} from 'react-native-gifted-chat';
 import {SexType} from '~stores/user/types';
 
 export enum ChatStateType {
@@ -21,4 +22,9 @@ export interface IDataOfStartChatEvent {
   opponentInterestCodeList: string;
   opponentUsername: string;
   opponentDepartmentCode: number;
+}
+
+export interface IDataOfMessageEvent extends IMessage {
+  receiveId: number;
+  sendId: number;
 }

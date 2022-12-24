@@ -2,7 +2,11 @@ import {Toast} from 'native-base';
 import {Platform} from 'react-native';
 import userStore from '~stores/user/userStore';
 import chatStore from './chatStore';
-import {ChatStateType, IDataOfStartChatEvent} from './types';
+import {
+  ChatStateType,
+  IDataOfMessageEvent,
+  IDataOfStartChatEvent,
+} from './types';
 
 export class ChatSocket {
   socket: WebSocket;
@@ -21,8 +25,8 @@ export class ChatSocket {
         console.log(Platform.OS, 'socket opened');
       });
 
-      this.socket.addEventListener('close', () =>
-        console.log(Platform.OS, 'socket closed'),
+      this.socket.addEventListener('close', e =>
+        console.log(Platform.OS, 'socket closed', e),
       );
 
       this.socket.addEventListener('error', err => {
@@ -37,9 +41,10 @@ export class ChatSocket {
         if (!flag)
           return Toast.show({description: 'Socket连接错误...', duration: 2000});
 
+        let _data;
         switch (event) {
           case 'start-chat':
-            const _data = data as IDataOfStartChatEvent;
+            _data = data as IDataOfStartChatEvent;
 
             // 更新全局状态（聊天对象信息 & chat状态）
             chatStore.updateOpponent({
@@ -53,7 +58,15 @@ export class ChatSocket {
             clearInterval(chatStore.timer);
 
             break;
+
           case 'message':
+            _data = data as IDataOfMessageEvent;
+            console.log(_data);
+
+            const {receiveId, sendId, ...restData} = _data;
+            restData.user.avatar = require('~assets/images/avatar2.png'); // 待删除
+            chatStore.updateMessageList([restData]);
+
             break;
         }
       });
@@ -100,5 +113,15 @@ export class ChatSocket {
       );
   }
 
-  sendMessage() {}
+  sendMessage(message: IDataOfMessageEvent) {
+    console.log(message);
+    if (this.socket.readyState === 1)
+      this.socket.send(
+        JSON.stringify({
+          event: 'message',
+          flag: true,
+          data: message,
+        }),
+      );
+  }
 }
