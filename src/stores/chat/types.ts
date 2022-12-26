@@ -15,13 +15,14 @@ export interface IOpponent {
   departmentCode?: string;
 }
 
-// 待改！！！
 export interface IDataOfStartChatEvent {
-  opponentSex: SexType;
-  opponentUserid: number;
-  opponentInterestCodeList: string;
-  opponentUsername: string;
-  opponentDepartmentCode: number;
+  opponent: {
+    sex: SexType;
+    departmentCode: string;
+    nickname: string;
+    interestCodeList: string;
+    id: number;
+  };
 }
 
 export interface IDataOfMessageEvent extends IMessage {

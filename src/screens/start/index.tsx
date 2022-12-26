@@ -1,4 +1,4 @@
-import {Flex, Box, Heading, Pressable, ZStack} from 'native-base';
+import {Flex, Heading, Pressable, ZStack} from 'native-base';
 import {useCallback, useRef, useState} from 'react';
 import {Animated, Dimensions} from 'react-native';
 import PageContainer from '~components/page-container';

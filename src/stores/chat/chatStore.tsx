@@ -22,7 +22,35 @@ class ChatStore {
 
   state: ChatStateType = ChatStateType.NONE;
   opponent?: IOpponent = {};
-  messageList?: IMessage[] = [];
+  messageList?: IMessage[] = [
+    {
+      _id: 1,
+      text: 'This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT',
+      createdAt: new Date(),
+      quickReplies: {
+        type: 'radio', // or 'checkbox',
+        keepIt: true,
+        values: [
+          {
+            title: '😋 Yes',
+            value: 'yes',
+          },
+          {
+            title: '📷 Yes, let me show you with a picture!',
+            value: 'yes_picture',
+          },
+          {
+            title: '😞 Nope. What?',
+            value: 'no',
+          },
+        ],
+      },
+      user: {
+        _id: 2,
+        name: 'React Native',
+      },
+    },
+  ];
   socket?: ChatSocket;
   timer?: NodeJS.Timer; // 处理接收不到start-chat消息问题，每3秒发送心跳包
 

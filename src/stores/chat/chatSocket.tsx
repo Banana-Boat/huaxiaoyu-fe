@@ -36,23 +36,25 @@ export class ChatSocket {
       });
 
       this.socket.addEventListener('message', msg => {
+        console.log(msg.data);
         const {data, flag, event} = JSON.parse(msg.data);
 
         if (!flag)
           return Toast.show({description: 'Socket连接错误...', duration: 2000});
 
-        let _data;
         switch (event) {
           case 'start-chat':
-            _data = data as IDataOfStartChatEvent;
+            const {opponent} = data as IDataOfStartChatEvent;
 
             // 更新全局状态（聊天对象信息 & chat状态）
+            const {id, departmentCode, nickname, sex, interestCodeList} =
+              opponent;
             chatStore.updateOpponent({
-              id: _data.opponentUserid,
-              departmentCode: _data.opponentDepartmentCode.toString(),
-              interestCodeList: _data.opponentInterestCodeList.split(','),
-              sex: _data.opponentSex,
-              nickname: _data.opponentUsername,
+              id,
+              departmentCode,
+              sex,
+              nickname,
+              interestCodeList: interestCodeList.split(','),
             });
             chatStore.updateState(ChatStateType.CHATTING);
             clearInterval(chatStore.timer);
@@ -60,7 +62,7 @@ export class ChatSocket {
             break;
 
           case 'message':
-            _data = data as IDataOfMessageEvent;
+            const _data = data as IDataOfMessageEvent;
             console.log(_data);
 
             const {receiveId, sendId, ...restData} = _data;
