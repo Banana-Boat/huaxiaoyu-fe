@@ -1,6 +1,6 @@
 import {Avatar, Box, Flex, View} from 'native-base';
 import {useEffect, useRef, useState} from 'react';
-import {Animated, Text} from 'react-native';
+import {Animated, Image, Text} from 'react-native';
 import chatStore from '~stores/chat/chatStore';
 import {ChatStateType} from '~stores/chat/types';
 import {IUser, SexType} from '~stores/user/types';
@@ -36,19 +36,19 @@ const SpinPlanet: React.FC<IProps> = ({userInfoList}) => {
       Animated.parallel([
         Animated.timing(ringRotateAnim, {
           toValue: 1,
-          duration: 6000,
+          duration: 4000,
           useNativeDriver: true,
         }),
         Animated.sequence([
           Animated.timing(planetRotateAnim, {
             toValue: 1,
-            duration: 3000,
+            duration: 2000,
             useNativeDriver: true,
           }),
 
           Animated.timing(planetRotateAnim, {
             toValue: 0,
-            duration: 3000,
+            duration: 2000,
             useNativeDriver: true,
           }),
         ]),
@@ -159,21 +159,25 @@ const SpinPlanet: React.FC<IProps> = ({userInfoList}) => {
               ],
               alignItems: 'center',
             }}>
-            <Avatar
-              size="md"
-              p={1}
+            <Box
+              rounded={50}
+              p={0.5}
               mb={1}
               bg={
                 userInfoList[randomIndexList[index]]?.sex === SexType.FEMALE
                   ? 'pink.400'
                   : 'lightBlue.700'
-              }
-              source={
-                userInfoList[randomIndexList[index]]?.headPhoto ??
-                require('~assets/images/avatar2.png')
-              }
-            />
-            <Text style={{color: '#e5e7eb'}}>
+              }>
+              <Image
+                style={{width: 50, height: 50, borderRadius: 50}}
+                source={
+                  userInfoList[randomIndexList[index]]?.headPhoto
+                    ? {url: userInfoList[randomIndexList[index]]?.headPhoto}
+                    : require('~assets/images/avatar2.png')
+                }
+              />
+            </Box>
+            <Text style={{color: '#e5e7eb', fontSize: 12}}>
               {userInfoList[randomIndexList[index]]?.nickname}
             </Text>
           </Animated.View>
