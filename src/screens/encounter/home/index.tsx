@@ -3,11 +3,12 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {observer} from 'mobx-react-lite';
 import {Box, Button, Center, Flex, HStack, Spinner, Text} from 'native-base';
 import {useEffect, useState} from 'react';
-import {LinearGradient} from 'react-native-svg';
 import PageContainer from '~components/page-container';
 import {RootStackParamList} from '~routes/router';
 import chatStore from '~stores/chat/chatStore';
 import {ChatStateType} from '~stores/chat/types';
+import {IUser} from '~stores/user/types';
+import {getNumOfOnline, getRandomUserInfo} from './api';
 import SpinPlanet from './components/spin-planet';
 
 const HomeScreen = () => {
@@ -15,15 +16,21 @@ const HomeScreen = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const [numOfOnline, setNumOfOnline] = useState(0);
+  const [randomUserInfoList, setRandomUserInfoList] = useState<IUser[]>([]);
 
   // 获取在线人数 & 随机已注册用户信息
-  // useEffect(() => {
-  //   getNumOfOnline()
-  //     .then(res => {
-  //       // setNumOfOnline(res);
-  //     })
-  //     .catch(res => console.log(res));
-  // }, []);
+  useEffect(() => {
+    setInterval(
+      () =>
+        getNumOfOnline()
+          .then(res => setNumOfOnline(res))
+          .catch(res => console.log(res)),
+      2000,
+    );
+    getRandomUserInfo(20)
+      .then(res => setRandomUserInfoList(res))
+      .catch(res => console.log(res));
+  }, []);
 
   // 匹配成功直接跳转
   useEffect(() => {
@@ -36,31 +43,28 @@ const HomeScreen = () => {
       <Box
         bg={{
           linearGradient: {
-            colors: ['pink.50', 'light.50'],
+            colors: ['darkBlue.900', 'dark.100'],
             start: [0.5, 0],
             end: [0.5, 1],
           },
         }}
-        _dark={{
-          bg: {
-            linearGradient: {
-              colors: ['darkBlue.900', 'dark.100'],
-              start: [0.5, 0],
-              end: [0.5, 1],
-            },
-          },
-        }}
-        flex={1}
-        justifyContent="space-around">
-        <Center>
-          <SpinPlanet />
+        flex={1}>
+        <Center h="75%">
+          <SpinPlanet userInfoList={randomUserInfoList} />
         </Center>
-        <Center>
+        <Flex
+          h="25%"
+          py={5}
+          align="center"
+          roundedTop={50}
+          bg="light.50"
+          _dark={{bg: 'dark.100'}}>
           <Text>当前{numOfOnline}人在线</Text>
           <Button
             onPress={() => chatStore.toggleState()}
             colorScheme="pink"
             w="60%"
+            mt={2}
             rounded={20}>
             <HStack space={2}>
               {chatStore.state === ChatStateType.MATCHING && (
@@ -73,7 +77,7 @@ const HomeScreen = () => {
               </Text>
             </HStack>
           </Button>
-        </Center>
+        </Flex>
       </Box>
     </PageContainer>
   );

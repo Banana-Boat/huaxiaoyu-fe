@@ -1,18 +1,35 @@
-import {Box, Flex, Text, View} from 'native-base';
-import {useEffect, useRef} from 'react';
-import {Animated, Dimensions} from 'react-native';
+import {Avatar, Box, Flex, View} from 'native-base';
+import {useEffect, useRef, useState} from 'react';
+import {Animated, Text} from 'react-native';
+import chatStore from '~stores/chat/chatStore';
+import {ChatStateType} from '~stores/chat/types';
+import {IUser, SexType} from '~stores/user/types';
+import {
+  avatarPositionList,
+  colorOfPlanet,
+  colorOfRing1,
+  colorOfRing2,
+  planetWidth,
+  ring2Width,
+  ringWidth,
+  starPositionList,
+} from './constants';
+import {getRandomIndex} from './utils';
 
-const {width: screenWidth} = Dimensions.get('window');
-const planetWidth = screenWidth * 0.3;
-const ringWidth = screenWidth * 0.45;
-const ring2Width = screenWidth * 0.4;
-const colorOfPlanet = '#E75582';
-const colorOfRing1 = '#EC90AD';
-const colorOfRing2 = '#F5C6D6';
+interface IProps {
+  userInfoList: IUser[];
+}
 
-const SpinPlanet = () => {
+const SpinPlanet: React.FC<IProps> = ({userInfoList}) => {
   const ringRotateAnim = useRef(new Animated.Value(0)).current;
   const planetRotateAnim = useRef(new Animated.Value(0)).current;
+  const avatar1OffsetAnim = useRef(new Animated.Value(0)).current;
+  const avatar1OpacityAnim = useRef(new Animated.Value(0)).current;
+  const avatar2OffsetAnim = useRef(new Animated.Value(0)).current;
+  const avatar2OpacityAnim = useRef(new Animated.Value(0)).current;
+
+  const [timer, setTimer] = useState<NodeJS.Timer>();
+  const [randomIndexList, setRandomIndexList] = useState<number[]>([]);
 
   useEffect(() => {
     Animated.loop(
@@ -39,8 +56,129 @@ const SpinPlanet = () => {
     ).start();
   }, []);
 
+  useEffect(() => {
+    if (chatStore.state === ChatStateType.MATCHING && userInfoList.length > 0) {
+      setRandomIndexList(getRandomIndex(userInfoList.length, 5));
+      setTimer(
+        setInterval(() => {
+          setRandomIndexList(getRandomIndex(userInfoList.length, 5));
+        }, 3500),
+      );
+
+      Animated.loop(
+        Animated.stagger(500, [
+          Animated.parallel([
+            Animated.sequence([
+              Animated.timing(avatar1OffsetAnim, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+              Animated.timing(avatar1OffsetAnim, {
+                toValue: 0,
+                duration: 2000,
+                useNativeDriver: true,
+              }),
+            ]),
+            Animated.sequence([
+              Animated.timing(avatar1OpacityAnim, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+              Animated.timing(avatar1OpacityAnim, {
+                toValue: 0,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+            ]),
+          ]),
+          Animated.parallel([
+            Animated.sequence([
+              Animated.timing(avatar2OffsetAnim, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+              Animated.timing(avatar2OffsetAnim, {
+                toValue: 0,
+                duration: 2000,
+                useNativeDriver: true,
+              }),
+            ]),
+            Animated.sequence([
+              Animated.timing(avatar2OpacityAnim, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+              Animated.timing(avatar2OpacityAnim, {
+                toValue: 0,
+                duration: 1000,
+                useNativeDriver: true,
+              }),
+            ]),
+          ]),
+        ]),
+      ).start();
+    } else {
+      clearInterval(timer);
+
+      avatar1OffsetAnim.setValue(0);
+      avatar1OpacityAnim.setValue(0);
+      avatar2OffsetAnim.setValue(0);
+      avatar2OpacityAnim.setValue(0);
+    }
+  }, [chatStore.state, userInfoList]);
+
   return (
-    <Flex position="relative" justify="center" align="center">
+    <Flex position="relative" w="100%" h="100%" justify="center" align="center">
+      {/* avatar */}
+      {chatStore.state === ChatStateType.MATCHING &&
+        avatarPositionList.map(([left, top, flag], index) => (
+          <Animated.View
+            key={index}
+            style={{
+              position: 'absolute',
+              left: left,
+              top: top,
+              opacity: flag === 1 ? avatar1OpacityAnim : avatar2OpacityAnim,
+              transform: [
+                {
+                  translateY:
+                    flag === 1
+                      ? avatar1OpacityAnim.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, -20],
+                        })
+                      : avatar2OpacityAnim.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, -15],
+                        }),
+                },
+              ],
+              alignItems: 'center',
+            }}>
+            <Avatar
+              size="md"
+              p={1}
+              mb={1}
+              bg={
+                userInfoList[randomIndexList[index]]?.sex === SexType.FEMALE
+                  ? 'pink.400'
+                  : 'lightBlue.700'
+              }
+              source={
+                userInfoList[randomIndexList[index]]?.headPhoto ??
+                require('~assets/images/avatar2.png')
+              }
+            />
+            <Text style={{color: '#e5e7eb'}}>
+              {userInfoList[randomIndexList[index]]?.nickname}
+            </Text>
+          </Animated.View>
+        ))}
+
       {/* planet */}
       <Animated.View
         style={{
@@ -134,6 +272,18 @@ const SpinPlanet = () => {
           }}
         />
       </Animated.View>
+      {/* star */}
+      {starPositionList.map(([left, top], index) => (
+        <Box
+          key={left + top}
+          bg="orange.50"
+          position="absolute"
+          h={0.8}
+          w={0.8}
+          left={left}
+          top={top}
+        />
+      ))}
     </Flex>
   );
 };

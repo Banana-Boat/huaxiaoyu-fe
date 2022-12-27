@@ -14,7 +14,7 @@ const BottomTab = () => {
     <Tab.Navigator
       initialRouteName="EncounterStack"
       screenOptions={{
-        tabBarActiveTintColor: '#ec4899', // pink.500
+        tabBarActiveTintColor: '#db2777', // pink.600
         tabBarStyle: {
           backgroundColor: colorMode === 'dark' ? '#27272a' : '#f9fafb', // dark.100 / coolGrey.50
           borderTopWidth: 0,
