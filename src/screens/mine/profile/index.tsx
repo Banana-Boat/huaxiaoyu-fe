@@ -162,7 +162,9 @@ const ProfileScreen = () => {
             height: 100,
           }}
           source={
-            userStore.user.headPhoto ?? require('~assets/images/avatar2.png')
+            userStore.user.headPhoto
+              ? {url: userStore.user.headPhoto}
+              : require('~assets/images/avatar2.png')
           }
         />
         <Box

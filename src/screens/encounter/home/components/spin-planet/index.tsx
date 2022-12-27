@@ -83,12 +83,12 @@ const SpinPlanet: React.FC<IProps> = ({userInfoList}) => {
             Animated.sequence([
               Animated.timing(avatar1OpacityAnim, {
                 toValue: 1,
-                duration: 1000,
+                duration: 800,
                 useNativeDriver: true,
               }),
               Animated.timing(avatar1OpacityAnim, {
                 toValue: 0,
-                duration: 1000,
+                duration: 1400,
                 useNativeDriver: true,
               }),
             ]),
@@ -172,7 +172,7 @@ const SpinPlanet: React.FC<IProps> = ({userInfoList}) => {
                 style={{width: 50, height: 50, borderRadius: 50}}
                 source={
                   userInfoList[randomIndexList[index]]?.headPhoto
-                    ? {url: userInfoList[randomIndexList[index]]?.headPhoto}
+                    ? {uri: userInfoList[randomIndexList[index]]?.headPhoto}
                     : require('~assets/images/avatar2.png')
                 }
               />
