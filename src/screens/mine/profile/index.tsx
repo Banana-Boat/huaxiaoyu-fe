@@ -22,6 +22,7 @@ import {useEffect, useState} from 'react';
 import {ColorType} from 'native-base/lib/typescript/components/types';
 import {removeData} from '~utils';
 import userStore from '~stores/user/userStore';
+import {observer} from 'mobx-react-lite';
 
 interface ISection {
   data: IOption[];
@@ -39,29 +40,6 @@ interface IOption {
 const ProfileScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-  /** 计算个人信息完成度 */
-  const [infoCompletation, setInfoCompletation] = useState('0');
-  useEffect(() => {
-    const {user} = userStore;
-    let completedNum = 0,
-      total = 0;
-
-    Object.entries(user).forEach(([key, val]) => {
-      if (
-        key === 'id' ||
-        key === 'username' ||
-        key === 'headPhoto' ||
-        key === 'nickname'
-      )
-        return;
-
-      total++;
-      if (!val) completedNum++;
-    });
-
-    setInfoCompletation(((completedNum / total) * 100).toFixed());
-  }, [userStore]);
 
   /** 选项列表 */
   const {colorMode, toggleColorMode} = useColorMode();
@@ -153,7 +131,7 @@ const ProfileScreen = () => {
           shadow={1}
           _dark={{bg: 'dark.100'}}
           style={{
-            padding: 5,
+            padding: 4,
             position: 'absolute',
             bottom: 0,
             left: 20,
@@ -163,7 +141,7 @@ const ProfileScreen = () => {
           }}
           source={
             userStore.user.headPhoto
-              ? {url: userStore.user.headPhoto}
+              ? {uri: userStore.user.headPhoto}
               : require('~assets/images/avatar2.png')
           }
         />
@@ -201,7 +179,7 @@ const ProfileScreen = () => {
           w="50%">
           <Center>
             <Heading size="md">个人信息</Heading>
-            <Text>{infoCompletation}%</Text>
+            <Text>{userStore.infoCompletation}%</Text>
           </Center>
         </Pressable>
       </HStack>
@@ -255,4 +233,4 @@ const ProfileScreen = () => {
   );
 };
 
-export default ProfileScreen;
+export default observer(ProfileScreen);

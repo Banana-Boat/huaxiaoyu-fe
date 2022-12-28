@@ -77,6 +77,7 @@ PODS:
   - glog (0.3.5)
   - hermes-engine (0.70.6)
   - libevent (2.1.12)
+  - NextLevelSessionExporter (0.4.6)
   - OpenSSL-Universal (1.1.1100)
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -304,6 +305,11 @@ PODS:
   - React-jsinspector (0.70.6)
   - React-logger (0.70.6):
     - glog
+  - react-native-compressor (1.6.1):
+    - NextLevelSessionExporter
+    - React-Core
+  - react-native-image-picker (4.10.3):
+    - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
   - React-perflogger (0.70.6)
@@ -434,6 +440,8 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-compressor (from `../node_modules/react-native-compressor`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -467,6 +475,7 @@ SPEC REPOS:
     - FlipperKit
     - fmt
     - libevent
+    - NextLevelSessionExporter
     - OpenSSL-Universal
     - SocketRocket
     - YogaKit
@@ -516,6 +525,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-compressor:
+    :path: "../node_modules/react-native-compressor"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
@@ -573,6 +586,7 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: 656bf2c4724a3fa708110cbb827acf4561d6aa82
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  NextLevelSessionExporter: 4d8aa5e617f1c709724f2453efe5d4628480f65a
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
   RCTRequired: e1866f61af7049eb3d8e08e8b133abd38bc1ca7a
@@ -589,6 +603,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b4a65947391c658450151275aa406f2b8263178f
   React-jsinspector: 60769e5a0a6d4b32294a2456077f59d0266f9a8b
   React-logger: 1623c216abaa88974afce404dc8f479406bbc3a0
+  react-native-compressor: ebcf8bc36f8e44581a8f831583caee8a27e55a01
+  react-native-image-picker: 60f4246eb5bb7187fc15638a8c1f13abd3820695
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   React-perflogger: 8c79399b0500a30ee8152d0f9f11beae7fc36595
   React-RCTActionSheet: 7316773acabb374642b926c19aef1c115df5c466

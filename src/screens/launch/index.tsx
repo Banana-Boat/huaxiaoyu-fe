@@ -1,4 +1,4 @@
-import {Box, Center, PresenceTransition} from 'native-base';
+import {Center, PresenceTransition} from 'native-base';
 import {Image} from 'react-native';
 import PageContainer from '~components/page-container';
 

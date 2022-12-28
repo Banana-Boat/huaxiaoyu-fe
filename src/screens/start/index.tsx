@@ -1,16 +1,17 @@
-import {Flex, Heading, Pressable, ZStack} from 'native-base';
+import {Flex, Heading, HStack, Icon, ZStack} from 'native-base';
 import {useCallback, useRef, useState} from 'react';
-import {Animated, Dimensions} from 'react-native';
+import {Animated} from 'react-native';
 import PageContainer from '~components/page-container';
 import Login from './components/login';
 import Register from './components/register';
-
-/** Logo相关参数 */
-const {width: screenWidth} = Dimensions.get('window');
-const logoLeftOfLogin = screenWidth * 0.5 - 70;
-const logoLeftOfRegister = 20;
-const logoWidthOfLogin = 140;
-const logoWidthOfRegister = 80;
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import {
+  logoLeftOfLogin,
+  logoWidthOfLogin,
+  logoLeftOfRegister,
+  logoWidthOfRegister,
+  screenWidth,
+} from './constants';
 
 const StartScreen = () => {
   /** 页面状态相关 */
@@ -74,32 +75,36 @@ const StartScreen = () => {
   return (
     <PageContainer>
       <Flex py={2} w="100%" h="100%" justify="space-between">
-        <Pressable onPress={toggleScreenMode}>
-          <Animated.View
+        <Animated.View
+          style={{
+            height: scaleAnim,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Animated.Image
+            source={require('~assets/images/logo.png')}
             style={{
+              position: 'absolute',
+              left: positionXAnim,
+              alignSelf: 'center',
               height: scaleAnim,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Animated.Image
-              source={require('~assets/images/logo.png')}
+              width: scaleAnim,
+              aspectRatio: 1,
+            }}
+          />
+          {screenMode === 'register' && (
+            <Animated.View
               style={{
+                width: screenWidth - logoWidthOfRegister - logoLeftOfRegister,
                 position: 'absolute',
-                left: positionXAnim,
-                alignSelf: 'center',
-                height: scaleAnim,
-                width: scaleAnim,
-                aspectRatio: 1,
-              }}
-            />
-            {screenMode === 'register' && (
-              <Animated.View
-                style={{
-                  position: 'absolute',
-                  left: logoLeftOfRegister + logoWidthOfRegister + 5,
-                  opacity: registerOpacityAnim,
-                }}>
+                left: logoLeftOfRegister + logoWidthOfRegister + 5,
+                opacity: registerOpacityAnim,
+              }}>
+              <HStack
+                alignItems="center"
+                justifyContent="space-between"
+                w="100%">
                 <Heading
                   color="coolGray.800"
                   _dark={{
@@ -109,10 +114,17 @@ const StartScreen = () => {
                   size="xl">
                   注册
                 </Heading>
-              </Animated.View>
-            )}
-          </Animated.View>
-        </Pressable>
+                <Icon
+                  onPress={toggleScreenMode}
+                  as={Ionicon}
+                  name="close"
+                  size="2xl"
+                  mr={8}
+                />
+              </HStack>
+            </Animated.View>
+          )}
+        </Animated.View>
         <ZStack mt={2} flex={1} reversed={screenMode === 'register'}>
           <Animated.View
             style={{

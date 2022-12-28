@@ -10,21 +10,30 @@ import {
   Icon,
   Select,
   Toast,
+  Box,
+  Modal,
+  Text,
+  Pressable,
 } from 'native-base';
 import {memo, useCallback, useState} from 'react';
-import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import InterestSelect from '~components/interest-select';
 import {SexType} from '~stores/user/types';
-import {formatParams} from '~utils';
 import userStore from '~stores/user/userStore';
 import PageContainer from '~components/page-container';
 import {updateUserInfo} from './api';
-
-// 14岁-40岁
-let cur = 0;
-const yearOptionList = Array(26)
-  .fill(0)
-  .map(() => new Date().getFullYear() - 15 - cur++);
+import {yearOptionList} from './constants';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import {Image} from 'react-native';
+import {Image as ImageCompressor} from 'react-native-compressor';
+import {
+  Asset,
+  ImagePickerResponse,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '~routes/router';
 
 interface IFormData {
   password?: string;
@@ -37,6 +46,67 @@ interface IFormData {
 }
 
 const EditInfoScreen = memo(() => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  /** 头像相关 */
+  const [isShowAvatarModal, setIsShowAvatarModal] = useState(false);
+
+  const imagePickerResHandle = useCallback(
+    async (res: ImagePickerResponse, errMsg: string) => {
+      try {
+        if (!res.assets || (res.assets && res.assets.length < 1))
+          throw new Error();
+
+        const compressedBase64 = await ImageCompressor.compress(
+          (res.assets as Asset[])[0].uri as string,
+          {
+            returnableOutputType: 'base64',
+            maxHeight: 256,
+            maxWidth: 256,
+          },
+        );
+
+        if (!compressedBase64) throw new Error('sss');
+
+        // 显示选中的图片需要前缀，提交表单时再删去，需要去掉换行符
+        const headPhoto = `data:image/jpg;base64,${compressedBase64}`.replace(
+          /\n|\r/g,
+          '',
+        );
+        setFormData(data => ({
+          ...data,
+          headPhoto,
+        }));
+        setIsShowAvatarModal(false);
+      } catch {
+        Toast.show({
+          description: errMsg,
+          duration: 2000,
+        });
+      }
+    },
+    [],
+  );
+
+  const photoBtnPressHandle = useCallback(async () => {
+    const res = await launchImageLibrary({
+      mediaType: 'photo',
+      includeExtra: false,
+    });
+
+    imagePickerResHandle(res, '获取图片失败');
+  }, []);
+
+  const cameraBtnPressHandle = useCallback(async () => {
+    const res = await launchCamera({
+      mediaType: 'photo',
+      includeExtra: false,
+    });
+
+    imagePickerResHandle(res, '拍摄失败');
+  }, []);
+
   /** 表单 */
   const [formData, setFormData] = useState<IFormData>({
     sex: userStore.user.sex,
@@ -44,6 +114,7 @@ const EditInfoScreen = memo(() => {
     age: userStore.user.age,
     nickname: userStore.user.nickname,
     phoneNum: userStore.user.phoneNum,
+    password: '',
     headPhoto: userStore.user.headPhoto,
   });
   const [rePassword, setRePassword] = useState('');
@@ -61,15 +132,25 @@ const EditInfoScreen = memo(() => {
   const editBtnPressHandle = useCallback(async () => {
     if (!validate()) return;
 
-    const data = formatParams({
-      username: userStore.user.username,
+    // 提交表单时去除base64的前缀 data:image/jpg;base64,
+    const headPhoto = formData.headPhoto
+      ? formData.headPhoto?.split(',')[1]
+      : '';
+
+    const data = {
       ...formData,
+      headPhoto,
+      username: userStore.user.username,
       interestCodeList: interestCodeList.join(','),
-    });
+    };
+
+    // 若password字段为空，则删去该字段
+    if (!data.password) delete data.password;
 
     try {
       if (await updateUserInfo(data)) {
         Toast.show({description: '修改成功', duration: 2000});
+        navigation.goBack();
       }
     } catch (err) {
       Toast.show({description: '修改失败', duration: 2000});
@@ -84,6 +165,8 @@ const EditInfoScreen = memo(() => {
   const validate = useCallback(() => {
     let res = true;
 
+    console.log(formData.password, rePassword);
+
     if (formData.password !== rePassword) {
       setErrors(errors => ({...errors, password: '两次密码输入不相同'}));
       res = false;
@@ -95,12 +178,62 @@ const EditInfoScreen = memo(() => {
     } else setErrors(errors => ({...errors, phoneNum: ''}));
 
     return res;
-  }, [formData, errors]);
+  }, [formData, errors, rePassword]);
 
   return (
     <PageContainer hasHeader title="个人信息修改">
+      <Modal
+        isOpen={isShowAvatarModal}
+        onClose={() => setIsShowAvatarModal(false)}>
+        <Modal.Content>
+          <Modal.CloseButton />
+          <Modal.Header>请选择获取方式</Modal.Header>
+          <Modal.Body p={6}>
+            <HStack space={12} justifyContent="center">
+              <Pressable alignItems="center" onPress={cameraBtnPressHandle}>
+                <Icon as={Ionicon} name="camera" size="2xl" />
+                <Text>相机</Text>
+              </Pressable>
+              <Pressable alignItems="center" onPress={photoBtnPressHandle}>
+                <Icon as={Ionicon} name="image" size="2xl" />
+                <Text>相册</Text>
+              </Pressable>
+            </HStack>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
+
       <ScrollView px={6} h="80%" mt={4}>
         <VStack alignItems="center" space={4}>
+          <FormControl>
+            <FormControl.Label>头像</FormControl.Label>
+            <Pressable
+              onPress={() => setIsShowAvatarModal(true)}
+              position="relative"
+              alignSelf="center">
+              <Image
+                source={
+                  formData.headPhoto
+                    ? {uri: formData.headPhoto}
+                    : require('~assets/images/avatar2.png')
+                }
+                style={{
+                  width: 100,
+                  height: 100,
+                  borderRadius: 100,
+                }}
+              />
+              <Box
+                position="absolute"
+                right={0}
+                bottom={0}
+                rounded={30}
+                bg="lime.600">
+                <Icon as={Ionicon} name="attach" size="xl" color="white" />
+              </Box>
+            </Pressable>
+          </FormControl>
+
           <FormControl>
             <FormControl.Label>昵称</FormControl.Label>
             <Input
@@ -204,18 +337,14 @@ const EditInfoScreen = memo(() => {
                 <Radio
                   value={SexType.FEMALE}
                   colorScheme="pink"
-                  icon={
-                    <Icon as={IoniconsIcon} name="female-outline" size="lg" />
-                  }>
+                  icon={<Icon as={Ionicon} name="female-outline" size="lg" />}>
                   女
                 </Radio>
                 <Radio
                   value={SexType.MALE}
                   colorScheme="lightBlue"
                   ml={8}
-                  icon={
-                    <Icon as={IoniconsIcon} name="male-outline" size="lg" />
-                  }>
+                  icon={<Icon as={Ionicon} name="male-outline" size="lg" />}>
                   男
                 </Radio>
               </HStack>

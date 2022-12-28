@@ -55,5 +55,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>华小遇需要获取照片的权限</string>
+	<key>NSCameraUsageDescription</key>
+	<string>华小遇需要获取手机相机的权限</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>zh-CN</string>
 </dict>
 </plist>

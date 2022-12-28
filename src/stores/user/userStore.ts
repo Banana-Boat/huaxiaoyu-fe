@@ -4,7 +4,11 @@ import {IInterestDicts, IUser, SexType} from './types';
 
 class UserStore {
   constructor() {
-    makeObservable(this, {user: observable, updateUserInfo: action});
+    makeObservable(this, {
+      user: observable,
+      infoCompletation: observable,
+      updateUserInfo: action,
+    });
   }
 
   user: IUser = {
@@ -14,6 +18,8 @@ class UserStore {
     departmentCode: '0',
     interestCodeList: [],
   };
+
+  infoCompletation: string = '0';
 
   interestDicts: IInterestDicts = {
     sport: [],
@@ -33,6 +39,18 @@ class UserStore {
     this.user.nickname = user.nickname;
     this.user.phoneNum = user.phoneNum;
     this.user.sex = user.sex;
+
+    let completedNum = 0,
+      total = 0;
+
+    Object.entries(this.user).forEach(([key, val]) => {
+      if (key === 'id' || key === 'username' || key === 'nickname') return;
+
+      total++;
+      if (val) completedNum++;
+    });
+
+    this.infoCompletation = ((completedNum / total) * 100).toFixed();
   }
 
   updateInterestDicts(dicts: IInterestDicts) {
