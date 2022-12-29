@@ -2,7 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useCallback, useState} from 'react';
 import {BackHandler} from 'react-native';
-import {IMessage} from 'react-native-gifted-chat';
+import {IMessage, Reply} from 'react-native-gifted-chat';
 import PageContainer from '~components/page-container';
 import {RootStackParamList} from '~routes/router';
 import Infoboard from './components/info-board';
@@ -12,6 +12,8 @@ import chatStore from '~stores/chat/chatStore';
 import {observer} from 'mobx-react-lite';
 import userStore from '~stores/user/userStore';
 import {ITopic} from './types';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 
 const ChatScreen = () => {
   const navigation =
@@ -51,8 +53,23 @@ const ChatScreen = () => {
 
   /** 对话相关 */
   const onSend = useCallback((messageList: IMessage[]) => {
-    chatStore.addMessage(messageList);
-    chatStore.scancelMessage(messageList[0]);
+    chatStore.addMessageSelf(messageList[0]);
+    chatStore.sendMessage(messageList[0]);
+  }, []);
+
+  const onQuickReply = useCallback((replies: Reply[]) => {
+    const message = {
+      _id: uuidv4(),
+      text: replies[0].value,
+      createdAt: new Date(),
+      user: {
+        _id: userStore.user.id,
+        avatar:
+          userStore.user.headPhoto ?? require('~assets/images/avatar2.png'),
+      },
+    };
+    chatStore.sendMessage(message);
+    chatStore.addMessageSelf(message);
   }, []);
 
   return (
@@ -72,6 +89,7 @@ const ChatScreen = () => {
       <MyGiftedChat
         messages={chatStore.messageList}
         onSend={onSend}
+        onQuickReply={onQuickReply}
         user={{
           _id: userStore.user.id,
           avatar:

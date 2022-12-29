@@ -75,16 +75,24 @@ export class ChatSocket {
           case 'message':
             const _data = data as IDataOfMessageEvent;
 
-            const {isCanceled, message} = _data;
+            const {isCanceled, message, isTopic} = _data;
 
             if (isCanceled) {
-              chatStore.addMessage([{...cancelMessage}]);
+              // cancel类型消息
+              chatStore.addMessageSelf({...cancelMessage});
+            } else if (isTopic) {
+              // 推荐话题
+              if (message) {
+                message.user.avatar = require('~assets/images/logo.png');
+                chatStore.addMessageSelf(message);
+              }
             } else {
+              // 用户消息
               if (message) {
                 message.user.avatar =
                   chatStore.opponent?.headPhoto ??
                   require('~assets/images/avatar2.png');
-                chatStore.addMessage([message]);
+                chatStore.addMessageSelf(message);
               }
             }
 
@@ -134,7 +142,7 @@ export class ChatSocket {
       );
   }
 
-  scancelMessage(data: IDataOfMessageEvent) {
+  sendMessage(data: IDataOfMessageEvent) {
     if (this.socket.readyState === 1)
       this.socket.send(
         JSON.stringify({

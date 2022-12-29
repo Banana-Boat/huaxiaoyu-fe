@@ -89,7 +89,7 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
         {isRecommend ? (
           <>
             <HStack justifyContent="space-between">
-              <HStack>
+              <HStack alignItems="center">
                 <Icon
                   as={Ionicon}
                   name="bulb-outline"
@@ -99,12 +99,15 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                 <Heading ml={2} size="sm">
                   推荐话题
                 </Heading>
+                <Text fontSize={12}>（选择一个打开话匣子吧）</Text>
               </HStack>
               <Icon as={Ionicon} name="refresh-outline" size="md" />
             </HStack>
             <VStack space={1} mt={3} alignSelf="center" w="80%">
               {topicList.map((item, index) => (
-                <Pressable key={index}>
+                <Pressable
+                  key={index}
+                  onPress={() => chatStore.sendTopicMessage(item)}>
                   <Text>
                     {index + 1}. {item.title}
                   </Text>

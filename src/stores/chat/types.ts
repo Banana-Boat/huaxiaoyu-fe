@@ -32,4 +32,5 @@ export interface IDataOfMessageEvent {
   sendId: number;
   message: IMessage | null;
   isCanceled: boolean;
+  isTopic: boolean;
 }

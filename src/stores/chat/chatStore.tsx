@@ -1,10 +1,13 @@
 import {action, makeObservable, observable} from 'mobx';
 import {Toast} from 'native-base';
 import {GiftedChat, IMessage} from 'react-native-gifted-chat';
+import {ITopic} from '~screens/encounter/chat/types';
 import userStore from '~stores/user/userStore';
 import {ChatSocket} from './chatSocket';
 import {startMessage} from './constants';
 import {ChatStateType, IOpponent} from './types';
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 
 class ChatStore {
   constructor() {
@@ -13,7 +16,7 @@ class ChatStore {
       opponent: observable,
       messageList: observable,
       updateOpponent: action,
-      addMessage: action,
+      addMessageSelf: action,
       createSocket: action,
       updateState: action,
       toggleState: action,
@@ -28,7 +31,7 @@ class ChatStore {
   timer?: NodeJS.Timer; // 处理接收不到start-chat消息问题，每3秒发送心跳包
 
   finishChat() {
-    this.scancelMessage(null, true);
+    this.sendMessage(null, true);
     setTimeout(() => {
       this.destroySocket();
     }, 5000);
@@ -74,18 +77,48 @@ class ChatStore {
   }
 
   /** 消息相关 */
-  addMessage(messageList: IMessage[]) {
-    this.messageList = GiftedChat.append(this.messageList, messageList);
+  addMessageSelf(message: IMessage) {
+    this.messageList = GiftedChat.append(this.messageList, [message]);
   }
   resetMessageList() {
     this.messageList = [{...startMessage}];
   }
-  scancelMessage(message: IMessage | null, isCanceled: boolean = false) {
-    this.socket?.scancelMessage({
+  sendMessage(message: IMessage | null, isCanceled: boolean = false) {
+    this.socket?.sendMessage({
       receiveId: this.opponent?.id as number,
       sendId: userStore.user.id,
-      message,
       isCanceled,
+      isTopic: false,
+      message,
+    });
+  }
+  sendTopicMessage(topic: ITopic) {
+    const message: IMessage = {
+      _id: uuidv4(),
+      text: topic.content,
+      createdAt: new Date(),
+      user: {
+        _id: 0,
+        avatar: require('~assets/images/logo.png'),
+      },
+      quickReplies: {
+        type: 'radio',
+        keepIt: true,
+        values: topic.optionList.map(option => ({
+          title: option,
+          value: option,
+        })),
+      },
+    };
+
+    this.addMessageSelf(message);
+
+    this.socket?.sendMessage({
+      receiveId: this.opponent?.id as number,
+      sendId: userStore.user.id,
+      isCanceled: false,
+      isTopic: true,
+      message,
     });
   }
 }
