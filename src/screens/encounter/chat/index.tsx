@@ -52,7 +52,7 @@ const ChatScreen = () => {
   /** 对话相关 */
   const onSend = useCallback((messageList: IMessage[]) => {
     chatStore.addMessage(messageList);
-    chatStore.sendMessage(messageList[0]);
+    chatStore.scancelMessage(messageList[0]);
   }, []);
 
   return (

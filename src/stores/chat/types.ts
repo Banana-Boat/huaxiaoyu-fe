@@ -27,7 +27,9 @@ export interface IDataOfStartChatEvent {
   };
 }
 
-export interface IDataOfMessageEvent extends IMessage {
+export interface IDataOfMessageEvent {
   receiveId: number;
   sendId: number;
+  message: IMessage | null;
+  isCanceled: boolean;
 }

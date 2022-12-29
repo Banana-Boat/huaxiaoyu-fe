@@ -1,7 +1,9 @@
 import {Toast} from 'native-base';
 import {Platform} from 'react-native';
+import {IMessage} from 'react-native-gifted-chat';
 import userStore from '~stores/user/userStore';
 import chatStore from './chatStore';
+import {cancelMessage} from './constants';
 import {
   ChatStateType,
   IDataOfMessageEvent,
@@ -73,11 +75,18 @@ export class ChatSocket {
           case 'message':
             const _data = data as IDataOfMessageEvent;
 
-            const {receiveId, sendId, ...restData} = _data;
-            restData.user.avatar =
-              chatStore.opponent?.headPhoto ??
-              require('~assets/images/avatar2.png');
-            chatStore.addMessage([restData]);
+            const {isCanceled, message} = _data;
+
+            if (isCanceled) {
+              chatStore.addMessage([{...cancelMessage}]);
+            } else {
+              if (message) {
+                message.user.avatar =
+                  chatStore.opponent?.headPhoto ??
+                  require('~assets/images/avatar2.png');
+                chatStore.addMessage([message]);
+              }
+            }
 
             break;
         }
@@ -125,13 +134,13 @@ export class ChatSocket {
       );
   }
 
-  sendMessage(message: IDataOfMessageEvent) {
+  scancelMessage(data: IDataOfMessageEvent) {
     if (this.socket.readyState === 1)
       this.socket.send(
         JSON.stringify({
           event: 'message',
           flag: true,
-          data: message,
+          data: data,
         }),
       );
   }

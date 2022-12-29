@@ -1,9 +1,9 @@
 import {action, makeObservable, observable} from 'mobx';
 import {Toast} from 'native-base';
 import {GiftedChat, IMessage} from 'react-native-gifted-chat';
-import {SexType} from '~stores/user/types';
 import userStore from '~stores/user/userStore';
 import {ChatSocket} from './chatSocket';
+import {startMessage} from './constants';
 import {ChatStateType, IOpponent} from './types';
 
 class ChatStore {
@@ -23,15 +23,18 @@ class ChatStore {
 
   state: ChatStateType = ChatStateType.NONE;
   opponent?: IOpponent = {};
-  messageList?: IMessage[] = [];
+  messageList?: IMessage[] = [{...startMessage}];
   socket?: ChatSocket;
   timer?: NodeJS.Timer; // 处理接收不到start-chat消息问题，每3秒发送心跳包
 
   finishChat() {
-    this.destroySocket();
+    this.scancelMessage(null, true);
+    setTimeout(() => {
+      this.destroySocket();
+    }, 5000);
     this.updateOpponent({});
     this.updateState(ChatStateType.NONE);
-    this.clearMessageList();
+    this.resetMessageList();
   }
 
   /** socket相关 */
@@ -74,14 +77,15 @@ class ChatStore {
   addMessage(messageList: IMessage[]) {
     this.messageList = GiftedChat.append(this.messageList, messageList);
   }
-  clearMessageList() {
-    this.messageList = [];
+  resetMessageList() {
+    this.messageList = [{...startMessage}];
   }
-  sendMessage(message: IMessage) {
-    this.socket?.sendMessage({
+  scancelMessage(message: IMessage | null, isCanceled: boolean = false) {
+    this.socket?.scancelMessage({
       receiveId: this.opponent?.id as number,
       sendId: userStore.user.id,
-      ...message,
+      message,
+      isCanceled,
     });
   }
 }

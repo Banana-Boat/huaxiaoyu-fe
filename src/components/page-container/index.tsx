@@ -1,6 +1,6 @@
 import {PropsWithChildren} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Box, Flex, Icon, Text} from 'native-base';
+import {Box, Flex, Icon, Pressable, Text} from 'native-base';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 /**
@@ -46,14 +46,15 @@ const PageContainer: React.FC<IProps> = ({
         shadow={2}
         bg="coolGray.50"
         _dark={{bg: 'dark.100'}}>
-        <Icon
-          onPress={leftAction ?? navigation.goBack}
-          as={Ionicon}
-          name="chevron-back"
-          size="xl"
-          color="dark.100"
-          _dark={{color: 'coolGray.200'}}
-        />
+        <Pressable onPress={leftAction ?? navigation.goBack}>
+          <Icon
+            as={Ionicon}
+            name="chevron-back"
+            size="xl"
+            color="dark.100"
+            _dark={{color: 'coolGray.200'}}
+          />
+        </Pressable>
         <Text fontSize="md" color="dark.100" _dark={{color: 'coolGray.50'}}>
           {title}
         </Text>
