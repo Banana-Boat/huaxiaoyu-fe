@@ -13,6 +13,7 @@ export interface IOpponent {
   nickname?: string;
   interestCodeList?: string[];
   departmentCode?: string;
+  headPhoto?: string;
 }
 
 export interface IDataOfStartChatEvent {
@@ -20,8 +21,9 @@ export interface IDataOfStartChatEvent {
     sex: SexType;
     departmentCode: string;
     nickname: string;
-    interestCodeList: string;
+    interestCodeList?: string;
     id: number;
+    headPhoto?: string;
   };
 }
 

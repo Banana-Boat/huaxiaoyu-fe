@@ -165,8 +165,6 @@ const EditInfoScreen = memo(() => {
   const validate = useCallback(() => {
     let res = true;
 
-    console.log(formData.password, rePassword);
-
     if (formData.password !== rePassword) {
       setErrors(errors => ({...errors, password: '两次密码输入不相同'}));
       res = false;

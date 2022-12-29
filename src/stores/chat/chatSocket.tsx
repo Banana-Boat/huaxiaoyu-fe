@@ -36,7 +36,7 @@ export class ChatSocket {
       });
 
       this.socket.addEventListener('message', msg => {
-        console.log(msg.data);
+        console.log(Platform.OS, msg.data);
         const {data, flag, event} = JSON.parse(msg.data);
 
         if (!flag)
@@ -47,14 +47,23 @@ export class ChatSocket {
             const {opponent} = data as IDataOfStartChatEvent;
 
             // 更新全局状态（聊天对象信息 & chat状态）
-            const {id, departmentCode, nickname, sex, interestCodeList} =
-              opponent;
+            const {
+              id,
+              departmentCode,
+              nickname,
+              sex,
+              interestCodeList,
+              headPhoto,
+            } = opponent;
             chatStore.updateOpponent({
               id,
               departmentCode,
               sex,
               nickname,
-              interestCodeList: interestCodeList.split(','),
+              interestCodeList: interestCodeList
+                ? interestCodeList.split(',')
+                : [],
+              headPhoto,
             });
             chatStore.updateState(ChatStateType.CHATTING);
             clearInterval(chatStore.timer);
@@ -63,11 +72,12 @@ export class ChatSocket {
 
           case 'message':
             const _data = data as IDataOfMessageEvent;
-            console.log(_data);
 
             const {receiveId, sendId, ...restData} = _data;
-            restData.user.avatar = require('~assets/images/avatar2.png'); // 待删除
-            chatStore.updateMessageList([restData]);
+            restData.user.avatar =
+              chatStore.opponent?.headPhoto ??
+              require('~assets/images/avatar2.png');
+            chatStore.addMessage([restData]);
 
             break;
         }
@@ -116,7 +126,6 @@ export class ChatSocket {
   }
 
   sendMessage(message: IDataOfMessageEvent) {
-    console.log(message);
     if (this.socket.readyState === 1)
       this.socket.send(
         JSON.stringify({

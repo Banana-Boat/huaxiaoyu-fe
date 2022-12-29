@@ -59,7 +59,7 @@ const HomeScreen = () => {
           roundedTop={50}
           bg="light.50"
           _dark={{bg: 'dark.100'}}>
-          <Text>当前{numOfOnline}人在线</Text>
+          <Text>当前 {numOfOnline} 人正在匹配</Text>
           <Button
             onPress={() => chatStore.toggleState()}
             colorScheme="pink"

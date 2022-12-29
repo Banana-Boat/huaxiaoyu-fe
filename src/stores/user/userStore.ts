@@ -60,6 +60,29 @@ class UserStore {
   updateDepartmentDict(dict: DictType) {
     this.departmentDict = dict;
   }
+
+  getDepartmentName(code: string) {
+    return this.departmentDict.find(item => item.code === code)?.name;
+  }
+
+  getInterestNameList(codeList: string[]) {
+    const {entertainment, sport, study} = this.interestDicts;
+    const res: string[] = [];
+
+    codeList.forEach(code => {
+      entertainment.forEach(item => {
+        if (item.code === code) res.push(item.name);
+      });
+      sport.forEach(item => {
+        if (item.code === code) res.push(item.name);
+      });
+      study.forEach(item => {
+        if (item.code === code) res.push(item.name);
+      });
+    });
+
+    return res;
+  }
 }
 
 export default new UserStore();

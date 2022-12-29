@@ -15,7 +15,5 @@ export const getRandomIndex = (total: number, batchSize: number): number[] => {
     }
   }
 
-  // console.log(resList);
-
   return resList;
 };
