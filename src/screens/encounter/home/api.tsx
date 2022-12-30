@@ -14,8 +14,10 @@ export const getNumOfOnline = async () =>
       } else return Promise.reject();
     });
 
-export type GetRandomUserInfoRequest = number;
-export type GetRandomUserInfoResponse = IUser[]; // 待改！！！
+type GetRandomUserInfoRequest = number;
+interface GetRandomUserInfoResponse {
+  userList: IUser[];
+}
 
 export const getRandomUserInfo = async (num: GetRandomUserInfoRequest) =>
   axios
@@ -24,6 +26,6 @@ export const getRandomUserInfo = async (num: GetRandomUserInfoRequest) =>
     )
     .then(async res => {
       if (res) {
-        return res;
+        return res.userList;
       } else return Promise.reject();
     });

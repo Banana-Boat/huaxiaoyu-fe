@@ -7,7 +7,16 @@ interface GetRecommendedTopicsRequest {
   num: number;
 }
 
-type GetRecommendedTopicsResponse = ITopic[]; // 待改
+interface _ITopic {
+  type: string;
+  title: string;
+  content: string;
+  optionList?: string;
+}
+
+interface GetRecommendedTopicsResponse {
+  topicList: _ITopic[];
+}
 
 export const getRecommendedTopics = async (
   params: GetRecommendedTopicsRequest,
@@ -18,6 +27,10 @@ export const getRecommendedTopics = async (
     )
     .then(async res => {
       if (res) {
-        return res;
+        const topicList = JSON.parse(JSON.stringify(res.topicList));
+        for (let item of topicList) {
+          if (item.optionList) item.optionList = item.optionList.split('/');
+        }
+        return topicList;
       } else return Promise.reject();
     });

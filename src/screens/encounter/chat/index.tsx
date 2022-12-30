@@ -44,15 +44,7 @@ const ChatScreen = () => {
   }, [navigation]);
 
   /** 推荐话题相关 */
-  const [topicList, setTopicList] = useState<ITopic[]>([
-    {
-      type: '体育',
-      title: '2022世界杯冠军出炉，阿根廷力捧大力神杯',
-      content:
-        '阿根廷终于战胜法国，拿到了2022卡塔尔世界杯冠军。你们觉得今年世界杯结果如何？',
-      optionList: ['阿根廷实至名归', '幸运女神降临阿根廷'],
-    },
-  ]);
+  const [topicList, setTopicList] = useState<ITopic[]>([]);
   useEffect(() => {
     if (chatStore.opponent?.id && userStore.user.id)
       getRecommendedTopics({
@@ -60,7 +52,7 @@ const ChatScreen = () => {
         sendId: userStore.user.id,
         num: topicBatchSize * 3,
       }).then(res => {
-        // setTopicList(res);
+        setTopicList(res);
       });
   }, []);
 

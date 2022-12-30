@@ -59,7 +59,7 @@ const HomeScreen = () => {
           roundedTop={50}
           bg="light.50"
           _dark={{bg: 'dark.100'}}>
-          <Text>当前 {numOfOnline} 人正在匹配</Text>
+          <Text>当前 {numOfOnline} 人正在探索宇宙</Text>
           <Button
             onPress={() => chatStore.toggleState()}
             colorScheme="pink"
@@ -72,8 +72,8 @@ const HomeScreen = () => {
               )}
               <Text color="coolGray.200">
                 {chatStore.state === ChatStateType.MATCHING
-                  ? '取消匹配'
-                  : '开始匹配'}
+                  ? '取消航程'
+                  : '开启星际旅行'}
               </Text>
             </HStack>
           </Button>

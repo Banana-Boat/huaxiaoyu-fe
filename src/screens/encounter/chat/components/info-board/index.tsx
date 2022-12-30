@@ -115,8 +115,8 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                 <Icon as={Ionicon} name="refresh-outline" size="md" />
               </Pressable>
             </HStack>
-            <VStack space="0.5" mt="2" alignSelf="center">
-              <ScrollView w="85%" mb={4}>
+            <VStack space="0.5" mt="2" px={5}>
+              <ScrollView mb={4}>
                 {topicList
                   .slice(
                     topicBatchSize * batchIdx,
@@ -126,7 +126,7 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                     <Pressable
                       key={index}
                       onPress={() => chatStore.sendTopicMessage(item)}>
-                      <HStack alignItems="center">
+                      <HStack>
                         <Button
                           w="auto"
                           isPressed={false}
