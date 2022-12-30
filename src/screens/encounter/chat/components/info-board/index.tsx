@@ -6,13 +6,15 @@ import {
   HStack,
   Icon,
   Pressable,
+  ScrollView,
   Text,
+  Toast,
   VStack,
 } from 'native-base';
 import {Animated} from 'react-native';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {boardHeight, ColorDict} from './types';
+import {boardHeight, ColorDict, topicBatchSize} from './types';
 import userStore from '~stores/user/userStore';
 import chatStore from '~stores/chat/chatStore';
 import {SexType} from '~stores/user/types';
@@ -25,6 +27,14 @@ interface IProps {
 
 const InfoBoard: React.FC<IProps> = ({topicList}) => {
   const [isRecommend, setIsRecommend] = useState(false); // 展板信息类型（推荐话题 or 聊天者信息）
+
+  /** 推荐话题相关 */
+  const [batchIdx, setBatchIdx] = useState(0);
+  const refreshTopicBatch = useCallback(() => {
+    setBatchIdx(
+      idx => (idx + 1) % Math.ceil(topicList.length / topicBatchSize),
+    );
+  }, [topicList]);
 
   /** 聊天对象信息相关 */
   const [department, setDepartment] = useState('');
@@ -99,20 +109,44 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                 <Heading ml={2} size="sm">
                   推荐话题
                 </Heading>
-                <Text fontSize={12}>（选择一个打开话匣子吧）</Text>
+                <Text fontSize={12}>（点击一个话题打开话匣子吧）</Text>
               </HStack>
-              <Icon as={Ionicon} name="refresh-outline" size="md" />
+              <Pressable onPress={refreshTopicBatch}>
+                <Icon as={Ionicon} name="refresh-outline" size="md" />
+              </Pressable>
             </HStack>
-            <VStack space={1} mt={3} alignSelf="center" w="80%">
-              {topicList.map((item, index) => (
-                <Pressable
-                  key={index}
-                  onPress={() => chatStore.sendTopicMessage(item)}>
-                  <Text>
-                    {index + 1}. {item.title}
-                  </Text>
-                </Pressable>
-              ))}
+            <VStack space="0.5" mt="2" alignSelf="center">
+              <ScrollView w="85%" mb={4}>
+                {topicList
+                  .slice(
+                    topicBatchSize * batchIdx,
+                    topicBatchSize * (batchIdx + 1),
+                  )
+                  .map((item, index) => (
+                    <Pressable
+                      key={index}
+                      onPress={() => chatStore.sendTopicMessage(item)}>
+                      <HStack alignItems="center">
+                        <Text>
+                          {index + 1}. {item.title}
+                        </Text>
+                        <Button
+                          isPressed={false}
+                          colorScheme={ColorDict[index]}
+                          variant="outline"
+                          rounded={5}
+                          h={5}
+                          px={1}
+                          py={0}
+                          mx={1}
+                          size="xs"
+                          w="auto">
+                          {item.type}
+                        </Button>
+                      </HStack>
+                    </Pressable>
+                  ))}
+              </ScrollView>
             </VStack>
           </>
         ) : (
@@ -139,6 +173,9 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                 />
               </Avatar.Group>
               <Button
+                onPress={() =>
+                  Toast.show({description: '功能建设中...', duration: 2000})
+                }
                 leftIcon={<Icon as={Ionicon} name="heart" />}
                 variant="solid"
                 height={9}
@@ -173,7 +210,7 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                     key={name}
                     colorScheme={ColorDict[index]}
                     variant="outline"
-                    rounded={10}
+                    rounded={5}
                     px={1}
                     mx={1}
                     size="xs"

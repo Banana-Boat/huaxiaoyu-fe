@@ -34,7 +34,7 @@ class ChatStore {
     this.sendMessage(null, true);
     setTimeout(() => {
       this.destroySocket();
-    }, 5000);
+    }, 3000);
     this.updateOpponent({});
     this.updateState(ChatStateType.NONE);
     this.resetMessageList();
@@ -101,14 +101,16 @@ class ChatStore {
         _id: 0,
         avatar: require('~assets/images/logo.png'),
       },
-      quickReplies: {
-        type: 'radio',
-        keepIt: true,
-        values: topic.optionList.map(option => ({
-          title: option,
-          value: option,
-        })),
-      },
+      quickReplies: topic.optionList
+        ? {
+            type: 'radio',
+            keepIt: true,
+            values: topic.optionList.map(option => ({
+              title: option,
+              value: option,
+            })),
+          }
+        : undefined,
     };
 
     this.addMessageSelf(message);

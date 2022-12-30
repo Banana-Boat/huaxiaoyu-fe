@@ -1,6 +1,6 @@
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {BackHandler} from 'react-native';
 import {IMessage, Reply} from 'react-native-gifted-chat';
 import PageContainer from '~components/page-container';
@@ -14,6 +14,8 @@ import userStore from '~stores/user/userStore';
 import {ITopic} from './types';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
+import {getRecommendedTopics} from './api';
+import {topicBatchSize} from './components/info-board/types';
 
 const ChatScreen = () => {
   const navigation =
@@ -45,11 +47,22 @@ const ChatScreen = () => {
   const [topicList, setTopicList] = useState<ITopic[]>([
     {
       type: '体育',
-      title: '世界杯冠军出炉',
-      content: '你觉得今年世界杯冠军如何',
-      optionList: ['实至名归', '运气好罢了'],
+      title: '2022世界杯冠军出炉，阿根廷力捧大力神杯',
+      content:
+        '阿根廷终于战胜法国，拿到了2022卡塔尔世界杯冠军。你们觉得今年世界杯结果如何？',
+      optionList: ['阿根廷实至名归', '幸运女神降临阿根廷'],
     },
   ]);
+  useEffect(() => {
+    if (chatStore.opponent?.id && userStore.user.id)
+      getRecommendedTopics({
+        receiveId: chatStore.opponent?.id,
+        sendId: userStore.user.id,
+        num: topicBatchSize * 3,
+      }).then(res => {
+        // setTopicList(res);
+      });
+  }, []);
 
   /** 对话相关 */
   const onSend = useCallback((messageList: IMessage[]) => {

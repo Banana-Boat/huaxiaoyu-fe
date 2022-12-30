@@ -9,11 +9,13 @@ import {
   HStack,
   Icon,
   Image,
+  Modal,
   Pressable,
   SectionList,
   Text,
   Toast,
   useColorMode,
+  VStack,
 } from 'native-base';
 import PageContainer from '~components/page-container';
 import {RootStackParamList} from '~routes/router';
@@ -44,6 +46,7 @@ const ProfileScreen = () => {
   /** 选项列表 */
   const {colorMode, toggleColorMode} = useColorMode();
   const [optionList, setOptionList] = useState<ISection[]>([]);
+  const [isShowAbout, setIsShowAbout] = useState(false);
   useEffect(() => {
     setOptionList([
       {
@@ -77,8 +80,7 @@ const ProfileScreen = () => {
             name: '关于我们',
             icon: 'body',
             hasArrow: true,
-            action: () =>
-              Toast.show({description: '功能建设中...', duration: 2000}),
+            action: () => setIsShowAbout(true),
           },
         ],
       },
@@ -170,7 +172,7 @@ const ProfileScreen = () => {
           w="50%">
           <Center>
             <Heading size="md">朋友</Heading>
-            <Text>100</Text>
+            <Text>0</Text>
           </Center>
         </Pressable>
         <Divider orientation="vertical" />
@@ -229,6 +231,20 @@ const ProfileScreen = () => {
           )}
         />
       </Box>
+
+      <Modal isOpen={isShowAbout} onClose={() => setIsShowAbout(false)}>
+        <Modal.Content>
+          <Modal.CloseButton />
+          <Modal.Header>华小遇开发团队</Modal.Header>
+          <Modal.Body>
+            <VStack>
+              <Text>后端开发———刘鑫</Text>
+              <Text>前端开发 & 美工设计———向天歌</Text>
+              <Text>产品策划———王华旦、刘沣文、陶永新</Text>
+            </VStack>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal>
     </PageContainer>
   );
 };
