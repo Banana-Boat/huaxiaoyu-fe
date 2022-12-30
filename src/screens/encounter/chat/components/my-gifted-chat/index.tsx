@@ -111,7 +111,7 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
       quickReplyStyle={{
         minHeight: 38,
         paddingHorizontal: 8,
-        marginTop: 8,
+        marginVertical: 8,
       }}
       renderAvatar={props => (
         <Avatar

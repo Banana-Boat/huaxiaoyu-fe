@@ -1,6 +1,7 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChatScreen from '~screens/encounter/chat';
 import EditInfoScreen from '~screens/mine/edit-info';
+import FriendScreen from '~screens/mine/friend';
 import StartScreen from '~screens/start';
 import BottomTab from './bottomTab';
 
@@ -12,6 +13,7 @@ export type RootStackParamList = {
   StartScreen: undefined;
   Main: undefined;
   EditInfoScreen: undefined;
+  FriendScreen: undefined;
   ChatScreen: undefined;
 };
 
@@ -33,6 +35,7 @@ const Router: React.FC<IProps> = ({isNeedLogin}) => {
         options={{animation: 'fade'}}
       />
       <Stack.Screen name="EditInfoScreen" component={EditInfoScreen} />
+      <Stack.Screen name="FriendScreen" component={FriendScreen} />
       <Stack.Screen
         name="ChatScreen"
         component={ChatScreen}

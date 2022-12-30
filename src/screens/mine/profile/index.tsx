@@ -133,7 +133,7 @@ const ProfileScreen = () => {
           shadow={1}
           _dark={{bg: 'dark.100'}}
           style={{
-            padding: 4,
+            padding: 3,
             position: 'absolute',
             bottom: 0,
             left: 20,
@@ -165,11 +165,7 @@ const ProfileScreen = () => {
       </Box>
 
       <HStack mt={3} justifyContent="space-around">
-        <Pressable
-          onPress={() =>
-            Toast.show({description: '功能建设中...', duration: 2000})
-          }
-          w="50%">
+        <Pressable onPress={() => navigation.navigate('FriendScreen')} w="50%">
           <Center>
             <Heading size="md">朋友</Heading>
             <Text>0</Text>

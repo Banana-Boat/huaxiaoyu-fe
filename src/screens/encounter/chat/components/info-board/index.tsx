@@ -127,10 +127,8 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                       key={index}
                       onPress={() => chatStore.sendTopicMessage(item)}>
                       <HStack alignItems="center">
-                        <Text>
-                          {index + 1}. {item.title}
-                        </Text>
                         <Button
+                          w="auto"
                           isPressed={false}
                           colorScheme={ColorDict[index]}
                           variant="outline"
@@ -138,11 +136,11 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                           h={5}
                           px={1}
                           py={0}
-                          mx={1}
-                          size="xs"
-                          w="auto">
+                          mr={2}
+                          size="xs">
                           {item.type}
                         </Button>
+                        <Text>{item.title}</Text>
                       </HStack>
                     </Pressable>
                   ))}
@@ -211,7 +209,9 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                     colorScheme={ColorDict[index]}
                     variant="outline"
                     rounded={5}
+                    h={5}
                     px={1}
+                    py={0}
                     mx={1}
                     size="xs"
                     w="auto">
