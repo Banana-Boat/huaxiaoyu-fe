@@ -1,6 +1,6 @@
-import {Avatar, Box, Flex, View} from 'native-base';
+import {Box, Flex, Icon, Pressable, View} from 'native-base';
 import {useEffect, useRef, useState} from 'react';
-import {Animated, Image, Text} from 'react-native';
+import {Animated, Easing, Image, Text} from 'react-native';
 import chatStore from '~stores/chat/chatStore';
 import {ChatStateType} from '~stores/chat/types';
 import {IUser, SexType} from '~stores/user/types';
