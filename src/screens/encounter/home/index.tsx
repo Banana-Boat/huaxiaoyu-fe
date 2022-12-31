@@ -78,6 +78,13 @@ const HomeScreen = () => {
     });
   }, []);
 
+  // 注销登录时，结束音乐
+  useEffect(() => {
+    return () => {
+      music?.release();
+    };
+  }, [music]);
+
   /** 获取在线人数 & 随机已注册用户信息 */
   const [numOfOnline, setNumOfOnline] = useState(0);
   const [randomUserInfoList, setRandomUserInfoList] = useState<IUser[]>([]);
