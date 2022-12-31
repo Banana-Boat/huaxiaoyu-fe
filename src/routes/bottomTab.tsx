@@ -1,9 +1,8 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import IoniconsIcon from 'react-native-vector-icons/Ionicons';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 import {Icon, useColorMode} from 'native-base';
 import ProfileScreen from '~screens/mine/profile';
 import HomeScreen from '~screens/encounter/home';
-IoniconsIcon.loadFont();
 
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +26,7 @@ const BottomTab = () => {
           tabBarLabel: '遇见',
           headerShown: false,
           tabBarIcon: ({size, color}) => (
-            <IoniconsIcon name="planet" size={size} color={color} />
+            <Icon as={Ionicon} name="planet" size={size} color={color} />
           ),
         }}
       />
@@ -38,7 +37,7 @@ const BottomTab = () => {
           tabBarLabel: '我的',
           headerShown: false,
           tabBarIcon: ({size, color}) => (
-            <Icon as={IoniconsIcon} name="person" size={size} color={color} />
+            <Icon as={Ionicon} name="person" size={size} color={color} />
           ),
         }}
       />

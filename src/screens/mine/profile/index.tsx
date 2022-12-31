@@ -144,7 +144,7 @@ const ProfileScreen = () => {
           source={
             userStore.user.headPhoto
               ? {uri: userStore.user.headPhoto}
-              : require('~assets/images/avatar2.png')
+              : require('~assets/images/avatar.png')
           }
         />
         <Box

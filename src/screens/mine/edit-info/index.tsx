@@ -213,7 +213,7 @@ const EditInfoScreen = memo(() => {
                 source={
                   formData.headPhoto
                     ? {uri: formData.headPhoto}
-                    : require('~assets/images/avatar2.png')
+                    : require('~assets/images/avatar.png')
                 }
                 style={{
                   width: 100,

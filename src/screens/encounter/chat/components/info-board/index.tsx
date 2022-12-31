@@ -159,14 +159,14 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                   source={
                     chatStore.opponent?.headPhoto
                       ? {uri: chatStore.opponent.headPhoto}
-                      : require('~assets/images/avatar2.png')
+                      : require('~assets/images/avatar.png')
                   }
                 />
                 <Avatar
                   source={
                     userStore.user.headPhoto
                       ? {uri: userStore.user.headPhoto}
-                      : require('~assets/images/avatar2.png')
+                      : require('~assets/images/avatar.png')
                   }
                 />
               </Avatar.Group>

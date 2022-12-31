@@ -1,6 +1,6 @@
-import {Box, Flex, Icon, Pressable, View} from 'native-base';
+import {Box, Flex, View} from 'native-base';
 import {useEffect, useRef, useState} from 'react';
-import {Animated, Easing, Image, Text} from 'react-native';
+import {Animated, Image, Text} from 'react-native';
 import chatStore from '~stores/chat/chatStore';
 import {ChatStateType} from '~stores/chat/types';
 import {IUser, SexType} from '~stores/user/types';
@@ -173,7 +173,7 @@ const SpinPlanet: React.FC<IProps> = ({userInfoList}) => {
                 source={
                   userInfoList[randomIndexList[index]]?.headPhoto
                     ? {uri: userInfoList[randomIndexList[index]]?.headPhoto}
-                    : require('~assets/images/avatar2.png')
+                    : require('~assets/images/avatar.png')
                 }
               />
             </Box>

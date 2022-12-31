@@ -12,9 +12,9 @@ interface IProps extends PropsWithChildren {
   safeAreaTop?: number; // false不起作用，取消顶部空间直接传入0
   safeAreaBottom?: number;
   hasHeader?: boolean; // 是否带header
-  title?: string;
-  leftAction?: () => void;
-  rightAction?: () => void;
+  title?: string; // header中的标题
+  leftAction?: () => void; // 左侧icon点击事件，默认为返回上级
+  rightAction?: () => void; // 右侧icon点击事件
 }
 
 const PageContainer: React.FC<IProps> = ({

@@ -43,7 +43,7 @@ const App = () => {
       .finally(() => setTimeout(() => setIsLaunched(true), 2000));
   }, []);
 
-  /** 获取院系、兴趣字典表 */
+  /** 提前获取院系、兴趣字典表 */
   useEffect(() => {
     try {
       getInterestDicts().then(dicts => userStore.updateInterestDicts(dicts));

@@ -1,6 +1,5 @@
 import {Toast} from 'native-base';
 import {Platform} from 'react-native';
-import {IMessage} from 'react-native-gifted-chat';
 import userStore from '~stores/user/userStore';
 import chatStore from './chatStore';
 import {cancelMessage} from './constants';
@@ -91,7 +90,7 @@ export class ChatSocket {
               if (message) {
                 message.user.avatar =
                   chatStore.opponent?.headPhoto ??
-                  require('~assets/images/avatar2.png');
+                  require('~assets/images/avatar.png');
                 chatStore.addMessageSelf(message);
               }
             }

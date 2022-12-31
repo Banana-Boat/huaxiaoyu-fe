@@ -70,7 +70,7 @@ const ChatScreen = () => {
       user: {
         _id: userStore.user.id,
         avatar:
-          userStore.user.headPhoto ?? require('~assets/images/avatar2.png'),
+          userStore.user.headPhoto ?? require('~assets/images/avatar.png'),
       },
     };
     chatStore.sendMessage(message);
@@ -98,7 +98,7 @@ const ChatScreen = () => {
         user={{
           _id: userStore.user.id,
           avatar:
-            userStore.user.headPhoto ?? require('~assets/images/avatar2.png'),
+            userStore.user.headPhoto ?? require('~assets/images/avatar.png'),
         }}
       />
     </PageContainer>

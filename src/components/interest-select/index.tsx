@@ -1,4 +1,4 @@
-import {Button, Divider, Flex} from 'native-base';
+import {Button, Flex} from 'native-base';
 import {ColorSchemeType} from 'native-base/lib/typescript/components/types';
 import {memo} from 'react';
 import {DictType} from '~utils/types';
