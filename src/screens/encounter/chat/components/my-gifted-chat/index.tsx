@@ -1,4 +1,4 @@
-import {Icon, Toast, useColorMode} from 'native-base';
+import {HStack, Icon, Pressable, useColorMode} from 'native-base';
 import {useState} from 'react';
 import {Keyboard} from 'react-native';
 import {
@@ -17,11 +17,14 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 const MyGiftedChat: React.FC<GiftedChatProps> = props => {
   const {colorMode} = useColorMode();
 
-  // 处理 IOS 输入框安全区域
+  /* 处理 IOS 输入框安全区域（键盘弹出则不需要底部安全距离）*/
   const {bottom: safePaddingBottom} = useSafeAreaInsets();
   const [isNeedSafePB, setIsNeedSafePB] = useState(1);
   Keyboard.addListener('keyboardWillShow', () => setIsNeedSafePB(0));
   Keyboard.addListener('keyboardWillHide', () => setIsNeedSafePB(1));
+
+  /* 功能按键 */
+  const [isShowOption, setIsShowOption] = useState(false);
 
   return (
     <GiftedChat
@@ -31,6 +34,7 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
         <InputToolbar
           {...props}
           containerStyle={{
+            bottom: 0,
             justifyContent: 'center',
             alignItems: 'center',
             paddingTop: 5,
@@ -41,28 +45,51 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
         />
       )}
       renderActions={props => (
-        <Actions
-          {...props}
-          onPressActionButton={() =>
-            Toast.show({description: '功能建设中...', duration: 2000})
-          }
-          containerStyle={{
-            justifyContent: 'center',
-            alignSelf: 'center',
-            alignItems: 'center',
-            paddingHorizontal: 24,
-            marginBottom: 0,
-            marginLeft: 0,
-          }}
-          icon={() => (
-            <Icon
-              as={Ionicon}
-              name="add-circle"
-              size="lg"
-              color={colorMode === 'dark' ? 'warmGray.600' : 'warmGray.300'}
-            />
+        <HStack style={{width: isShowOption ? 130 : 50}} alignItems="center">
+          <Actions
+            {...props}
+            onPressActionButton={() => setIsShowOption(flag => !flag)}
+            containerStyle={{
+              justifyContent: 'center',
+              alignSelf: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 24,
+              height: 40,
+              width: 40,
+              marginBottom: 0,
+              marginLeft: 0,
+            }}
+            icon={() => (
+              <Icon
+                as={Ionicon}
+                name="ellipsis-horizontal"
+                size="lg"
+                color={colorMode === 'dark' ? 'warmGray.500' : 'warmGray.400'}
+              />
+            )}
+          />
+
+          {isShowOption && (
+            <HStack space={3}>
+              <Pressable>
+                <Icon
+                  as={Ionicon}
+                  name="image"
+                  size="lg"
+                  color={colorMode === 'dark' ? 'warmGray.500' : 'warmGray.400'}
+                />
+              </Pressable>
+              <Pressable>
+                <Icon
+                  as={Ionicon}
+                  name="camera"
+                  size="lg"
+                  color={colorMode === 'dark' ? 'warmGray.500' : 'warmGray.400'}
+                />
+              </Pressable>
+            </HStack>
           )}
-        />
+        </HStack>
       )}
       renderComposer={props => (
         <Composer

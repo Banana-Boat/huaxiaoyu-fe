@@ -22,7 +22,7 @@
     "react-native": "0.70.6",
     "react-native-compressor": "^1.6.1",
     "react-native-get-random-values": "^1.8.0",
-    "react-native-gifted-chat": "^1.1.0",
+    "react-native-gifted-chat": "^1.1.1",
     "react-native-image-picker": "^4.10.3",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-safe-area-context": "3.3.2",

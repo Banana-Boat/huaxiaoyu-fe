@@ -11,7 +11,7 @@ import Router from '~routes/router';
 import {getData} from '~utils';
 import LaunchScreen from '~screens/launch';
 import userStore from '~stores/user/userStore';
-import {getInterestDicts, getDepartmentDict} from '~utils/api';
+import {getInterestDicts, getDepartmentDict, getUserInfo} from '~utils/api';
 
 /** Native Base配置 */
 const customTheme = extendTheme({
@@ -31,15 +31,16 @@ const App = () => {
   /** 读取本地登录状态信息 */
   const [isNeedLogin, setIsNeedLogin] = useState(true); // 是否需要登录
   useEffect(() => {
-    getData('userInfo')
-      .then(async res => {
-        if (res) {
-          setIsNeedLogin(false);
-
-          const jwt = await getData('jwt');
+    getData('jwt')
+      .then(async jwt => {
+        if (jwt) {
+          // 先将jwt注入header通过获取用户信息的API判断是否过期
           userStore.updateJwt(jwt);
-
-          userStore.updateUserInfo(res);
+          try {
+            if (await getUserInfo()) setIsNeedLogin(false);
+          } catch {
+            userStore.updateJwt('');
+          }
         }
       })
       .catch(err => console.log(err))

@@ -46,9 +46,6 @@ export const updateUserInfo = async (params: UpdateUserInfoRequest) =>
         // 用户信息存入userStore
         userStore.updateUserInfo(_res);
 
-        // 用户信息存入AsyncStorage
-        await setData('userInfo', _res);
-
         return true;
       } else return Promise.reject();
     });

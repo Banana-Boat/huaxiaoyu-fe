@@ -74,7 +74,7 @@ const ProfileScreen = () => {
             icon: 'settings-sharp',
             hasArrow: true,
             action: () =>
-              Toast.show({description: '功能建设中...', duration: 2000}),
+              Toast.show({description: '暂无内容...', duration: 2000}),
           },
           {
             name: '关于我们',
@@ -92,7 +92,7 @@ const ProfileScreen = () => {
             color: 'red.400',
             hasArrow: true,
             action: async () => {
-              await removeData('userInfo');
+              await removeData('jwt');
               navigation.replace('StartScreen');
             },
           },

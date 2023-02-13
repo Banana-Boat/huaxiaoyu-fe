@@ -2326,7 +2326,16 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.0.21":
+"@types/react@*":
+  version "18.0.28"
+  resolved "https://registry.npmmirror.com/@types/react/-/react-18.0.28.tgz#accaeb8b86f4908057ad629a26635fe641480065"
+  integrity sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^18.0.21":
   version "18.0.26"
   resolved "https://registry.npmmirror.com/@types/react/-/react-18.0.26.tgz#8ad59fc01fef8eaf5c74f4ea392621749f0b7917"
   integrity sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==
@@ -6963,10 +6972,10 @@ react-native-get-random-values@^1.8.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
-react-native-gifted-chat@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmmirror.com/react-native-gifted-chat/-/react-native-gifted-chat-1.1.0.tgz#d842e08781ebbf86d878b5e7b9d442cb6b32c43c"
-  integrity sha512-Fg2hAcpNdEtbsgKO3OQ8PPPV2eCqsonbB6bLZCiBwg+EHYifr61U1au+YSkLcGr64lxp6d8Hm0iLGnQMddnx1Q==
+react-native-gifted-chat@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.npmmirror.com/react-native-gifted-chat/-/react-native-gifted-chat-1.1.1.tgz#da906ee56526ca6fe22443b00580bd4015d9f3bf"
+  integrity sha512-dixjMqeNEM16m8zp0DLqyusH5SxUglhAdKEw2qLmeMpJsvqguPVMklT0QUXEw/aWVYr1+YC+UnOA3f4aPdzbsg==
   dependencies:
     "@expo/react-native-action-sheet" "4.0.1"
     dayjs "1.8.26"
