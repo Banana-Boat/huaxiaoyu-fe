@@ -90,7 +90,7 @@ const HomeScreen = () => {
   const [randomUserInfoList, setRandomUserInfoList] = useState<IUser[]>([]);
 
   useEffect(() => {
-    setInterval(
+    const timer = setInterval(
       () =>
         getNumOfOnline()
           .then(res => setNumOfOnline(res))
@@ -100,6 +100,8 @@ const HomeScreen = () => {
     getRandomUserInfo(20)
       .then(res => setRandomUserInfoList(res))
       .catch(res => console.log(res));
+
+    return () => clearInterval(timer);
   }, []);
 
   return (
