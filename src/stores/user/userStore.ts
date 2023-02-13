@@ -19,6 +19,8 @@ class UserStore {
     interestCodeList: [],
   };
 
+  jwt: string = '';
+
   infoCompletation: string = '0';
 
   interestDicts: IInterestDicts = {
@@ -51,6 +53,10 @@ class UserStore {
     });
 
     this.infoCompletation = ((completedNum / total) * 100).toFixed();
+  }
+
+  updateJwt(token: string) {
+    this.jwt = token;
   }
 
   updateInterestDicts(dicts: IInterestDicts) {

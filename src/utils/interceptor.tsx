@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {Toast} from 'native-base';
-// import qs from "qs";
+import userStore from '~stores/user/userStore';
 
 const instance = axios.create({
   baseURL: 'http://82.157.247.7:9092',
@@ -9,22 +9,24 @@ const instance = axios.create({
   },
 });
 
-// instance.interceptors.request.use(
-//   config => {
-//     // application/x-www-form-urlencoded 需要将data数据进行特殊序列化
-//     if (config.method === 'post') config.data = qs.stringify(config.data);
+instance.interceptors.request.use(
+  config => {
+    // 注入jwt Authorization 中
+    const {jwt} = userStore;
+    if (
+      config.url !== '/user/login' &&
+      config.url !== '/user/register' &&
+      jwt &&
+      config.headers
+    )
+      config.headers.Authorization = `Bearer ${jwt}`;
 
-//     // 如果 token 存在，则注入 Authorization 中
-//     const {token} = useUserStore();
-//     if (token && config.headers)
-//       config.headers.Authorization = `Bearer ${token}`;
-
-//     return config;
-//   },
-//   error => {
-//     return Promise.reject(error);
-//   },
-// );
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 
 instance.interceptors.response.use(
   response => {

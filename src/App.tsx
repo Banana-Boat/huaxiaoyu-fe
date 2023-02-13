@@ -32,9 +32,12 @@ const App = () => {
   const [isNeedLogin, setIsNeedLogin] = useState(true); // 是否需要登录
   useEffect(() => {
     getData('userInfo')
-      .then(res => {
+      .then(async res => {
         if (res) {
           setIsNeedLogin(false);
+
+          const jwt = await getData('jwt');
+          userStore.updateJwt(jwt);
 
           userStore.updateUserInfo(res);
         }
@@ -45,12 +48,12 @@ const App = () => {
 
   /** 提前获取院系、兴趣字典表 */
   useEffect(() => {
-    try {
-      getInterestDicts().then(dicts => userStore.updateInterestDicts(dicts));
-      getDepartmentDict().then(dict => userStore.updateDepartmentDict(dict));
-    } catch {
-      Toast.show({description: '字典表请求失败', duration: 2000});
-    }
+    getInterestDicts()
+      .then(dicts => userStore.updateInterestDicts(dicts))
+      .catch(() => Toast.show({description: '字典表请求失败', duration: 2000}));
+    getDepartmentDict()
+      .then(dict => userStore.updateDepartmentDict(dict))
+      .catch(() => Toast.show({description: '字典表请求失败', duration: 2000}));
   }, []);
 
   return (

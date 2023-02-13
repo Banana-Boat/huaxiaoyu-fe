@@ -18,7 +18,7 @@ import {
 import {memo, useCallback, useState} from 'react';
 import {RootStackParamList} from '~routes/router';
 import {useColorMode} from 'native-base';
-import {login} from './api';
+import {login} from '../../api';
 
 interface IProps {
   toggleScreenMode: () => void;

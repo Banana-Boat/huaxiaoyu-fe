@@ -1,7 +1,6 @@
 import axios from '~utils/interceptor';
-import userStore from '~stores/user/userStore';
-import {setData} from '~utils';
-import {IUser, SexType} from '~stores/user/types';
+import {SexType} from '~stores/user/types';
+import {login} from '~screens/start/api';
 
 interface RegisterRequest {
   username: string;
@@ -12,15 +11,7 @@ interface RegisterRequest {
 }
 
 interface RegisterResponse {
-  id: number;
-  username: string;
-  sex: SexType;
-  departmentCode: number;
-  age?: number;
-  nickname?: string;
-  phoneNum?: string;
-  interestCodeList?: string;
-  headPhoto?: string;
+  isSuccess: boolean;
 }
 
 export const register = async (params: RegisterRequest) =>
@@ -28,20 +19,10 @@ export const register = async (params: RegisterRequest) =>
     .post<RegisterRequest, RegisterResponse>('/user/register', params)
     .then(async res => {
       if (res) {
-        const _res: IUser = JSON.parse(JSON.stringify(res));
-
-        // 处理interestCodeList & departmentCode
-        _res.interestCodeList = res.interestCodeList
-          ? res.interestCodeList.split(',')
-          : [];
-        _res.departmentCode = res.departmentCode.toString();
-
-        // 用户信息存入userStore
-        userStore.updateUserInfo(_res);
-
-        // 用户信息存入AsyncStorage
-        await setData('userInfo', _res);
-
-        return true;
+        const {isSuccess} = res;
+        if (isSuccess) {
+          await login({username: params.username, password: params.password});
+          return true;
+        } else return Promise.reject();
       } else return Promise.reject();
     });
