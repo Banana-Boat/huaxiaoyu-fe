@@ -1,5 +1,5 @@
-import {HStack, Icon, Pressable, useColorMode} from 'native-base';
-import {useState} from 'react';
+import {HStack, Icon, Pressable, Toast, useColorMode} from 'native-base';
+import {useCallback, useState} from 'react';
 import {Keyboard} from 'react-native';
 import {
   Actions,
@@ -11,10 +11,23 @@ import {
   InputToolbar,
   Send,
 } from 'react-native-gifted-chat';
+import {
+  Asset,
+  ImagePickerResponse,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
+import {Image as ImageCompressor} from 'react-native-compressor';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
-const MyGiftedChat: React.FC<GiftedChatProps> = props => {
+interface IMyGiftedChatProps {
+  onSendImage: (image: string) => void;
+}
+
+const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
+  const {onSendImage, ...restProps} = props;
+
   const {colorMode} = useColorMode();
 
   /* 处理 IOS 输入框安全区域（键盘弹出则不需要底部安全距离）*/
@@ -26,9 +39,63 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
   /* 功能按键 */
   const [isShowOption, setIsShowOption] = useState(false);
 
+  const imagePickerResHandle = useCallback(
+    async (res: ImagePickerResponse, errMsg: string) => {
+      try {
+        if (res.didCancel) return;
+
+        if (!res.assets || (res.assets && res.assets.length < 1))
+          throw new Error();
+
+        const compressedBase64 = await ImageCompressor.compress(
+          (res.assets as Asset[])[0].uri as string,
+          {
+            returnableOutputType: 'base64',
+            maxHeight: 256,
+            maxWidth: 256,
+          },
+        );
+
+        if (!compressedBase64) throw new Error();
+
+        // 图片需要添加前缀并需要去掉换行符
+        const image = `data:image/jpg;base64,${compressedBase64}`.replace(
+          /\n|\r/g,
+          '',
+        );
+        console.log(image.length);
+        onSendImage(image);
+      } catch {
+        Toast.show({
+          description: errMsg,
+          duration: 2000,
+        });
+      }
+    },
+    [],
+  );
+
+  const photoBtnPressHandle = useCallback(async () => {
+    const res = await launchImageLibrary({
+      mediaType: 'photo',
+      includeExtra: false,
+    });
+
+    imagePickerResHandle(res, '获取图片失败');
+  }, []);
+
+  const cameraBtnPressHandle = useCallback(async () => {
+    const res = await launchCamera({
+      mediaType: 'photo',
+      includeExtra: false,
+    });
+
+    imagePickerResHandle(res, '拍摄失败');
+  }, []);
+
   return (
     <GiftedChat
-      {...props}
+      {...restProps}
       minInputToolbarHeight={safePaddingBottom * isNeedSafePB + 44 + 10}
       renderInputToolbar={props => (
         <InputToolbar
@@ -71,7 +138,7 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
 
           {isShowOption && (
             <HStack space={3}>
-              <Pressable>
+              <Pressable onPress={photoBtnPressHandle}>
                 <Icon
                   as={Ionicon}
                   name="image"
@@ -79,7 +146,7 @@ const MyGiftedChat: React.FC<GiftedChatProps> = props => {
                   color={colorMode === 'dark' ? 'warmGray.500' : 'warmGray.400'}
                 />
               </Pressable>
-              <Pressable>
+              <Pressable onPress={cameraBtnPressHandle}>
                 <Icon
                   as={Ionicon}
                   name="camera"

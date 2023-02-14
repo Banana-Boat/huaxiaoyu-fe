@@ -63,9 +63,25 @@ const ChatScreen = () => {
   }, []);
 
   const onQuickReply = useCallback((replies: Reply[]) => {
-    const message = {
+    const message: IMessage = {
       _id: uuidv4(),
       text: replies[0].value,
+      createdAt: new Date(),
+      user: {
+        _id: userStore.user.id,
+        avatar:
+          userStore.user.headPhoto ?? require('~assets/images/avatar.png'),
+      },
+    };
+    chatStore.sendMessage(message);
+    chatStore.addMessageSelf(message);
+  }, []);
+
+  const onSendImage = useCallback((image: string) => {
+    const message: IMessage = {
+      _id: uuidv4(),
+      text: '',
+      image: image,
       createdAt: new Date(),
       user: {
         _id: userStore.user.id,
@@ -95,6 +111,7 @@ const ChatScreen = () => {
         messages={chatStore.messageList}
         onSend={onSend}
         onQuickReply={onQuickReply}
+        onSendImage={onSendImage}
         user={{
           _id: userStore.user.id,
           avatar:
