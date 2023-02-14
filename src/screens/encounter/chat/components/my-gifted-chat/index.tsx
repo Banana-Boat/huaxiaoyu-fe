@@ -39,6 +39,7 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
   /* 功能按键 */
   const [isShowOption, setIsShowOption] = useState(false);
 
+  /* 图片信息 */
   const imagePickerResHandle = useCallback(
     async (res: ImagePickerResponse, errMsg: string) => {
       try {
@@ -112,7 +113,7 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
         />
       )}
       renderActions={props => (
-        <HStack style={{width: isShowOption ? 130 : 50}} alignItems="center">
+        <HStack style={{width: isShowOption ? 195 : 50}} alignItems="center">
           <Actions
             {...props}
             onPressActionButton={() => setIsShowOption(flag => !flag)}
@@ -150,6 +151,28 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
                 <Icon
                   as={Ionicon}
                   name="camera"
+                  size="lg"
+                  color={colorMode === 'dark' ? 'warmGray.500' : 'warmGray.400'}
+                />
+              </Pressable>
+              <Pressable
+                onPress={() =>
+                  Toast.show({description: '功能建设中...', duration: 2000})
+                }>
+                <Icon
+                  as={Ionicon}
+                  name="mic"
+                  size="lg"
+                  color={colorMode === 'dark' ? 'warmGray.500' : 'warmGray.400'}
+                />
+              </Pressable>
+              <Pressable
+                onPress={() =>
+                  Toast.show({description: '功能建设中...', duration: 2000})
+                }>
+                <Icon
+                  as={Ionicon}
+                  name="videocam"
                   size="lg"
                   color={colorMode === 'dark' ? 'warmGray.500' : 'warmGray.400'}
                 />
