@@ -31,6 +31,24 @@ export interface IDataOfMessageEvent {
   receiveId: number;
   sendId: number;
   message: IMessage | null;
-  isCanceled: boolean;
-  isTopic: boolean;
+  isCanceled: boolean; // 是否退出聊天室
+  isTopic: boolean; // 是否为推荐话题
+}
+
+export enum FriendApplyResultType {
+  NONE = 'none',
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  FAIL = 'fail',
+}
+
+export interface IDataOfFriendApplyEvent {
+  receiveId: number;
+  sendId: number;
+}
+
+export interface IDataOfFriendReplyEvent {
+  result: number;
+  receiveId: number;
+  sendId: number;
 }

@@ -1,5 +1,4 @@
 import axios from '~utils/interceptor';
-import {ITopic} from './types';
 
 interface GetRecommendedTopicsRequest {
   receiveId: number;

@@ -33,7 +33,10 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
   /* 处理 IOS 输入框安全区域（键盘弹出则不需要底部安全距离）*/
   const {bottom: safePaddingBottom} = useSafeAreaInsets();
   const [isNeedSafePB, setIsNeedSafePB] = useState(1);
-  Keyboard.addListener('keyboardWillShow', () => setIsNeedSafePB(0));
+  Keyboard.addListener('keyboardWillShow', () => {
+    setIsNeedSafePB(0);
+    setIsShowOption(false);
+  });
   Keyboard.addListener('keyboardWillHide', () => setIsNeedSafePB(1));
 
   /* 功能按键 */

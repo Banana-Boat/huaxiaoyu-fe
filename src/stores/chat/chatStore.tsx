@@ -5,7 +5,7 @@ import {ITopic} from '~screens/encounter/chat/types';
 import userStore from '~stores/user/userStore';
 import {ChatSocket} from './chatSocket';
 import {startMessage} from './constants';
-import {ChatStateType, IOpponent} from './types';
+import {ChatStateType, FriendApplyResultType, IOpponent} from './types';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 
@@ -15,21 +15,31 @@ class ChatStore {
       state: observable,
       opponent: observable,
       messageList: observable,
+      isFriendApplySender: observable,
+      friendApplyResult: observable,
       updateOpponent: action,
       addMessageSelf: action,
       createSocket: action,
       updateState: action,
       toggleState: action,
       finishChat: action,
+      updateFriendApplyResult: action,
+      updateIsFriendApplySender: action,
     });
   }
 
   state: ChatStateType = ChatStateType.NONE;
   opponent?: IOpponent = {};
   messageList?: IMessage[] = [{...startMessage}];
+
   socket?: ChatSocket;
+
   timer?: NodeJS.Timer; // 处理接收不到start-chat消息问题，每3秒发送心跳包
 
+  isFriendApplySender = false; // 是否为好友申请的发起者
+  friendApplyResult = FriendApplyResultType.NONE; // 好友申请结果
+
+  // 结束聊天（重置变量）
   finishChat() {
     this.sendMessage(null, true);
     setTimeout(() => {
@@ -38,6 +48,7 @@ class ChatStore {
     this.updateOpponent({});
     this.updateState(ChatStateType.NONE);
     this.resetMessageList();
+    this.resetFriendApplyInfo();
   }
 
   /** socket相关 */
@@ -53,7 +64,7 @@ class ChatStore {
     this.socket?.close();
   }
 
-  /** 状态相关 */
+  /** 聊天状态相关 */
   updateState(state: ChatStateType) {
     this.state = state;
   }
@@ -121,6 +132,36 @@ class ChatStore {
       isCanceled: false,
       isTopic: true,
       message,
+    });
+
+    /* 好友申请相关 */
+  }
+
+  /* 好友申请相关 */
+  updateFriendApplyResult(result: FriendApplyResultType) {
+    this.friendApplyResult = result;
+  }
+  updateIsFriendApplySender(flag: boolean) {
+    this.isFriendApplySender = flag;
+  }
+  resetFriendApplyInfo() {
+    this.updateFriendApplyResult(FriendApplyResultType.NONE);
+    this.updateIsFriendApplySender(false);
+  }
+  sendFriendApply() {
+    this.updateIsFriendApplySender(true);
+    this.updateFriendApplyResult(FriendApplyResultType.PENDING);
+    this.socket?.sendFriendApply({
+      receiveId: this.opponent?.id as number,
+      sendId: userStore.user.id,
+    });
+  }
+  sendFriendReply(result: FriendApplyResultType) {
+    this.updateFriendApplyResult(result);
+    this.socket?.sendFriendReply({
+      receiveId: this.opponent?.id as number,
+      sendId: userStore.user.id,
+      result: result === FriendApplyResultType.SUCCESS ? 1 : 0,
     });
   }
 }

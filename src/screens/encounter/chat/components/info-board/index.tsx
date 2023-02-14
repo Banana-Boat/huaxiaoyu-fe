@@ -20,13 +20,16 @@ import chatStore from '~stores/chat/chatStore';
 import {SexType} from '~stores/user/types';
 import {observer} from 'mobx-react-lite';
 import {ITopic} from '../../types';
+import FriendApplyModal from './components/friend-apply-modal';
+import {FriendApplyResultType} from '~stores/chat/types';
+import FriendResultModal from './components/friend-result-modal';
 
 interface IProps {
   topicList: ITopic[];
 }
 
 const InfoBoard: React.FC<IProps> = ({topicList}) => {
-  const [isRecommend, setIsRecommend] = useState(false); // 展板信息类型（推荐话题 or 聊天者信息）
+  const [isRecommend, setIsRecommend] = useState(true); // 展板信息类型（推荐话题 or 聊天者信息）
 
   /** 推荐话题相关 */
   const [batchIdx, setBatchIdx] = useState(0);
@@ -36,9 +39,27 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
     );
   }, [topicList]);
 
-  /** 聊天对象信息相关 */
+  /** 对方信息面板 */
   const [department, setDepartment] = useState('');
   const [interestList, setInterestList] = useState<string[]>([]);
+  const [isFriendApplyBtnDisabled, setIsFriendApplyBtnDisabled] =
+    useState(false); // 交个朋友按钮是否可点击
+  const [friendApplyBtnText, setFriendApplyBtnText] = useState('交个朋友');
+  useEffect(() => {
+    switch (chatStore.friendApplyResult) {
+      case FriendApplyResultType.PENDING:
+        setFriendApplyBtnText('等待回复..');
+        setIsFriendApplyBtnDisabled(true);
+        break;
+      case FriendApplyResultType.SUCCESS:
+        setFriendApplyBtnText('已是好友');
+        setIsFriendApplyBtnDisabled(true);
+        break;
+      default:
+        setFriendApplyBtnText('交个朋友');
+        setIsFriendApplyBtnDisabled(false);
+    }
+  }, [chatStore.friendApplyResult]);
 
   /** 动画相关 */
   const transYAnim = useRef(new Animated.Value(-boardHeight)).current;
@@ -88,6 +109,35 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
         width: '100%',
         transform: [{translateY: transYAnim}],
       }}>
+      {/* 朋友申请弹窗 */}
+      <FriendApplyModal
+        isOpen={
+          !chatStore.isFriendApplySender &&
+          chatStore.friendApplyResult === FriendApplyResultType.PENDING
+        }
+        approve={() => {
+          chatStore.sendFriendReply(FriendApplyResultType.SUCCESS);
+        }}
+        reject={() => {
+          chatStore.sendFriendReply(FriendApplyResultType.FAIL);
+        }}
+      />
+
+      {/* 朋友申请结果弹窗 */}
+      <FriendResultModal
+        isOpen={
+          chatStore.isFriendApplySender &&
+          (chatStore.friendApplyResult === FriendApplyResultType.SUCCESS ||
+            chatStore.friendApplyResult === FriendApplyResultType.FAIL)
+        }
+        result={chatStore.friendApplyResult}
+        close={() => {
+          if (chatStore.friendApplyResult === FriendApplyResultType.FAIL)
+            chatStore.resetFriendApplyInfo();
+          else chatStore.updateIsFriendApplySender(false);
+        }}
+      />
+
       <Box
         h={boardHeight}
         px={4}
@@ -97,6 +147,7 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
         roundedBottom={25}
         shadow={1}>
         {isRecommend ? (
+          /* 推荐话题面板 */
           <>
             <HStack justifyContent="space-between">
               <HStack alignItems="center">
@@ -148,6 +199,7 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
             </VStack>
           </>
         ) : (
+          /* 对方信息面板 */
           <VStack space={1} px={5}>
             <HStack
               mb={2}
@@ -171,16 +223,21 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                 />
               </Avatar.Group>
               <Button
-                onPress={() =>
-                  Toast.show({description: '功能建设中...', duration: 2000})
-                }
+                onPress={() => {
+                  chatStore.sendFriendApply();
+                  Toast.show({
+                    description: '好友申请已发出，等待回复',
+                    duration: 2000,
+                  });
+                }}
+                isDisabled={isFriendApplyBtnDisabled}
                 leftIcon={<Icon as={Ionicon} name="heart" />}
                 variant="solid"
                 height={9}
                 size="sm"
                 rounded={30}
                 colorScheme="pink">
-                交个朋友
+                {friendApplyBtnText}
               </Button>
             </HStack>
             {department && chatStore.opponent?.sex && (
@@ -223,6 +280,8 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
           </VStack>
         )}
       </Box>
+
+      {/* 切换拉杆 */}
       <Pressable onPress={toggle}>
         <Icon
           as={Ionicon}

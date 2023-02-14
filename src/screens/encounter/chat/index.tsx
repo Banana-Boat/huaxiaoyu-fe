@@ -23,6 +23,7 @@ const ChatScreen = () => {
 
   /** 退出页面提醒 */
   const [isShowAlert, setIsShowAlert] = useState(false);
+
   // 处理android端系统级返回按键
   useFocusEffect(
     useCallback(() => {

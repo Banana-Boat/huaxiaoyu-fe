@@ -5,6 +5,9 @@ import chatStore from './chatStore';
 import {cancelMessage} from './constants';
 import {
   ChatStateType,
+  FriendApplyResultType,
+  IDataOfFriendApplyEvent,
+  IDataOfFriendReplyEvent,
   IDataOfMessageEvent,
   IDataOfStartChatEvent,
 } from './types';
@@ -37,7 +40,8 @@ export class ChatSocket {
       });
 
       this.socket.addEventListener('message', msg => {
-        console.log(Platform.OS, msg.data);
+        console.log(Platform.OS, 'receive', msg.data);
+
         const {data, flag, event} = JSON.parse(msg.data);
 
         if (!flag)
@@ -96,6 +100,20 @@ export class ChatSocket {
             }
 
             break;
+
+          case 'friend-apply':
+            chatStore.updateFriendApplyResult(FriendApplyResultType.PENDING);
+
+            break;
+
+          case 'friend-reply':
+            const {result} = data as IDataOfFriendReplyEvent;
+
+            if (result === 1)
+              chatStore.updateFriendApplyResult(FriendApplyResultType.SUCCESS);
+            else chatStore.updateFriendApplyResult(FriendApplyResultType.FAIL);
+
+            break;
         }
       });
     });
@@ -146,6 +164,39 @@ export class ChatSocket {
       this.socket.send(
         JSON.stringify({
           event: 'message',
+          flag: true,
+          data: data,
+        }),
+      );
+  }
+
+  sendFriendApply(data: IDataOfFriendApplyEvent) {
+    if (this.socket.readyState === 1)
+      this.socket.send(
+        JSON.stringify({
+          event: 'friend-apply',
+          flag: true,
+          data: data,
+        }),
+      );
+  }
+
+  sendFriendReply(data: IDataOfFriendReplyEvent) {
+    console.log(
+      JSON.stringify(
+        {
+          event: 'friend-reply',
+          flag: true,
+          data: data,
+        },
+        null,
+        2,
+      ),
+    );
+    if (this.socket.readyState === 1)
+      this.socket.send(
+        JSON.stringify({
+          event: 'friend-reply',
           flag: true,
           data: data,
         }),
