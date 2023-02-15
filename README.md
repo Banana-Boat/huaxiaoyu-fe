@@ -1,22 +1,29 @@
-### <div align=center><img src="./readme-image/logo.png" width="28%">
+
+### <div align=center><img src="./readme-image/logo.png" width="18%"></div>
 
 # <center>华小遇</center>
 
-一款主打华科校内交友的 APP！同是 Huster，交友对象更靠谱；通过算法匹配对象，保证志趣相投；提供辅助聊天功能，助你轻松破冰，避免尴尬。
-
+一款主打华科校内交友的 APP！
+- 同是 Huster，交友对象更靠谱；
+- 通过算法匹配对象，保证志趣相投；
+- 提供辅助聊天功能，助你轻松破冰，避免尴尬。
 ## APP 界面
 
 #### 1. 登录 / 注册 / 我的
 
-<img src="./readme-image/login.png" width="30%">
-<img src="./readme-image/register.png" width="30%">
-<img src="./readme-image/mine.png" width="30%">
+<div class="flexible">
+<img src="./readme-image/login.png" width="25%">
+<img src="./readme-image/register.png" width="25%">
+<img src="./readme-image/mine.png" width="25%">
+</div>
 
 #### 2. 匹配 / 聊天 / 推荐话题
 
-<img src="./readme-image/match.gif" width="30%">
-<img src="./readme-image/chat.gif" width="30%">
-<img src="./readme-image/topic.gif" width="30%">
+<div class="flexible">
+<img src="./readme-image/match.gif" width="25%">
+<img src="./readme-image/chat.gif" width="25%">
+<img src="./readme-image/topic.gif" width="25%">
+</div>
 
 ## 主要依赖
 
