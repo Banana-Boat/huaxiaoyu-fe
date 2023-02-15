@@ -135,7 +135,7 @@ const EditInfoScreen = memo(() => {
     // 提交表单时去除base64的前缀 data:image/jpg;base64,
     const headPhoto = formData.headPhoto
       ? formData.headPhoto?.split(',')[1]
-      : '';
+      : undefined;
 
     const data = {
       ...formData,
