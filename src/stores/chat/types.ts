@@ -14,6 +14,7 @@ export interface IOpponent {
   interestCodeList?: string[];
   departmentCode?: string;
   headPhoto?: string;
+  isFriend?: boolean;
 }
 
 export interface IDataOfStartChatEvent {
@@ -25,6 +26,7 @@ export interface IDataOfStartChatEvent {
     id: number;
     headPhoto?: string;
   };
+  isFriend: boolean;
 }
 
 export interface IDataOfMessageEvent {
@@ -36,10 +38,10 @@ export interface IDataOfMessageEvent {
 }
 
 export enum FriendApplyResultType {
-  NONE = 'none',
-  PENDING = 'pending',
-  SUCCESS = 'success',
-  FAIL = 'fail',
+  FAIL = 0,
+  SUCCESS = 1,
+  PENDING = 2,
+  NONE = 3,
 }
 
 export interface IDataOfFriendApplyEvent {

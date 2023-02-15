@@ -25,31 +25,38 @@ export class ChatSocket {
   init() {
     return new Promise((resove, reject) => {
       this.socket.addEventListener('open', () => {
+        console.log(Platform.OS, 'onopen');
         resove(true);
-        console.log(Platform.OS, 'socket opened');
       });
 
-      this.socket.addEventListener('close', e =>
-        console.log(Platform.OS, 'socket closed', e),
-      );
+      this.socket.addEventListener('close', e => {
+        console.log(Platform.OS, 'onclose', e);
+      });
 
-      this.socket.addEventListener('error', err => {
-        console.log(Platform.OS, err);
-        Toast.show({description: 'Socket连接错误...', duration: 2000});
-        reject(err);
+      this.socket.addEventListener('error', e => {
+        console.log(Platform.OS, 'onerror', e);
       });
 
       this.socket.addEventListener('message', msg => {
-        console.log(Platform.OS, 'receive', msg.data);
+        console.log(Platform.OS, 'onmessage', msg.data);
 
         const {data, flag, event} = JSON.parse(msg.data);
 
         if (!flag)
-          return Toast.show({description: 'Socket连接错误...', duration: 2000});
+          return Toast.show({
+            description: '出错了，请稍后重试',
+            duration: 2000,
+          });
 
         switch (event) {
+          case 'error':
+            console.log(Platform.OS, 'error', data.msg);
+            Toast.show({description: '出错了，请稍后重试', duration: 2000});
+
+            break;
+
           case 'start-chat':
-            const {opponent} = data as IDataOfStartChatEvent;
+            const {opponent, isFriend} = data as IDataOfStartChatEvent;
 
             // 更新全局状态（聊天对象信息 & chat状态）
             const {
@@ -69,6 +76,7 @@ export class ChatSocket {
                 ? interestCodeList.split(',')
                 : [],
               headPhoto,
+              isFriend,
             });
             chatStore.updateState(ChatStateType.CHATTING);
             clearInterval(chatStore.timer);
@@ -109,7 +117,7 @@ export class ChatSocket {
           case 'friend-reply':
             const {result} = data as IDataOfFriendReplyEvent;
 
-            if (result === 1)
+            if (result === FriendApplyResultType.SUCCESS)
               chatStore.updateFriendApplyResult(FriendApplyResultType.SUCCESS);
             else chatStore.updateFriendApplyResult(FriendApplyResultType.FAIL);
 
@@ -182,17 +190,6 @@ export class ChatSocket {
   }
 
   sendFriendReply(data: IDataOfFriendReplyEvent) {
-    console.log(
-      JSON.stringify(
-        {
-          event: 'friend-reply',
-          flag: true,
-          data: data,
-        },
-        null,
-        2,
-      ),
-    );
     if (this.socket.readyState === 1)
       this.socket.send(
         JSON.stringify({

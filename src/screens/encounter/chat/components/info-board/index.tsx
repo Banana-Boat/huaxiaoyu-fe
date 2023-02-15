@@ -43,9 +43,16 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
   const [department, setDepartment] = useState('');
   const [interestList, setInterestList] = useState<string[]>([]);
   const [isFriendApplyBtnDisabled, setIsFriendApplyBtnDisabled] =
-    useState(false); // 交个朋友按钮是否可点击
+    useState(false); // 好友申请按钮是否被禁用
   const [friendApplyBtnText, setFriendApplyBtnText] = useState('交个朋友');
+
   useEffect(() => {
+    if (chatStore.opponent?.isFriend) {
+      setFriendApplyBtnText('已是好友');
+      setIsFriendApplyBtnDisabled(true);
+      return;
+    }
+
     switch (chatStore.friendApplyResult) {
       case FriendApplyResultType.PENDING:
         setFriendApplyBtnText('等待回复..');
@@ -59,7 +66,7 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
         setFriendApplyBtnText('交个朋友');
         setIsFriendApplyBtnDisabled(false);
     }
-  }, [chatStore.friendApplyResult]);
+  }, [chatStore.friendApplyResult, chatStore.opponent]);
 
   /** 动画相关 */
   const transYAnim = useRef(new Animated.Value(-boardHeight)).current;

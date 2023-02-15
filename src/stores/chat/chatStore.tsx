@@ -57,7 +57,7 @@ class ChatStore {
       this.socket = new ChatSocket();
       await this.socket.init();
     } catch {
-      Toast.show({description: 'Socket连接错误...', duration: 2000});
+      Toast.show({description: '抱歉，连接错误', duration: 2000});
     }
   }
   destroySocket() {
