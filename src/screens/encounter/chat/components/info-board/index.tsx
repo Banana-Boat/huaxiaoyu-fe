@@ -47,7 +47,7 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
   const [friendApplyBtnText, setFriendApplyBtnText] = useState('交个朋友');
 
   useEffect(() => {
-    if (chatStore.opponent?.isFriend) {
+    if (chatStore.opponent.isFriend) {
       setFriendApplyBtnText('已是好友');
       setIsFriendApplyBtnDisabled(true);
       return;
@@ -75,13 +75,13 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
   useEffect(() => {
     toggle();
 
-    if (chatStore.opponent?.departmentCode) {
+    if (chatStore.opponent.departmentCode) {
       const {departmentCode} = chatStore.opponent;
       const res = userStore.getDepartmentName(departmentCode);
       if (res) setDepartment(res);
     }
 
-    if (chatStore.opponent?.interestCodeList) {
+    if (chatStore.opponent.interestCodeList) {
       const {interestCodeList} = chatStore.opponent;
       const res = userStore.getInterestNameList(interestCodeList);
       // 如果兴趣不为空，截取前五个展示
@@ -216,7 +216,7 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
               <Avatar.Group _avatar={{size: 'md'}}>
                 <Avatar
                   source={
-                    chatStore.opponent?.headPhoto
+                    chatStore.opponent.headPhoto
                       ? {uri: chatStore.opponent.headPhoto}
                       : require('~assets/images/avatar.png')
                   }
@@ -247,15 +247,15 @@ const InfoBoard: React.FC<IProps> = ({topicList}) => {
                 {friendApplyBtnText}
               </Button>
             </HStack>
-            {department && chatStore.opponent?.sex && (
+            {department && chatStore.opponent.sex && (
               <HStack>
                 <Text
                   color={
-                    chatStore.opponent?.sex === SexType.MALE
+                    chatStore.opponent.sex === SexType.MALE
                       ? 'lightBlue.500'
                       : 'pink.500'
                   }>
-                  {chatStore.opponent?.sex === SexType.MALE ? '他' : '她'}
+                  {chatStore.opponent.sex === SexType.MALE ? '他' : '她'}
                 </Text>
                 <Text>
                   &nbsp;&nbsp;来自

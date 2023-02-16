@@ -47,9 +47,9 @@ const ChatScreen = () => {
   /** 推荐话题相关 */
   const [topicList, setTopicList] = useState<ITopic[]>([]);
   useEffect(() => {
-    if (chatStore.opponent?.id && userStore.user.id)
+    if (chatStore.opponent.id && userStore.user.id)
       getRecommendedTopics({
-        receiveId: chatStore.opponent?.id,
+        receiveId: chatStore.opponent.id,
         sendId: userStore.user.id,
         num: topicBatchSize * 3,
       }).then(res => {
@@ -98,7 +98,7 @@ const ChatScreen = () => {
     <PageContainer
       safeAreaBottom={0}
       hasHeader
-      title={chatStore.opponent?.nickname ?? 'Hust_宇航员'}
+      title={chatStore.opponent.nickname ?? 'Hust_宇航员'}
       leftAction={() => setIsShowAlert(true)}>
       <QuitAlert
         isOpen={isShowAlert}

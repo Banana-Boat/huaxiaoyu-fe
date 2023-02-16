@@ -8,13 +8,13 @@ export enum ChatStateType {
 }
 
 export interface IOpponent {
-  sex?: SexType;
-  id?: number;
-  nickname?: string;
-  interestCodeList?: string[];
-  departmentCode?: string;
+  sex: SexType;
+  id: number;
+  nickname: string;
+  interestCodeList: string[];
+  departmentCode: string;
   headPhoto?: string;
-  isFriend?: boolean;
+  isFriend: boolean;
 }
 
 export interface IDataOfStartChatEvent {

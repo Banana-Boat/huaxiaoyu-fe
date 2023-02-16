@@ -1,4 +1,6 @@
 import {IMessage} from 'react-native-gifted-chat';
+import {SexType} from '~stores/user/types';
+import {IOpponent} from './types';
 
 export const startMessage: IMessage = {
   _id: 0,
@@ -18,4 +20,13 @@ export const cancelMessage: IMessage = {
     _id: 0,
     avatar: require('~assets/images/logo.png'),
   },
+};
+
+export const initOpponent: IOpponent = {
+  id: 0,
+  nickname: '',
+  sex: SexType.NONE,
+  departmentCode: '0',
+  interestCodeList: [],
+  isFriend: false,
 };

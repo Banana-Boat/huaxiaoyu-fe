@@ -101,7 +101,7 @@ export class ChatSocket {
               // 用户消息
               if (message) {
                 message.user.avatar =
-                  chatStore.opponent?.headPhoto ??
+                  chatStore.opponent.headPhoto ??
                   require('~assets/images/avatar.png');
                 chatStore.addMessageSelf(message);
               }
