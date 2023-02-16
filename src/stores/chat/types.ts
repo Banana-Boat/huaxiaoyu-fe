@@ -14,6 +14,7 @@ export interface IOpponent {
   interestCodeList: string[];
   departmentCode: string;
   headPhoto?: string;
+  phoneNum?: string;
   isFriend: boolean;
 }
 

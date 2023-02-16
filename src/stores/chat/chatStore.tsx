@@ -30,7 +30,7 @@ class ChatStore {
 
   state: ChatStateType = ChatStateType.NONE;
   opponent: IOpponent = {...initOpponent};
-  messageList?: IMessage[] = [{...startMessage}];
+  messageList: IMessage[] = [{...startMessage}];
 
   socket?: ChatSocket;
 

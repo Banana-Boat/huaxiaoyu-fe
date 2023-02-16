@@ -2,6 +2,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChatScreen from '~screens/encounter/chat';
 import EditInfoScreen from '~screens/mine/edit-info';
 import FriendScreen from '~screens/mine/friend';
+import MessageScreen from '~screens/mine/message';
 import StartScreen from '~screens/start';
 import BottomTab from './bottomTab';
 
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   EditInfoScreen: undefined;
   FriendScreen: undefined;
   ChatScreen: undefined;
+  MessageScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -44,6 +46,7 @@ const Router: React.FC<IProps> = ({isNeedLogin}) => {
           fullScreenGestureEnabled: false,
         }}
       />
+      <Stack.Screen name="MessageScreen" component={MessageScreen} />
     </Stack.Navigator>
   );
 };

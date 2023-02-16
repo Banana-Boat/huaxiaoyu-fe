@@ -15,16 +15,22 @@ export const getInterestDicts = async () =>
   axios
     .get<null, GetInterestDictsResponse>('/user/getInterestDicts')
     .then(async res => {
-      if (res) return res;
-      else return Promise.reject();
+      if (res) {
+        // 存入userStore
+        userStore.updateInterestDicts(res);
+        return true;
+      } else return Promise.reject();
     });
 
 export const getDepartmentDict = async () =>
   axios
     .get<null, GetDepartmentDictResponse>('/user/getDepartmentDict')
     .then(async res => {
-      if (res) return res;
-      else return Promise.reject();
+      if (res) {
+        // 存入userStore
+        userStore.updateDepartmentDict(res);
+        return true;
+      } else return Promise.reject();
     });
 
 interface GetUserInfoResponse {

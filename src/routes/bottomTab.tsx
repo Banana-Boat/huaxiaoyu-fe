@@ -4,7 +4,12 @@ import {Icon, useColorMode} from 'native-base';
 import ProfileScreen from '~screens/mine/profile';
 import HomeScreen from '~screens/encounter/home';
 
-const Tab = createBottomTabNavigator();
+export type BottomTabParamList = {
+  EncounterStack: undefined;
+  MineStack: undefined;
+};
+
+const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const BottomTab = () => {
   const {colorMode} = useColorMode();

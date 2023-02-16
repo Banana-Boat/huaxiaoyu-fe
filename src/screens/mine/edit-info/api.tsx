@@ -1,6 +1,5 @@
 import axios from '~utils/interceptor';
 import userStore from '~stores/user/userStore';
-import {setData} from '~utils';
 import {IUser, SexType} from '~stores/user/types';
 
 interface UpdateUserInfoRequest {

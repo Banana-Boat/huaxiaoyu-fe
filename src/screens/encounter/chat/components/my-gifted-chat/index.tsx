@@ -67,7 +67,6 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
           /\n|\r/g,
           '',
         );
-        console.log(image.length);
         onSendImage(image);
       } catch {
         Toast.show({

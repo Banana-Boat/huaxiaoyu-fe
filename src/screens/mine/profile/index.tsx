@@ -1,7 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   Avatar,
+  Badge,
   Box,
   Center,
   Divider,
@@ -20,11 +21,13 @@ import {
 import PageContainer from '~components/page-container';
 import {RootStackParamList} from '~routes/router';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {ColorType} from 'native-base/lib/typescript/components/types';
 import {removeData} from '~utils';
 import userStore from '~stores/user/userStore';
 import {observer} from 'mobx-react-lite';
+import {getMessageList} from './api';
+import messageStore from '~stores/message/messageStore';
 
 interface ISection {
   data: IOption[];
@@ -43,6 +46,15 @@ const ProfileScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  /* 每次聚焦该页面，则获取消息列表 */
+  useFocusEffect(
+    useCallback(() => {
+      getMessageList().catch(() =>
+        Toast.show({description: '消息获取失败', duration: 2000}),
+      );
+    }, []),
+  );
+
   /** 选项列表 */
   const {colorMode, toggleColorMode} = useColorMode();
   const [optionList, setOptionList] = useState<ISection[]>([]);
@@ -57,6 +69,13 @@ const ProfileScreen = () => {
             hasArrow: true,
             action: () =>
               Toast.show({description: '功能建设中...', duration: 2000}),
+          },
+          {
+            name: '个人信息',
+            icon: 'person-circle',
+            hasArrow: false,
+            value: `${userStore.infoCompletation}%`,
+            action: () => navigation.navigate('EditInfoScreen'),
           },
         ],
       },
@@ -165,19 +184,34 @@ const ProfileScreen = () => {
       </Box>
 
       <HStack mt={3} justifyContent="space-around">
+        <Pressable onPress={() => navigation.navigate('MessageScreen')} w="50%">
+          <HStack justifyContent="center">
+            <Center>
+              <Heading size="md">消息中心</Heading>
+              <Text>{messageStore.receiveMsgList.length}</Text>
+            </Center>
+            {messageStore.unreadMsgNum !== 0 && (
+              <Badge
+                colorScheme="teal"
+                variant="solid"
+                position="absolute"
+                top={-12}
+                right={2}
+                shadow={3}
+                rounded="full"
+                _text={{
+                  fontSize: 11,
+                }}>
+                +{messageStore.unreadMsgNum}
+              </Badge>
+            )}
+          </HStack>
+        </Pressable>
+        <Divider orientation="vertical" />
         <Pressable onPress={() => navigation.navigate('FriendScreen')} w="50%">
           <Center>
             <Heading size="md">朋友</Heading>
             <Text>0</Text>
-          </Center>
-        </Pressable>
-        <Divider orientation="vertical" />
-        <Pressable
-          onPress={() => navigation.navigate('EditInfoScreen')}
-          w="50%">
-          <Center>
-            <Heading size="md">个人信息</Heading>
-            <Text>{userStore.infoCompletation}%</Text>
           </Center>
         </Pressable>
       </HStack>

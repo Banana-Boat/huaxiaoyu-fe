@@ -49,12 +49,12 @@ const App = () => {
 
   /** 提前获取院系、兴趣字典表 */
   useEffect(() => {
-    getInterestDicts()
-      .then(dicts => userStore.updateInterestDicts(dicts))
-      .catch(() => Toast.show({description: '字典表请求失败', duration: 2000}));
-    getDepartmentDict()
-      .then(dict => userStore.updateDepartmentDict(dict))
-      .catch(() => Toast.show({description: '字典表请求失败', duration: 2000}));
+    getInterestDicts().catch(() =>
+      Toast.show({description: '字典表获取失败', duration: 2000}),
+    );
+    getDepartmentDict().catch(() =>
+      Toast.show({description: '字典表获取失败', duration: 2000}),
+    );
   }, []);
 
   return (
