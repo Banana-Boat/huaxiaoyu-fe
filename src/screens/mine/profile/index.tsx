@@ -67,8 +67,7 @@ const ProfileScreen = () => {
             name: '聊天记录',
             icon: 'chatbubbles',
             hasArrow: true,
-            action: () =>
-              Toast.show({description: '功能建设中...', duration: 2000}),
+            action: () => navigation.navigate('RecordScreen'),
           },
           {
             name: '个人信息',

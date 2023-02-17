@@ -1,3 +1,3 @@
-export const RightBackRowBtnWidth = 70;
-export const LeftBackRowBtnWidth = 90;
+export const BackRowRightBtnWidth = 70;
+export const BackRowLeftBtnWidth = 90;
 export const RowHeight = 65;

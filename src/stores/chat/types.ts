@@ -7,7 +7,7 @@ export enum ChatStateType {
   CHATTING = 'chatting',
 }
 
-export interface IOpponent {
+export interface IOpponentOfChat {
   sex: SexType;
   id: number;
   nickname: string;

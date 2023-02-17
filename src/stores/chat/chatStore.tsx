@@ -5,7 +5,7 @@ import {ITopic} from '~screens/encounter/chat/types';
 import userStore from '~stores/user/userStore';
 import {ChatSocket} from './chatSocket';
 import {initOpponent, startMessage} from './constants';
-import {ChatStateType, FriendApplyResultType, IOpponent} from './types';
+import {ChatStateType, FriendApplyResultType, IOpponentOfChat} from './types';
 import 'react-native-get-random-values';
 import {v4 as uuidv4} from 'uuid';
 
@@ -31,7 +31,7 @@ class ChatStore {
   }
 
   state: ChatStateType = ChatStateType.NONE;
-  opponent: IOpponent = {...initOpponent};
+  opponent: IOpponentOfChat = {...initOpponent};
   messageList: IMessage[] = [{...startMessage}];
   isOpponentQuit: boolean = false; // 对方是否已经退出聊天室（双方只需要一个人发送退出信息即可）
 
@@ -92,7 +92,7 @@ class ChatStore {
   }
 
   /** 聊天对象 */
-  updateOpponent(opponent: IOpponent) {
+  updateOpponent(opponent: IOpponentOfChat) {
     this.opponent = opponent;
   }
 

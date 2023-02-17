@@ -13,6 +13,12 @@ const data: IFriend[] = [
     departmentCode: '1',
     phoneNum: '19975269369',
   },
+  {
+    id: 1,
+    sex: SexType.MALE,
+    nickname: 'Huster_宇航员',
+    departmentCode: '1',
+  },
 ];
 
 const FriendScreen = () => {

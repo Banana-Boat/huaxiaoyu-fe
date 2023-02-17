@@ -15,6 +15,7 @@ const FrontRow = ({data}: IProps) => {
       w="100%"
       background="white"
       _dark={{background: 'dark.100'}}
+      justifyContent="space-between"
       alignItems="center"
       px={2}>
       <HStack space={4}>
@@ -51,6 +52,17 @@ const FrontRow = ({data}: IProps) => {
           </Text>
         </VStack>
       </HStack>
+
+      <VStack>
+        <Text
+          fontSize="xs"
+          color="coolGray.500"
+          _dark={{
+            color: 'coolGray.400',
+          }}>
+          {data.phoneNum ?? ''}
+        </Text>
+      </VStack>
     </HStack>
   );
 };

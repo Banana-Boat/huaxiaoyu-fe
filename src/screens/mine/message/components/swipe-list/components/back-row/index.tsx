@@ -50,7 +50,6 @@ const BackRow = ({
           h={RowHeight}
           w={BackRowBtnWidth}
           bg="teal.500"
-          _dark={{bg: 'teal.600'}}
           justifyContent="center"
           _pressed={{
             opacity: 0.5,
@@ -92,7 +91,6 @@ const BackRow = ({
           h={RowHeight}
           bg="teal.500"
           justifyContent="center"
-          // onPress={() => closeRow(rowMap, data.item.key)}
           _pressed={{
             opacity: 0.5,
           }}>

@@ -23,7 +23,7 @@ const data: IMessageOfMsg[] = [
       departmentCode: '0',
     },
     createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: '001',
+    messageId: 1,
     status: MessageStatusType.UNREAD,
   },
   {
@@ -35,7 +35,7 @@ const data: IMessageOfMsg[] = [
       departmentCode: '0',
     },
     createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: '002',
+    messageId: 2,
     status: MessageStatusType.UNREAD,
   },
   {
@@ -47,7 +47,7 @@ const data: IMessageOfMsg[] = [
       departmentCode: '0',
     },
     createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: '003',
+    messageId: 3,
     status: MessageStatusType.UNREAD,
   },
   {
@@ -60,7 +60,7 @@ const data: IMessageOfMsg[] = [
     },
     result: MessageResultType.REJECT,
     createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: '004',
+    messageId: 4,
     status: MessageStatusType.UNREAD,
   },
   {
@@ -74,7 +74,7 @@ const data: IMessageOfMsg[] = [
     },
     result: MessageResultType.APPROVE,
     createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: '005',
+    messageId: 5,
     status: MessageStatusType.UNREAD,
   },
 ];

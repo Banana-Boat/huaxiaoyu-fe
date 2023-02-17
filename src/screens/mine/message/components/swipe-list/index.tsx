@@ -18,16 +18,16 @@ interface IProps {
 const SwipeList = ({sendMsgList, receiveMsgList}: IProps) => {
   const isReceive = receiveMsgList ? true : false;
 
-  const markReadBtnHandle = useCallback((messageId: string) => {}, []);
+  const markReadBtnHandle = useCallback((messageId: number) => {}, []);
   const copyBtnHandle = useCallback((text: string) => {}, []);
   const approveBtnHandle = useCallback(
-    (messageId: string, opponentId: number, type: MessageType) => {
+    (messageId: number, opponentId: number, type: MessageType) => {
       setIsShowPhoneNumInputModal(true);
     },
     [],
   );
   const rejectBtnHandle = useCallback(
-    (messageId: string, opponentId: number) => {},
+    (messageId: number, opponentId: number) => {},
     [],
   );
 
@@ -45,7 +45,7 @@ const SwipeList = ({sendMsgList, receiveMsgList}: IProps) => {
 
       <SwipeListView
         data={isReceive ? receiveMsgList : sendMsgList}
-        keyExtractor={item => item.messageId}
+        keyExtractor={item => item.messageId.toString()}
         renderItem={({item}) => {
           const isNeedReply =
             item.type === MessageType.APPLY_FRIEND ||

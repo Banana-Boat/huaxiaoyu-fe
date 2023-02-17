@@ -3,7 +3,7 @@ import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import {IFriend} from '~stores/friend/types';
 import BackRow from './components/back-row';
 import FrontRow from './components/front-row';
-import {LeftBackRowBtnWidth, RightBackRowBtnWidth} from './constants';
+import {BackRowLeftBtnWidth, BackRowRightBtnWidth} from './constants';
 
 interface IProps {
   friendList: IFriend[];
@@ -11,7 +11,8 @@ interface IProps {
 
 const SwipeList = ({friendList}: IProps) => {
   const deleteBtnHandle = useCallback((opponentId: number) => {}, []);
-  const phoneNumBtnHandle = useCallback((opponentId: number) => {}, []);
+  const copyBtnHandle = useCallback((phoneNum: string) => {}, []);
+  const applyBtnHandle = useCallback((opponentId: number) => {}, []);
 
   return (
     <>
@@ -19,19 +20,25 @@ const SwipeList = ({friendList}: IProps) => {
         data={friendList}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => {
-          const isNeedPhoneNumBtn = item.phoneNum ? true : false;
+          const hasPhoneNum = item.phoneNum ? true : false;
+
           return (
             <SwipeRow
-              disableRightSwipe={!isNeedPhoneNumBtn}
-              leftOpenValue={isNeedPhoneNumBtn ? LeftBackRowBtnWidth : 0}
-              rightOpenValue={-RightBackRowBtnWidth}>
+              disableRightSwipe={hasPhoneNum}
+              leftOpenValue={hasPhoneNum ? 0 : BackRowLeftBtnWidth}
+              rightOpenValue={
+                hasPhoneNum ? -2 * BackRowRightBtnWidth : -BackRowRightBtnWidth
+              }>
               {/* 底部隐藏按钮 */}
               <BackRow
-                isNeedPhoneNumBtn={isNeedPhoneNumBtn}
+                hasPhoneNum={hasPhoneNum}
                 deleteBtnHandle={() => deleteBtnHandle(item.id)}
-                phoneNumBtnHandle={
-                  isNeedPhoneNumBtn
-                    ? () => phoneNumBtnHandle(item.id)
+                applyBtnHandle={
+                  hasPhoneNum ? () => applyBtnHandle(item.id) : () => {}
+                }
+                copyBtnHandle={
+                  hasPhoneNum
+                    ? () => copyBtnHandle(item.phoneNum as string)
                     : () => {}
                 }
               />

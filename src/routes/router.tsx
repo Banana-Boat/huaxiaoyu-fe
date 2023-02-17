@@ -3,6 +3,7 @@ import ChatScreen from '~screens/encounter/chat';
 import EditInfoScreen from '~screens/mine/edit-info';
 import FriendScreen from '~screens/mine/friend';
 import MessageScreen from '~screens/mine/message';
+import RecordScreen from '~screens/mine/record';
 import StartScreen from '~screens/start';
 import BottomTab from './bottomTab';
 
@@ -17,6 +18,7 @@ export type RootStackParamList = {
   FriendScreen: undefined;
   ChatScreen: undefined;
   MessageScreen: undefined;
+  RecordScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -47,6 +49,7 @@ const Router: React.FC<IProps> = ({isNeedLogin}) => {
         }}
       />
       <Stack.Screen name="MessageScreen" component={MessageScreen} />
+      <Stack.Screen name="RecordScreen" component={RecordScreen} />
     </Stack.Navigator>
   );
 };

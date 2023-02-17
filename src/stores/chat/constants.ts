@@ -1,6 +1,6 @@
 import {IMessage} from 'react-native-gifted-chat';
 import {SexType} from '~stores/user/types';
-import {IOpponent} from './types';
+import {IOpponentOfChat} from './types';
 
 export const startMessage: IMessage = {
   _id: 0,
@@ -22,7 +22,7 @@ export const cancelMessage: IMessage = {
   },
 };
 
-export const initOpponent: IOpponent = {
+export const initOpponent: IOpponentOfChat = {
   id: 0,
   nickname: '',
   sex: SexType.NONE,
