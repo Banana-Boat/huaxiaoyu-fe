@@ -1,6 +1,19 @@
 import {Icon, Input} from 'native-base';
 import PageContainer from '~components/page-container';
 import Ionicon from 'react-native-vector-icons/Ionicons';
+import SwipeList from './components/swipe-list';
+import {IFriend} from '~stores/friend/types';
+import {SexType} from '~stores/user/types';
+
+const data: IFriend[] = [
+  {
+    id: 0,
+    sex: SexType.FEMALE,
+    nickname: 'Huster_宇航员',
+    departmentCode: '1',
+    phoneNum: '19975269369',
+  },
+];
 
 const FriendScreen = () => {
   return (
@@ -12,12 +25,13 @@ const FriendScreen = () => {
         _dark={{bg: 'dark.100'}}
         rounded={20}
         mx={2}
-        mt={2}
+        my={2}
         px={2}
         InputLeftElement={
           <Icon ml={3} color="gray.400" as={Ionicon} name="search" />
         }
       />
+      <SwipeList friendList={data} />
     </PageContainer>
   );
 };

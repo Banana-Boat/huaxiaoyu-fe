@@ -1,9 +1,18 @@
 import {action, makeObservable, observable} from 'mobx';
-import {IOpponent} from '~stores/chat/types';
+import {IFriend} from './types';
 
 class FriendStore {
   constructor() {
-    makeObservable(this, {});
+    makeObservable(this, {
+      friendList: observable,
+      updateFriendList: action,
+    });
+  }
+
+  friendList: IFriend[] = [];
+
+  updateFriendList(friendList: IFriend[]) {
+    this.friendList = [...friendList];
   }
 }
 
