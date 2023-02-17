@@ -23,7 +23,8 @@ const FriendResultModal: React.FC<IProps> = ({isOpen, result, close}) => {
             <Button
               onPress={close}
               variant="solid"
-              height={9}
+              h={9}
+              w={20}
               size="sm"
               rounded={30}
               colorScheme="pink">

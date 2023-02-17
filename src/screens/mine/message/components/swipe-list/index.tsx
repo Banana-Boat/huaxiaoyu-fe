@@ -1,71 +1,111 @@
+import {useCallback, useState} from 'react';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import {
   IMessageOfMsg,
-  MessageStatusType,
+  MessageResultType,
   MessageType,
 } from '~stores/message/types';
-import {SexType} from '~stores/user/types';
 import BackRow from './components/back-row';
 import FrontRow from './components/front-row';
+import PhoneNumInputModal from './components/phone-num-input-modal';
 import {BackRowBtnWidth} from './constants';
 
 interface IProps {
   sendMsgList?: IMessageOfMsg[];
   receiveMsgList?: IMessageOfMsg[];
 }
-const data: IMessageOfMsg[] = [
-  {
-    type: MessageType.APPLY_FRIEND,
-    opponent: {
-      id: 0,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '0',
-    },
-    createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: '001',
-    status: MessageStatusType.UNREAD,
-  },
-  {
-    type: MessageType.APPLY_PHONE,
-    opponent: {
-      id: 0,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '0',
-    },
-    createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: '002',
-    status: MessageStatusType.UNREAD,
-  },
-];
 
 const SwipeList = ({sendMsgList, receiveMsgList}: IProps) => {
-  const isSend = sendMsgList ? true : false;
+  const isReceive = receiveMsgList ? true : false;
+
+  const markReadBtnHandle = useCallback((messageId: string) => {}, []);
+  const copyBtnHandle = useCallback((text: string) => {}, []);
+  const approveBtnHandle = useCallback(
+    (messageId: string, opponentId: number, type: MessageType) => {
+      setIsShowPhoneNumInputModal(true);
+    },
+    [],
+  );
+  const rejectBtnHandle = useCallback(
+    (messageId: string, opponentId: number) => {},
+    [],
+  );
+
+  const [isShowPhoneNumInputModal, setIsShowPhoneNumInputModal] =
+    useState(false);
+  const submitPhoneNum = useCallback((phoneNum: string) => {}, []);
 
   return (
-    <SwipeListView
-      data={data}
-      keyExtractor={item => item.messageId}
-      renderItem={({item}) => {
-        const isNeedReply = true;
-        const hasStatus = true;
+    <>
+      <PhoneNumInputModal
+        isOpen={isShowPhoneNumInputModal}
+        close={() => setIsShowPhoneNumInputModal(false)}
+        submit={submitPhoneNum}
+      />
 
-        return (
-          <SwipeRow
-            disableLeftSwipe={!hasStatus}
-            disableRightSwipe={!isNeedReply}
-            leftOpenValue={hasStatus ? BackRowBtnWidth : 0}
-            rightOpenValue={isNeedReply ? -2 * BackRowBtnWidth : 0}>
-            {/* 底部隐藏按钮 */}
-            <BackRow isNeedReply={isNeedReply} hasStatus={hasStatus} />
+      <SwipeListView
+        data={isReceive ? receiveMsgList : sendMsgList}
+        keyExtractor={item => item.messageId}
+        renderItem={({item}) => {
+          const isNeedReply =
+            item.type === MessageType.APPLY_FRIEND ||
+            item.type === MessageType.APPLY_PHONE;
+          const hasStatus = isReceive;
+          const hasPhoneNum =
+            item.type === MessageType.REPLY_PHONE &&
+            item.result === MessageResultType.APPROVE;
 
-            {/* 顶部列表项 */}
-            <FrontRow data={item} />
-          </SwipeRow>
-        );
-      }}
-    />
+          return (
+            <SwipeRow
+              disableLeftSwipe={!isNeedReply && !hasPhoneNum}
+              disableRightSwipe={!hasStatus}
+              leftOpenValue={hasStatus ? BackRowBtnWidth : 0}
+              rightOpenValue={
+                isNeedReply
+                  ? -2 * BackRowBtnWidth
+                  : hasPhoneNum
+                  ? -BackRowBtnWidth
+                  : 0
+              }>
+              {/* 底部隐藏按钮 */}
+              <BackRow
+                isNeedReply={isNeedReply}
+                hasStatus={hasStatus}
+                hasPhoneNum={hasPhoneNum}
+                markReadBtnHandle={
+                  hasStatus
+                    ? () => markReadBtnHandle(item.messageId)
+                    : undefined
+                }
+                approveBtnHandle={
+                  isNeedReply
+                    ? () =>
+                        approveBtnHandle(
+                          item.messageId,
+                          item.opponent.id,
+                          item.type,
+                        )
+                    : undefined
+                }
+                rejectBtnHandle={
+                  isNeedReply
+                    ? () => rejectBtnHandle(item.messageId, item.opponent.id)
+                    : undefined
+                }
+                copyBtnHandle={
+                  hasPhoneNum
+                    ? () => copyBtnHandle(item.opponent.phoneNum ?? '')
+                    : undefined
+                }
+              />
+
+              {/* 顶部列表项 */}
+              <FrontRow data={item} />
+            </SwipeRow>
+          );
+        }}
+      />
+    </>
   );
 };
 

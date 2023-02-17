@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
 import {HStack, Avatar, VStack, Text, Box} from 'native-base';
-import {IMessageOfMsg, MessageType} from '~stores/message/types';
+import {
+  IMessageOfMsg,
+  MessageResultType,
+  MessageStatusType,
+  MessageType,
+} from '~stores/message/types';
 import {RowHeight} from '../../constants';
 
 interface IProps {
@@ -33,14 +38,17 @@ const FrontRow = ({data}: IProps) => {
             _dark={{bg: 'coolGray.200'}}
             style={{padding: 2}}
           />
-          <Box
-            position="absolute"
-            background="rose.500"
-            rounded="full"
-            w={3}
-            h={3}
-            right={0}
-          />
+
+          {data.status === MessageStatusType.UNREAD && (
+            <Box
+              position="absolute"
+              background="rose.500"
+              rounded="full"
+              w={3}
+              h={3}
+              right={0}
+            />
+          )}
         </Box>
 
         <VStack>
@@ -63,6 +71,19 @@ const FrontRow = ({data}: IProps) => {
               : ''}
             {data.type === MessageType.APPLY_PHONE
               ? 'Hello，方便留个电话吗？'
+              : ''}
+            {data.type === MessageType.DELETE_FRIEND
+              ? '对方已将你移出好友列表...'
+              : ''}
+            {data.type === MessageType.REPLY_FRIEND
+              ? data.result === MessageResultType.APPROVE
+                ? '对方同意了你的好友申请，去朋友列表看看吧'
+                : '很遗憾，对方拒绝了你的好友申请...'
+              : ''}
+            {data.type === MessageType.REPLY_PHONE
+              ? data.result === MessageResultType.APPROVE
+                ? `我的联系方式是${data.opponent.phoneNum}`
+                : '很遗憾，对方拒绝了你的联系方式申请...'
               : ''}
           </Text>
         </VStack>
