@@ -15,6 +15,7 @@ class ChatStore {
       state: observable,
       opponent: observable,
       messageList: observable,
+      isOpponentQuit: observable,
       isFriendApplySender: observable,
       friendApplyResult: observable,
       updateOpponent: action,
@@ -22,6 +23,7 @@ class ChatStore {
       createSocket: action,
       updateState: action,
       toggleState: action,
+      updateIsOpponentQuit: action,
       finishChat: action,
       updateFriendApplyResult: action,
       updateIsFriendApplySender: action,
@@ -31,6 +33,7 @@ class ChatStore {
   state: ChatStateType = ChatStateType.NONE;
   opponent: IOpponent = {...initOpponent};
   messageList: IMessage[] = [{...startMessage}];
+  isOpponentQuit: boolean = false; // 对方是否已经退出聊天室（双方只需要一个人发送退出信息即可）
 
   socket?: ChatSocket;
 
@@ -41,12 +44,15 @@ class ChatStore {
 
   // 结束聊天（重置变量）
   finishChat() {
-    this.sendMessage(null, true);
+    if (!this.isOpponentQuit) this.sendMessage(null, true);
+
     setTimeout(() => {
       this.destroySocket();
     }, 3000);
+
     this.updateOpponent({...initOpponent});
     this.updateState(ChatStateType.NONE);
+    this.updateIsOpponentQuit(false);
     this.resetMessageList();
     this.resetFriendApplyInfo();
   }
@@ -80,6 +86,9 @@ class ChatStore {
       this.updateState(ChatStateType.MATCHING);
       this.timer = setInterval(() => this.socket?.detectState(), 2000);
     }
+  }
+  updateIsOpponentQuit(flag: boolean) {
+    this.isOpponentQuit = flag;
   }
 
   /** 聊天对象 */

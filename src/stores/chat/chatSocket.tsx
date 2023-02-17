@@ -91,6 +91,7 @@ export class ChatSocket {
             if (isCanceled) {
               // cancel类型消息
               chatStore.addMessageSelf({...cancelMessage});
+              chatStore.updateIsOpponentQuit(true);
             } else if (isTopic) {
               // 推荐话题
               if (message) {

@@ -29,7 +29,7 @@ interface IProps {
 }
 
 const InfoBoard: React.FC<IProps> = ({topicList}) => {
-  const [isRecommend, setIsRecommend] = useState(true); // 展板信息类型（推荐话题 or 聊天者信息）
+  const [isRecommend, setIsRecommend] = useState(false); // 展板信息类型（推荐话题 or 聊天者信息）
 
   /** 推荐话题相关 */
   const [batchIdx, setBatchIdx] = useState(0);
