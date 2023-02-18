@@ -5,6 +5,7 @@ import SwipeList from './components/swipe-list';
 import {SexType} from '~stores/user/types';
 import {IRecord} from '~stores/record/types';
 import {observer} from 'mobx-react-lite';
+import {useEffect, useState} from 'react';
 
 const data: IRecord[] = [
   {
@@ -32,9 +33,21 @@ const data: IRecord[] = [
 ];
 
 const RecordScreen = () => {
+  const [recordList, setRecordList] = useState<IRecord[]>([]);
+  useEffect(() => {
+    setRecordList(data);
+  }, [data]);
+
   return (
     <PageContainer hasHeader title="聊天记录列表">
       <Input
+        onChangeText={(text: string) =>
+          setRecordList(() =>
+            data.filter(item =>
+              item.opponent.nickname.toLocaleLowerCase().includes(text),
+            ),
+          )
+        }
         placeholder="搜索"
         variant="filled"
         bg="dark.900"
@@ -47,7 +60,7 @@ const RecordScreen = () => {
           <Icon ml={3} color="gray.400" as={Ionicon} name="search" />
         }
       />
-      <SwipeList recordList={data} />
+      <SwipeList recordList={recordList} />
     </PageContainer>
   );
 };

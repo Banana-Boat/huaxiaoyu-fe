@@ -1,10 +1,12 @@
-import {Icon, Input} from 'native-base';
+import {Box, Icon, Image, Input, Text} from 'native-base';
 import PageContainer from '~components/page-container';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import SwipeList from './components/swipe-list';
 import {IFriend} from '~stores/friend/types';
 import {SexType} from '~stores/user/types';
 import {observer} from 'mobx-react-lite';
+import {useEffect, useState} from 'react';
+import Empty from '~components/empty';
 
 const data: IFriend[] = [
   {
@@ -17,15 +19,28 @@ const data: IFriend[] = [
   {
     id: 1,
     sex: SexType.MALE,
-    nickname: 'Huster_宇航员',
+    nickname: 'Hduer_救生员',
     departmentCode: '1',
   },
 ];
 
 const FriendScreen = () => {
+  const [friendList, setFriendList] = useState<IFriend[]>([]);
+
+  useEffect(() => {
+    setFriendList(data);
+  }, [data]);
+
   return (
     <PageContainer hasHeader title="朋友列表">
       <Input
+        onChangeText={(text: string) =>
+          setFriendList(() =>
+            data.filter(item =>
+              item.nickname.toLocaleLowerCase().includes(text),
+            ),
+          )
+        }
         placeholder="搜索"
         variant="filled"
         bg="dark.900"
@@ -38,7 +53,7 @@ const FriendScreen = () => {
           <Icon ml={3} color="gray.400" as={Ionicon} name="search" />
         }
       />
-      <SwipeList friendList={data} />
+      <SwipeList friendList={friendList} />
     </PageContainer>
   );
 };

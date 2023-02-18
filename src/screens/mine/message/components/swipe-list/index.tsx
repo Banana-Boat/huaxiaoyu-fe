@@ -2,6 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {Toast} from 'native-base';
 import {useCallback, useState} from 'react';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
+import Empty from '~components/empty';
 import {getMessageList} from '~screens/mine/api';
 import {updateUserInfo} from '~screens/mine/edit-info/api';
 import {
@@ -18,13 +19,11 @@ import PhoneNumInputModal from './components/phone-num-input-modal';
 import {BackRowBtnWidth} from './constants';
 
 interface IProps {
-  sendMsgList?: IMessageOfMsg[];
-  receiveMsgList?: IMessageOfMsg[];
+  isReceive: boolean;
+  messageList: IMessageOfMsg[];
 }
 
-const SwipeList = ({sendMsgList, receiveMsgList}: IProps) => {
-  const isReceive = receiveMsgList ? true : false;
-
+const SwipeList = ({isReceive, messageList}: IProps) => {
   const markReadBtnHandle = useCallback(async (messageId: number) => {
     if (!(await updateStatusOfMsg({messageId})))
       Toast.show({description: '修改状态失败', duration: 2000});
@@ -128,83 +127,86 @@ const SwipeList = ({sendMsgList, receiveMsgList}: IProps) => {
         close={() => setIsShowPhoneNumInputModal(false)}
         submit={submitPhoneNum}
       />
+      {messageList.length === 0 ? (
+        <Empty />
+      ) : (
+        <SwipeListView
+          data={messageList}
+          keyExtractor={item => item.messageId.toString()}
+          renderItem={({item}) => {
+            const isNeedReply =
+              item.status === MessageStatusType.UNREAD &&
+              (item.type === MessageType.APPLY_FRIEND ||
+                item.type === MessageType.APPLY_PHONE);
 
-      <SwipeListView
-        data={isReceive ? receiveMsgList : sendMsgList}
-        keyExtractor={item => item.messageId.toString()}
-        renderItem={({item}) => {
-          const isNeedReply =
-            item.status === MessageStatusType.UNREAD &&
-            (item.type === MessageType.APPLY_FRIEND ||
-              item.type === MessageType.APPLY_PHONE);
+            const isNeedUpdateStatus =
+              item.status === MessageStatusType.UNREAD && isReceive;
+            const hasPhoneNum =
+              item.type === MessageType.REPLY_PHONE &&
+              item.result === MessageResultType.APPROVE;
 
-          const isNeedUpdateStatus =
-            item.status === MessageStatusType.UNREAD && isReceive;
-          const hasPhoneNum =
-            item.type === MessageType.REPLY_PHONE &&
-            item.result === MessageResultType.APPROVE;
-
-          return (
-            <SwipeRow
-              disableLeftSwipe={!isNeedReply && !hasPhoneNum}
-              disableRightSwipe={!isNeedUpdateStatus || isNeedReply}
-              leftOpenValue={isNeedUpdateStatus ? BackRowBtnWidth : 0}
-              rightOpenValue={
-                isNeedReply
-                  ? -2 * BackRowBtnWidth
-                  : hasPhoneNum
-                  ? -BackRowBtnWidth
-                  : 0
-              }>
-              {/* 底部隐藏按钮 */}
-              <BackRow
-                isNeedReply={isNeedReply}
-                isNeedUpdateStatus={isNeedUpdateStatus}
-                hasPhoneNum={hasPhoneNum}
-                markReadBtnHandle={
-                  isNeedUpdateStatus
-                    ? () => markReadBtnHandle(item.messageId)
-                    : undefined
-                }
-                approveBtnHandle={
+            return (
+              <SwipeRow
+                disableLeftSwipe={!isNeedReply && !hasPhoneNum}
+                disableRightSwipe={!isNeedUpdateStatus || isNeedReply}
+                leftOpenValue={isNeedUpdateStatus ? BackRowBtnWidth : 0}
+                rightOpenValue={
                   isNeedReply
-                    ? () =>
-                        approveBtnHandle(
-                          item.messageId,
-                          item.opponent.id,
-                          item.type,
-                        )
-                    : undefined
-                }
-                rejectBtnHandle={
-                  isNeedReply
-                    ? () =>
-                        rejectBtnHandle(
-                          item.messageId,
-                          item.opponent.id,
-                          item.type,
-                        )
-                    : undefined
-                }
-                copyBtnHandle={
-                  hasPhoneNum
-                    ? () => {
-                        Clipboard.setString(item.opponent.phoneNum as string);
-                        Toast.show({
-                          description: '复制成功',
-                          duration: 2000,
-                        });
-                      }
-                    : undefined
-                }
-              />
+                    ? -2 * BackRowBtnWidth
+                    : hasPhoneNum
+                    ? -BackRowBtnWidth
+                    : 0
+                }>
+                {/* 底部隐藏按钮 */}
+                <BackRow
+                  isNeedReply={isNeedReply}
+                  isNeedUpdateStatus={isNeedUpdateStatus}
+                  hasPhoneNum={hasPhoneNum}
+                  markReadBtnHandle={
+                    isNeedUpdateStatus
+                      ? () => markReadBtnHandle(item.messageId)
+                      : undefined
+                  }
+                  approveBtnHandle={
+                    isNeedReply
+                      ? () =>
+                          approveBtnHandle(
+                            item.messageId,
+                            item.opponent.id,
+                            item.type,
+                          )
+                      : undefined
+                  }
+                  rejectBtnHandle={
+                    isNeedReply
+                      ? () =>
+                          rejectBtnHandle(
+                            item.messageId,
+                            item.opponent.id,
+                            item.type,
+                          )
+                      : undefined
+                  }
+                  copyBtnHandle={
+                    hasPhoneNum
+                      ? () => {
+                          Clipboard.setString(item.opponent.phoneNum as string);
+                          Toast.show({
+                            description: '复制成功',
+                            duration: 2000,
+                          });
+                        }
+                      : undefined
+                  }
+                />
 
-              {/* 顶部列表项 */}
-              <FrontRow data={item} />
-            </SwipeRow>
-          );
-        }}
-      />
+                {/* 顶部列表项 */}
+                <FrontRow data={item} />
+              </SwipeRow>
+            );
+          }}
+        />
+      )}
     </>
   );
 };

@@ -2,6 +2,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {Toast} from 'native-base';
 import {useCallback, useState} from 'react';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
+import Empty from '~components/empty';
 import {getFriendList} from '~screens/mine/api';
 import {IFriend} from '~stores/friend/types';
 import {applyPhoneNum, deleteFriend} from './api';
@@ -46,48 +47,54 @@ const SwipeList = ({friendList}: IProps) => {
         deleteId={deleteId}
         deleteBtnHandle={deleteBtnHandle}
       />
-      <SwipeListView
-        data={friendList}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => {
-          const hasPhoneNum = item.phoneNum ? true : false;
+      {friendList.length === 0 ? (
+        <Empty />
+      ) : (
+        <SwipeListView
+          data={friendList}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => {
+            const hasPhoneNum = item.phoneNum ? true : false;
 
-          return (
-            <SwipeRow
-              disableRightSwipe={hasPhoneNum}
-              leftOpenValue={hasPhoneNum ? 0 : BackRowLeftBtnWidth}
-              rightOpenValue={
-                hasPhoneNum ? -2 * BackRowRightBtnWidth : -BackRowRightBtnWidth
-              }>
-              {/* 底部隐藏按钮 */}
-              <BackRow
-                hasPhoneNum={hasPhoneNum}
-                deleteBtnHandle={() => {
-                  setDeleteId(item.id);
-                  setIsShowDeleteConfirmModal(true);
-                }}
-                applyBtnHandle={
-                  hasPhoneNum ? () => applyBtnHandle(item.id) : () => {}
-                }
-                copyBtnHandle={
+            return (
+              <SwipeRow
+                disableRightSwipe={hasPhoneNum}
+                leftOpenValue={hasPhoneNum ? 0 : BackRowLeftBtnWidth}
+                rightOpenValue={
                   hasPhoneNum
-                    ? () => {
-                        Clipboard.setString(item.phoneNum as string);
-                        Toast.show({
-                          description: '复制成功',
-                          duration: 2000,
-                        });
-                      }
-                    : () => {}
-                }
-              />
+                    ? -2 * BackRowRightBtnWidth
+                    : -BackRowRightBtnWidth
+                }>
+                {/* 底部隐藏按钮 */}
+                <BackRow
+                  hasPhoneNum={hasPhoneNum}
+                  deleteBtnHandle={() => {
+                    setDeleteId(item.id);
+                    setIsShowDeleteConfirmModal(true);
+                  }}
+                  applyBtnHandle={
+                    hasPhoneNum ? () => applyBtnHandle(item.id) : () => {}
+                  }
+                  copyBtnHandle={
+                    hasPhoneNum
+                      ? () => {
+                          Clipboard.setString(item.phoneNum as string);
+                          Toast.show({
+                            description: '复制成功',
+                            duration: 2000,
+                          });
+                        }
+                      : () => {}
+                  }
+                />
 
-              {/* 顶部列表项 */}
-              <FrontRow data={item} />
-            </SwipeRow>
-          );
-        }}
-      />
+                {/* 顶部列表项 */}
+                <FrontRow data={item} />
+              </SwipeRow>
+            );
+          }}
+        />
+      )}
     </>
   );
 };
