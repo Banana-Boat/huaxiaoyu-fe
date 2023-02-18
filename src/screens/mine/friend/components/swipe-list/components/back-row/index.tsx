@@ -72,7 +72,7 @@ const BackRow = ({
         }}>
         <VStack alignItems="center" space={2}>
           <Text fontSize="xs" fontWeight="medium" color="coolGray.100">
-            删除
+            删除好友
           </Text>
         </VStack>
       </Pressable>

@@ -41,7 +41,7 @@ const PhoneNumInputModal = ({isOpen, close, submit}: IProps) => {
       <Modal.Content>
         <Modal.Header>填写手机号码</Modal.Header>
         <Modal.Body>
-          <Text mb={4}>您还未记录手机号码，请先填写</Text>
+          <Text mb={4}>你还未记录手机号码，请先填写</Text>
 
           <FormControl isInvalid={error !== ''}>
             <Input

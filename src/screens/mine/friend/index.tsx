@@ -4,6 +4,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import SwipeList from './components/swipe-list';
 import {IFriend} from '~stores/friend/types';
 import {SexType} from '~stores/user/types';
+import {observer} from 'mobx-react-lite';
 
 const data: IFriend[] = [
   {
@@ -42,4 +43,4 @@ const FriendScreen = () => {
   );
 };
 
-export default FriendScreen;
+export default observer(FriendScreen);

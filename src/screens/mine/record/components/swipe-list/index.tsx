@@ -1,6 +1,8 @@
+import {Toast} from 'native-base';
 import {useCallback} from 'react';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import {IRecord} from '~stores/record/types';
+import {applyFriend} from './api';
 import BackRow from './components/back-row';
 import FrontRow from './components/front-row';
 import {BackRowBtnWidth} from './constants';
@@ -10,7 +12,12 @@ interface IProps {
 }
 
 const SwipeList = ({recordList}: IProps) => {
-  const applyBtnHandle = useCallback((opponentId: number) => {}, []);
+  const applyBtnHandle = useCallback(async (opponentId: number) => {
+    if (!(await applyFriend({opponentId})))
+      return Toast.show({description: '申请失败，请稍后重试', duration: 2000});
+
+    Toast.show({description: '申请已发出', duration: 2000});
+  }, []);
 
   return (
     <>

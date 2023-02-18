@@ -26,8 +26,9 @@ import {ColorType} from 'native-base/lib/typescript/components/types';
 import {removeData} from '~utils';
 import userStore from '~stores/user/userStore';
 import {observer} from 'mobx-react-lite';
-import {getMessageList} from './api';
+import {getFriendList, getMessageList, getRecordList} from '../api';
 import messageStore from '~stores/message/messageStore';
+import friendStore from '~stores/friend/friendStore';
 
 interface ISection {
   data: IOption[];
@@ -50,7 +51,13 @@ const ProfileScreen = () => {
   useFocusEffect(
     useCallback(() => {
       getMessageList().catch(() =>
-        Toast.show({description: '消息获取失败', duration: 2000}),
+        Toast.show({description: '消息列表获取失败', duration: 2000}),
+      );
+      getFriendList().catch(() =>
+        Toast.show({description: '朋友列表获取失败', duration: 2000}),
+      );
+      getRecordList().catch(() =>
+        Toast.show({description: '消息记录列表获取失败', duration: 2000}),
       );
     }, []),
   );
@@ -210,7 +217,7 @@ const ProfileScreen = () => {
         <Pressable onPress={() => navigation.navigate('FriendScreen')} w="50%">
           <Center>
             <Heading size="md">朋友</Heading>
-            <Text>0</Text>
+            <Text>{friendStore.friendList.length}</Text>
           </Center>
         </Pressable>
       </HStack>

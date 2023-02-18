@@ -1,3 +1,5 @@
+import friendStore from '~stores/friend/friendStore';
+import {IFriend} from '~stores/friend/types';
 import messageStore from '~stores/message/messageStore';
 import {
   IMessageOfMsg,
@@ -6,37 +8,27 @@ import {
   MessageStatusType,
   MessageType,
 } from '~stores/message/types';
+import recordStore from '~stores/record/recordStore';
+import {IRecord} from '~stores/record/types';
 
 import axios from '~utils/interceptor';
 
-interface ISendMsgOfApi {
+interface IMessageOfApi {
   opponent: IOpponentOfMsg;
   message: {
-    messageId: string;
+    messageId: number;
     type: MessageType;
+    status?: MessageStatusType;
     result?: MessageResultType;
     createdAt: string;
-    sendId: string;
-    receiveId: string;
-  };
-}
-
-interface IReceiveMsgOfApi {
-  opponent: IOpponentOfMsg;
-  message: {
-    messageId: string;
-    type: MessageType.APPLY_FRIEND | MessageType.APPLY_PHONE;
-    status: MessageStatusType;
-    result?: MessageResultType;
-    createdAt: string;
-    sendId: string;
-    receiveId: string;
+    sendId: number;
+    receiveId: number;
   };
 }
 
 interface GetMessageListResponse {
-  sendMessageList: ISendMsgOfApi[];
-  receiveMessageList: IReceiveMsgOfApi[];
+  sendMessageList: IMessageOfApi[];
+  receiveMessageList: IMessageOfApi[];
 }
 
 export const getMessageList = async () =>
@@ -61,6 +53,38 @@ export const getMessageList = async () =>
         messageStore.updateReceiveMsgList(receiveList);
         messageStore.updateSendMsgList(sendList);
         messageStore.updateUnreadMsgNum(count);
+
+        return true;
+      } else return Promise.reject();
+    });
+
+interface GetFriendListResponse {
+  friendList: IFriend[];
+}
+
+export const getFriendList = async () =>
+  axios
+    .get<null, GetFriendListResponse>('/friend/getFriendList')
+    .then(async res => {
+      if (res) {
+        // 存入friendStore
+        friendStore.updateFriendList(res.friendList);
+
+        return true;
+      } else return Promise.reject();
+    });
+
+interface GetRecordListResponse {
+  recordList: IRecord[];
+}
+
+export const getRecordList = async () =>
+  axios
+    .get<null, GetRecordListResponse>('/record/getRecordList')
+    .then(async res => {
+      if (res) {
+        // 存入recordStore
+        recordStore.updateRecordList(res.recordList);
 
         return true;
       } else return Promise.reject();

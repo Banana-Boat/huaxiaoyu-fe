@@ -4,6 +4,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import SwipeList from './components/swipe-list';
 import {SexType} from '~stores/user/types';
 import {IRecord} from '~stores/record/types';
+import {observer} from 'mobx-react-lite';
 
 const data: IRecord[] = [
   {
@@ -51,4 +52,4 @@ const RecordScreen = () => {
   );
 };
 
-export default RecordScreen;
+export default observer(RecordScreen);

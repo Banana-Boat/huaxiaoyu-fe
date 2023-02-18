@@ -2,7 +2,7 @@ import {HStack, Pressable, Text, VStack} from 'native-base';
 import {BackRowBtnWidth, RowHeight} from '../../constants';
 
 interface IProps {
-  hasStatus: boolean;
+  isNeedUpdateStatus: boolean;
   isNeedReply: boolean;
   hasPhoneNum: boolean;
   markReadBtnHandle?: () => void;
@@ -12,7 +12,7 @@ interface IProps {
 }
 
 const BackRow = ({
-  hasStatus,
+  isNeedUpdateStatus,
   isNeedReply,
   hasPhoneNum,
   markReadBtnHandle,
@@ -22,7 +22,7 @@ const BackRow = ({
 }: IProps) => {
   return (
     <HStack flex={1} h={RowHeight}>
-      {hasStatus && (
+      {isNeedUpdateStatus && (
         <Pressable
           onPress={markReadBtnHandle}
           position="absolute"
