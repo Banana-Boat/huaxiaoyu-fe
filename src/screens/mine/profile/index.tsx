@@ -47,7 +47,7 @@ const ProfileScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  /* 每次聚焦该页面，则获取消息列表 */
+  /* 每次聚焦该页面，则获取三个列表 */
   useFocusEffect(
     useCallback(() => {
       getMessageList().catch(() =>

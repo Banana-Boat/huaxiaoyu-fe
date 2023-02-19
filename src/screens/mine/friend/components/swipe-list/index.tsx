@@ -4,6 +4,7 @@ import {useCallback, useState} from 'react';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import Empty from '~components/empty';
 import {getFriendList} from '~screens/mine/api';
+import friendStore from '~stores/friend/friendStore';
 import {IFriend} from '~stores/friend/types';
 import {applyPhoneNum, deleteFriend} from './api';
 import BackRow from './components/back-row';
@@ -24,12 +25,10 @@ const SwipeList = ({friendList}: IProps) => {
     setIsShowDeleteConfirmModal(false);
 
     if (!(await deleteFriend({opponentId})))
-      Toast.show({description: '删除好友失败', duration: 2000});
+      return Toast.show({description: '删除好友失败', duration: 2000});
 
     Toast.show({description: '删除好友成功', duration: 2000});
-    getFriendList().catch(() =>
-      Toast.show({description: '获取好友列表失败', duration: 2000}),
-    );
+    friendStore.deleteFriend(opponentId); // 若删除成功，则同时删除本地好友
   }, []);
 
   const applyBtnHandle = useCallback(async (opponentId: number) => {

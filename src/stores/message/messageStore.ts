@@ -1,5 +1,5 @@
 import {action, makeObservable, observable} from 'mobx';
-import {IMessageOfMsg} from './types';
+import {IMessageOfMsg, MessageStatusType} from './types';
 
 class MessageStore {
   constructor() {
@@ -10,6 +10,8 @@ class MessageStore {
       updateSendMsgList: action,
       updateReceiveMsgList: action,
       updateUnreadMsgNum: action,
+      updateStatusOfReceiveMsg: action,
+      updateStatusOfSendMsg: action,
     });
   }
 
@@ -27,6 +29,18 @@ class MessageStore {
 
   updateUnreadMsgNum(num: number) {
     this.unreadMsgNum = num;
+  }
+
+  updateStatusOfSendMsg(messageId: number) {
+    this.sendMsgList.forEach(item => {
+      if (item.messageId === messageId) item.status = MessageStatusType.READED;
+    });
+  }
+
+  updateStatusOfReceiveMsg(messageId: number) {
+    this.receiveMsgList.forEach(item => {
+      if (item.messageId === messageId) item.status = MessageStatusType.READED;
+    });
   }
 }
 

@@ -3,8 +3,8 @@ import {Toast} from 'native-base';
 import {useCallback, useState} from 'react';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import Empty from '~components/empty';
-import {getMessageList} from '~screens/mine/api';
 import {updateUserInfo} from '~screens/mine/edit-info/api';
+import messageStore from '~stores/message/messageStore';
 import {
   IMessageOfMsg,
   MessageResultType,
@@ -26,11 +26,10 @@ interface IProps {
 const SwipeList = ({isReceive, messageList}: IProps) => {
   const markReadBtnHandle = useCallback(async (messageId: number) => {
     if (!(await updateStatusOfMsg({messageId})))
-      Toast.show({description: '修改状态失败', duration: 2000});
+      return Toast.show({description: '修改状态失败', duration: 2000});
 
-    getMessageList().catch(() =>
-      Toast.show({description: '获取消息列表失败', duration: 2000}),
-    );
+    if (isReceive) messageStore.updateStatusOfReceiveMsg(messageId);
+    else messageStore.updateStatusOfSendMsg(messageId);
   }, []);
 
   const approveBtnHandle = useCallback(
@@ -44,10 +43,11 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
               result: MessageResultType.APPROVE,
             }))
           )
-            Toast.show({description: '回复失败', duration: 2000});
+            return Toast.show({description: '回复失败', duration: 2000});
 
           Toast.show({description: '回复成功', duration: 2000});
-          markReadBtnHandle(messageId);
+          if (isReceive) messageStore.updateStatusOfReceiveMsg(messageId);
+          else messageStore.updateStatusOfSendMsg(messageId);
 
           break;
         case MessageType.APPLY_PHONE:
@@ -63,10 +63,11 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
               result: MessageResultType.APPROVE,
             }))
           )
-            Toast.show({description: '回复失败', duration: 2000});
+            return Toast.show({description: '回复失败', duration: 2000});
 
           Toast.show({description: '回复成功', duration: 2000});
-          markReadBtnHandle(messageId);
+          if (isReceive) messageStore.updateStatusOfReceiveMsg(messageId);
+          else messageStore.updateStatusOfSendMsg(messageId);
 
           break;
       }
@@ -85,10 +86,11 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
               result: MessageResultType.APPROVE,
             }))
           )
-            Toast.show({description: '回复失败', duration: 2000});
+            return Toast.show({description: '回复失败', duration: 2000});
 
           Toast.show({description: '回复成功', duration: 2000});
-          markReadBtnHandle(messageId);
+          if (isReceive) messageStore.updateStatusOfReceiveMsg(messageId);
+          else messageStore.updateStatusOfSendMsg(messageId);
 
           break;
         case MessageType.APPLY_PHONE:
@@ -99,10 +101,11 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
               result: MessageResultType.APPROVE,
             }))
           )
-            Toast.show({description: '回复失败', duration: 2000});
+            return Toast.show({description: '回复失败', duration: 2000});
 
           Toast.show({description: '回复成功', duration: 2000});
-          markReadBtnHandle(messageId);
+          if (isReceive) messageStore.updateStatusOfReceiveMsg(messageId);
+          else messageStore.updateStatusOfSendMsg(messageId);
 
           break;
       }

@@ -6,6 +6,7 @@ class FriendStore {
     makeObservable(this, {
       friendList: observable,
       updateFriendList: action,
+      deleteFriend: action,
     });
   }
 
@@ -13,6 +14,10 @@ class FriendStore {
 
   updateFriendList(friendList: IFriend[]) {
     this.friendList = [...friendList];
+  }
+
+  deleteFriend(opponentId: number) {
+    this.friendList = this.friendList.filter(item => item.id !== opponentId);
   }
 }
 
