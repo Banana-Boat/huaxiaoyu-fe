@@ -55,8 +55,8 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
           (res.assets as Asset[])[0].uri as string,
           {
             returnableOutputType: 'base64',
-            maxHeight: 256,
-            maxWidth: 256,
+            maxHeight: 1024,
+            maxWidth: 1024,
           },
         );
 

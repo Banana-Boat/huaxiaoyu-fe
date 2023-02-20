@@ -14,7 +14,7 @@ import {
 import userStore from '~stores/user/userStore';
 import {replyFriend, replyPhoneNum, updateStatusOfMsg} from './api';
 import BackRow from './components/back-row';
-import FrontRowOfReceive from './components/front-row-reveive';
+import FrontRowOfReceive from './components/front-row-receive';
 import FrontRowOfSend from './components/front-row-send';
 import PhoneNumInputModal from './components/phone-num-input-modal';
 import {BackRowBtnWidth} from './constants';
@@ -139,13 +139,15 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
           keyExtractor={item => item.id.toString()}
           renderItem={({item}, rowMap) => {
             const isNeedReply =
+              isReceive &&
               item.status === MessageStatusType.UNREAD &&
               (item.type === MessageType.APPLY_FRIEND ||
                 item.type === MessageType.APPLY_PHONE);
 
             const isNeedUpdateStatus =
-              item.status === MessageStatusType.UNREAD && isReceive;
+              isReceive && item.status === MessageStatusType.UNREAD;
             const hasPhoneNum =
+              isReceive &&
               item.type === MessageType.REPLY_PHONE &&
               item.result === MessageResultType.APPROVE;
 
