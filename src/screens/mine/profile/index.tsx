@@ -29,6 +29,12 @@ import {observer} from 'mobx-react-lite';
 import {getFriendList, getMessageList, getRecordList} from '../api';
 import messageStore from '~stores/message/messageStore';
 import friendStore from '~stores/friend/friendStore';
+import {
+  BottomTabBarButtonProps,
+  BottomTabBarProps,
+  BottomTabNavigationProp,
+} from '@react-navigation/bottom-tabs';
+import {BottomTabParamList} from '~routes/bottomTab';
 
 interface ISection {
   data: IOption[];
@@ -47,20 +53,37 @@ const ProfileScreen = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const tab = useNavigation<BottomTabNavigationProp<BottomTabParamList>>();
+
+  const fetchData = useCallback(() => {
+    getMessageList().catch(() =>
+      Toast.show({description: '消息列表获取失败', duration: 2000}),
+    );
+    getFriendList().catch(() =>
+      Toast.show({description: '朋友列表获取失败', duration: 2000}),
+    );
+    getRecordList().catch(() =>
+      Toast.show({description: '消息记录列表获取失败', duration: 2000}),
+    );
+  }, []);
+
+  /* 长按‘我的’tab刷新数据 */
+  useEffect(() => {
+    const unsubscribe = tab.addListener('tabLongPress', e => {
+      if (
+        e.target ===
+        tab.getState().routes.find(item => item.name === 'MineStack')?.key
+      ) {
+        Toast.show({description: '刷新成功', duration: 2000});
+        fetchData();
+      }
+    });
+
+    return unsubscribe;
+  }, [tab]);
+
   /* 每次聚焦该页面，则获取三个列表 */
-  useFocusEffect(
-    useCallback(() => {
-      getMessageList().catch(() =>
-        Toast.show({description: '消息列表获取失败', duration: 2000}),
-      );
-      getFriendList().catch(() =>
-        Toast.show({description: '朋友列表获取失败', duration: 2000}),
-      );
-      getRecordList().catch(() =>
-        Toast.show({description: '消息记录列表获取失败', duration: 2000}),
-      );
-    }, []),
-  );
+  useFocusEffect(useCallback(() => fetchData(), []));
 
   /** 选项列表 */
   const {colorMode, toggleColorMode} = useColorMode();

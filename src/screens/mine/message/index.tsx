@@ -52,11 +52,12 @@ const MessageScreen = () => {
         }
       />
       <Box flex={1} mt={1}>
-        {curTab === TabType.RECEIVE ? (
+        <Box display={curTab === TabType.RECEIVE ? 'flex' : 'none'}>
           <SwipeList isReceive={true} messageList={receiveMessageList} />
-        ) : (
+        </Box>
+        <Box display={curTab === TabType.SEND ? 'flex' : 'none'}>
           <SwipeList isReceive={false} messageList={sendMessageList} />
-        )}
+        </Box>
       </Box>
     </PageContainer>
   );
