@@ -13,7 +13,7 @@ interface ReplyFriendResponse {
 
 export const replyFriend = async (params: ReplyFriendRequest) =>
   axios
-    .put<ReplyFriendRequest, ReplyFriendResponse>(
+    .post<ReplyFriendRequest, ReplyFriendResponse>(
       '/message/replyFriend',
       params,
     )
@@ -35,7 +35,7 @@ interface ReplyPhoneNumResponse {
 
 export const replyPhoneNum = async (params: ReplyPhoneNumRequest) =>
   axios
-    .put<ReplyPhoneNumRequest, ReplyPhoneNumResponse>(
+    .post<ReplyPhoneNumRequest, ReplyPhoneNumResponse>(
       '/message/replyPhoneNum',
       params,
     )
@@ -55,7 +55,7 @@ interface UpdateStatusOfMsgResponse {
 
 export const updateStatusOfMsg = async (params: UpdateStatusOfMsgRequest) =>
   axios
-    .put<UpdateStatusOfMsgRequest, UpdateStatusOfMsgResponse>(
+    .post<UpdateStatusOfMsgRequest, UpdateStatusOfMsgResponse>(
       '/message/updateStatusOfMsg',
       params,
     )

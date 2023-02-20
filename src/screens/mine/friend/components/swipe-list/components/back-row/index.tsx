@@ -9,7 +9,7 @@ interface IProps {
   hasPhoneNum: boolean;
   applyBtnHandle: () => void;
   deleteBtnHandle: () => void;
-  copyBtnHandle: () => void;
+  copyBtnHandle?: () => void;
 }
 
 const BackRow = ({

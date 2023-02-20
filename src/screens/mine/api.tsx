@@ -16,7 +16,7 @@ import axios from '~utils/interceptor';
 interface IMessageOfApi {
   opponent: IOpponentOfMsg;
   message: {
-    messageId: number;
+    id: number;
     type: MessageType;
     status?: MessageStatusType;
     result?: MessageResultType;

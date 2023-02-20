@@ -14,7 +14,8 @@ import {
 import userStore from '~stores/user/userStore';
 import {replyFriend, replyPhoneNum, updateStatusOfMsg} from './api';
 import BackRow from './components/back-row';
-import FrontRow from './components/front-row';
+import FrontRowOfReceive from './components/front-row-reveive';
+import FrontRowOfSend from './components/front-row-send';
 import PhoneNumInputModal from './components/phone-num-input-modal';
 import {BackRowBtnWidth} from './constants';
 
@@ -83,7 +84,7 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
             !(await replyFriend({
               messageId,
               opponentId,
-              result: MessageResultType.APPROVE,
+              result: MessageResultType.REJECT,
             }))
           )
             return Toast.show({description: '回复失败', duration: 2000});
@@ -98,7 +99,7 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
             !(await replyPhoneNum({
               messageId,
               opponentId,
-              result: MessageResultType.APPROVE,
+              result: MessageResultType.REJECT,
             }))
           )
             return Toast.show({description: '回复失败', duration: 2000});
@@ -135,8 +136,8 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
       ) : (
         <SwipeListView
           data={messageList}
-          keyExtractor={item => item.messageId.toString()}
-          renderItem={({item}) => {
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}, rowMap) => {
             const isNeedReply =
               item.status === MessageStatusType.UNREAD &&
               (item.type === MessageType.APPLY_FRIEND ||
@@ -167,27 +168,30 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
                   hasPhoneNum={hasPhoneNum}
                   markReadBtnHandle={
                     isNeedUpdateStatus
-                      ? () => markReadBtnHandle(item.messageId)
+                      ? () => {
+                          markReadBtnHandle(item.id);
+                          rowMap[item.id].closeRow();
+                        }
                       : undefined
                   }
                   approveBtnHandle={
                     isNeedReply
-                      ? () =>
+                      ? () => {
                           approveBtnHandle(
-                            item.messageId,
+                            item.id,
                             item.opponent.id,
                             item.type,
-                          )
+                          );
+                          rowMap[item.id].closeRow();
+                        }
                       : undefined
                   }
                   rejectBtnHandle={
                     isNeedReply
-                      ? () =>
-                          rejectBtnHandle(
-                            item.messageId,
-                            item.opponent.id,
-                            item.type,
-                          )
+                      ? () => {
+                          rejectBtnHandle(item.id, item.opponent.id, item.type);
+                          rowMap[item.id].closeRow();
+                        }
                       : undefined
                   }
                   copyBtnHandle={
@@ -198,13 +202,18 @@ const SwipeList = ({isReceive, messageList}: IProps) => {
                             description: '复制成功',
                             duration: 2000,
                           });
+                          rowMap[item.id].closeRow();
                         }
                       : undefined
                   }
                 />
 
                 {/* 顶部列表项 */}
-                <FrontRow data={item} />
+                {isReceive ? (
+                  <FrontRowOfReceive data={item} />
+                ) : (
+                  <FrontRowOfSend data={item} />
+                )}
               </SwipeRow>
             );
           }}

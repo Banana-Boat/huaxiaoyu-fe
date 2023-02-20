@@ -10,7 +10,7 @@ interface DeleteFriendResponse {
 
 export const deleteFriend = async (params: DeleteFriendRequest) =>
   axios
-    .put<DeleteFriendRequest, DeleteFriendResponse>(
+    .post<DeleteFriendRequest, DeleteFriendResponse>(
       '/friend/deleteFriend',
       params,
     )
@@ -30,7 +30,7 @@ interface ApplyPhoneNumResponse {
 
 export const applyPhoneNum = async (params: ApplyPhoneNumRequest) =>
   axios
-    .put<ApplyPhoneNumRequest, ApplyPhoneNumResponse>(
+    .post<ApplyPhoneNumRequest, ApplyPhoneNumResponse>(
       '/friend/applyPhoneNum',
       params,
     )

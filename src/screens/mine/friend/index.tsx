@@ -1,42 +1,25 @@
-import {Box, Icon, Image, Input, Text} from 'native-base';
+import {Icon, Input} from 'native-base';
 import PageContainer from '~components/page-container';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import SwipeList from './components/swipe-list';
 import {IFriend} from '~stores/friend/types';
-import {SexType} from '~stores/user/types';
 import {observer} from 'mobx-react-lite';
 import {useEffect, useState} from 'react';
-import Empty from '~components/empty';
-
-const data: IFriend[] = [
-  {
-    id: 0,
-    sex: SexType.FEMALE,
-    nickname: 'Huster_宇航员',
-    departmentCode: '1',
-    phoneNum: '19975269369',
-  },
-  {
-    id: 1,
-    sex: SexType.MALE,
-    nickname: 'Hduer_救生员',
-    departmentCode: '1',
-  },
-];
+import friendStore from '~stores/friend/friendStore';
 
 const FriendScreen = () => {
   const [friendList, setFriendList] = useState<IFriend[]>([]);
 
   useEffect(() => {
-    setFriendList(data);
-  }, [data]);
+    setFriendList(friendStore.friendList);
+  }, [friendStore.friendList]);
 
   return (
     <PageContainer hasHeader title="朋友列表">
       <Input
         onChangeText={(text: string) =>
           setFriendList(() =>
-            data.filter(item =>
+            friendStore.friendList.filter(item =>
               item.nickname.toLocaleLowerCase().includes(text),
             ),
           )

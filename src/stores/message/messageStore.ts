@@ -32,14 +32,16 @@ class MessageStore {
   }
 
   updateStatusOfSendMsg(messageId: number) {
-    this.sendMsgList.forEach(item => {
-      if (item.messageId === messageId) item.status = MessageStatusType.READED;
+    this.sendMsgList = this.sendMsgList.map(item => {
+      if (item.id === messageId) item.status = MessageStatusType.READED;
+      return item;
     });
   }
 
   updateStatusOfReceiveMsg(messageId: number) {
-    this.receiveMsgList.forEach(item => {
-      if (item.messageId === messageId) item.status = MessageStatusType.READED;
+    this.receiveMsgList = this.receiveMsgList.map(item => {
+      if (item.id === messageId) item.status = MessageStatusType.READED;
+      return item;
     });
   }
 }

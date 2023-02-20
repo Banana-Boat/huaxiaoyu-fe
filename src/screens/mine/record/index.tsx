@@ -6,44 +6,20 @@ import {SexType} from '~stores/user/types';
 import {IRecord} from '~stores/record/types';
 import {observer} from 'mobx-react-lite';
 import {useEffect, useState} from 'react';
-
-const data: IRecord[] = [
-  {
-    opponent: {
-      id: 0,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '1',
-    },
-    recordId: 0,
-    createdAt: '2023-02-16T08:07:38.355Z',
-    isFriend: true,
-  },
-  {
-    opponent: {
-      id: 2,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '1',
-    },
-    recordId: 1,
-    createdAt: '2023-02-16T08:07:38.355Z',
-    isFriend: false,
-  },
-];
+import recordStore from '~stores/record/recordStore';
 
 const RecordScreen = () => {
   const [recordList, setRecordList] = useState<IRecord[]>([]);
   useEffect(() => {
-    setRecordList(data);
-  }, [data]);
+    setRecordList(recordStore.recordList);
+  }, [recordStore.recordList]);
 
   return (
     <PageContainer hasHeader title="聊天记录列表">
       <Input
         onChangeText={(text: string) =>
           setRecordList(() =>
-            data.filter(item =>
+            recordStore.recordList.filter(item =>
               item.opponent.nickname.toLocaleLowerCase().includes(text),
             ),
           )

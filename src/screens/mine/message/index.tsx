@@ -2,83 +2,12 @@ import {observer} from 'mobx-react-lite';
 import {Box, Icon, Input} from 'native-base';
 import {useEffect, useState} from 'react';
 import PageContainer from '~components/page-container';
-import {
-  IMessageOfMsg,
-  MessageType,
-  MessageStatusType,
-  MessageResultType,
-} from '~stores/message/types';
-import {SexType} from '~stores/user/types';
+import {IMessageOfMsg} from '~stores/message/types';
 import SwipeList from './components/swipe-list';
 import Tab from './components/tab';
 import {TabType} from './types';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-
-const data: IMessageOfMsg[] = [
-  {
-    type: MessageType.APPLY_FRIEND,
-    opponent: {
-      id: 0,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '0',
-    },
-    createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: 1,
-    status: MessageStatusType.UNREAD,
-  },
-  {
-    type: MessageType.APPLY_PHONE,
-    opponent: {
-      id: 0,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '0',
-    },
-    createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: 2,
-    status: MessageStatusType.UNREAD,
-  },
-  {
-    type: MessageType.DELETE_FRIEND,
-    opponent: {
-      id: 0,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '0',
-    },
-    createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: 3,
-    status: MessageStatusType.UNREAD,
-  },
-  {
-    type: MessageType.REPLY_FRIEND,
-    opponent: {
-      id: 0,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '0',
-    },
-    result: MessageResultType.REJECT,
-    createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: 4,
-    status: MessageStatusType.UNREAD,
-  },
-  {
-    type: MessageType.REPLY_PHONE,
-    opponent: {
-      id: 0,
-      sex: SexType.FEMALE,
-      nickname: 'Huster_宇航员',
-      departmentCode: '0',
-      phoneNum: '19975269369',
-    },
-    result: MessageResultType.APPROVE,
-    createdAt: '2023-02-16T08:07:38.355Z',
-    messageId: 5,
-    status: MessageStatusType.UNREAD,
-  },
-];
+import messageStore from '~stores/message/messageStore';
 
 const MessageScreen = () => {
   const [curTab, setCurTab] = useState(TabType.RECEIVE);
@@ -88,9 +17,9 @@ const MessageScreen = () => {
   );
 
   useEffect(() => {
-    setSendMessageList([]);
-    setReceiveMessageList(data);
-  }, [data]);
+    setSendMessageList(messageStore.sendMsgList);
+    setReceiveMessageList(messageStore.receiveMsgList);
+  }, [messageStore.sendMsgList, messageStore.receiveMsgList]);
 
   return (
     <PageContainer hasHeader title="消息中心">
@@ -99,13 +28,13 @@ const MessageScreen = () => {
         onChangeText={(text: string) => {
           if (curTab === TabType.SEND)
             setSendMessageList(() =>
-              data.filter(item =>
+              messageStore.sendMsgList.filter(item =>
                 item.opponent.nickname.toLocaleLowerCase().includes(text),
               ),
             );
           if (curTab === TabType.RECEIVE)
             setReceiveMessageList(() =>
-              data.filter(item =>
+              messageStore.receiveMsgList.filter(item =>
                 item.opponent.nickname.toLocaleLowerCase().includes(text),
               ),
             );

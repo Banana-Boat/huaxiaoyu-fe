@@ -208,7 +208,7 @@ const ProfileScreen = () => {
                 _text={{
                   fontSize: 11,
                 }}>
-                +{messageStore.unreadMsgNum}
+                {`+${messageStore.unreadMsgNum}`}
               </Badge>
             )}
           </HStack>

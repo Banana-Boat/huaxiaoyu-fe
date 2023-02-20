@@ -12,7 +12,7 @@ interface IProps {
   data: IMessageOfMsg;
 }
 
-const FrontRow = ({data}: IProps) => {
+const FrontRowOfReceive = ({data}: IProps) => {
   return (
     <HStack
       h={RowHeight}
@@ -111,4 +111,4 @@ const FrontRow = ({data}: IProps) => {
   );
 };
 
-export default FrontRow;
+export default FrontRowOfReceive;

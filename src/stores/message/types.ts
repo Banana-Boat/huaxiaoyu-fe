@@ -30,7 +30,7 @@ export interface IOpponentOfMsg {
 export interface IMessageOfMsg {
   type: MessageType;
   opponent: IOpponentOfMsg;
-  messageId: number;
+  id: number;
   createdAt: string;
   status?: MessageStatusType;
   result?: MessageResultType;

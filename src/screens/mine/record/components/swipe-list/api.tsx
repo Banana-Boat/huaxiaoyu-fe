@@ -10,7 +10,10 @@ interface ApplyFriendResponse {
 
 export const applyFriend = async (params: ApplyFriendRequest) =>
   axios
-    .put<ApplyFriendRequest, ApplyFriendResponse>('/friend/applyFriend', params)
+    .post<ApplyFriendRequest, ApplyFriendResponse>(
+      '/friend/applyFriend',
+      params,
+    )
     .then(async res => {
       if (res) {
         return res.isSuccess;

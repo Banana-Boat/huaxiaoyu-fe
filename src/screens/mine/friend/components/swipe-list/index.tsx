@@ -3,7 +3,6 @@ import {Toast} from 'native-base';
 import {useCallback, useState} from 'react';
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 import Empty from '~components/empty';
-import {getFriendList} from '~screens/mine/api';
 import friendStore from '~stores/friend/friendStore';
 import {IFriend} from '~stores/friend/types';
 import {applyPhoneNum, deleteFriend} from './api';
@@ -52,7 +51,7 @@ const SwipeList = ({friendList}: IProps) => {
         <SwipeListView
           data={friendList}
           keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => {
+          renderItem={({item}, rowMap) => {
             const hasPhoneNum = item.phoneNum ? true : false;
 
             return (
@@ -70,10 +69,12 @@ const SwipeList = ({friendList}: IProps) => {
                   deleteBtnHandle={() => {
                     setDeleteId(item.id);
                     setIsShowDeleteConfirmModal(true);
+                    rowMap[item.id].closeRow();
                   }}
-                  applyBtnHandle={
-                    hasPhoneNum ? () => applyBtnHandle(item.id) : () => {}
-                  }
+                  applyBtnHandle={() => {
+                    applyBtnHandle(item.id);
+                    rowMap[item.id].closeRow();
+                  }}
                   copyBtnHandle={
                     hasPhoneNum
                       ? () => {
@@ -82,8 +83,9 @@ const SwipeList = ({friendList}: IProps) => {
                             description: '复制成功',
                             duration: 2000,
                           });
+                          rowMap[item.id].closeRow();
                         }
-                      : () => {}
+                      : undefined
                   }
                 />
 

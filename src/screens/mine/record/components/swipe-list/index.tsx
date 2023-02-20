@@ -15,7 +15,10 @@ interface IProps {
 const SwipeList = ({recordList}: IProps) => {
   const applyBtnHandle = useCallback(async (opponentId: number) => {
     if (!(await applyFriend({opponentId})))
-      return Toast.show({description: '申请失败，请稍后重试', duration: 2000});
+      return Toast.show({
+        description: '申请失败，请稍后重试',
+        duration: 2000,
+      });
 
     Toast.show({description: '申请已发出', duration: 2000});
   }, []);
@@ -28,7 +31,8 @@ const SwipeList = ({recordList}: IProps) => {
         <SwipeListView
           data={recordList}
           keyExtractor={item => item.recordId.toString()}
-          renderItem={({item}) => {
+          closeOnRowPress={true}
+          renderItem={({item}, rowMap) => {
             return (
               <SwipeRow
                 disableRightSwipe={true}
@@ -37,7 +41,10 @@ const SwipeList = ({recordList}: IProps) => {
                 {/* 底部隐藏按钮 */}
                 <BackRow
                   isFriend={item.isFriend}
-                  applyBtnHandle={() => applyBtnHandle(item.opponent.id)}
+                  applyBtnHandle={() => {
+                    applyBtnHandle(item.opponent.id);
+                    rowMap[item.recordId].closeRow();
+                  }}
                 />
 
                 {/* 顶部列表项 */}
