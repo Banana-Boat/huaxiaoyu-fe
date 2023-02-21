@@ -51,7 +51,7 @@ const ChatScreen = () => {
       getRecommendedTopics({
         receiveId: chatStore.opponent.id,
         sendId: userStore.user.id,
-        num: topicBatchSize * 3,
+        num: topicBatchSize * 8,
       }).then(res => {
         setTopicList(res);
       });
