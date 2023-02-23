@@ -1,12 +1,13 @@
-
 ### <div align=center><img src="./readme-image/logo.png" width="18%"></div>
 
 # <center>华小遇</center>
 
 一款主打华科校内交友的 APP！
+
 - 同是 Huster，交友对象更靠谱；
 - 通过算法匹配对象，保证志趣相投；
 - 提供辅助聊天功能，助你轻松破冰，避免尴尬。
+
 ## APP 界面
 
 #### 1. 登录 / 注册 / 我的
@@ -35,7 +36,17 @@
 
 [**华小遇 API 文档**](https://www.apifox.cn/apidoc/shared-73747cdd-880f-4b68-951f-7294685be27e)
 
-## 编译要求
+## CI/CD
+
+- 使用 Github Action
+- CI：开发分支提交 PR 时进行测试
+- CD：合并主分支后编译生成 APK，同时创建新的 Release
+
+#### 引用 Action
+
+[**r0adkll/sign-android-release@v1**](https://github.com/r0adkll/sign-android-release)
+
+## 编译说明
 
 - Node >= 14
 
