@@ -42,7 +42,7 @@
 - CI：开发分支提交 PR 时进行测试
 - CD：合并主分支后编译生成 APK，同时创建新的 Release
 
-#### 主要 Action 引用
+#### 主要 Github Action 引用
 
 [**r0adkll/sign-android-release@v1**](https://github.com/r0adkll/sign-android-release)
 
