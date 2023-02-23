@@ -1,15 +1,16 @@
 name: CI - Test
 
 on:
+  push:
   pull_request:
-    branches: ['main']
+    branches: [ "main" ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
+      - name: Check Out Code
         uses: actions/checkout@v3
 
       - name: Use Node.js 18
@@ -19,5 +20,8 @@ jobs:
 
       - uses: c-hive/gha-yarn-cache@v1
 
-      - name: Install node modules
-        run: yarn install
+      - name: Install Node Modules
+        run: yarn
+
+      - name: Run Test
+        run: yarn test
