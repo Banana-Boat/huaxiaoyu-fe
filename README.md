@@ -39,12 +39,17 @@
 ## CI/CD
 
 - 使用 Github Action
-- CI：开发分支提交 PR 时进行测试
-- CD：合并主分支后编译生成 APK，同时创建新的 Release
+- CI：开发分支提交 PR 时，运行测试流水线
+- CD：向主分支打上 Tag 时，运行发布流水线
+  - 执行测试脚本，编译生成 APK
+  - 使用 Github Secret 中保存的 Key 对 APK 签名
+  - 使用当前 Tag 为名创建新的 Release
 
 #### 主要 Action 引用
 
-[**r0adkll/sign-android-release@v1**](https://github.com/r0adkll/sign-android-release)
+- [**r0adkll/sign-android-release@v1**](https://github.com/r0adkll/sign-android-release)
+- [**actions/create-release@v1**](https://github.com/actions/create-release)
+- [**actions/upload-release-asset@v1**](https://github.com/actions/upload-release-asset)
 
 ## 编译说明
 
