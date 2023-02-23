@@ -50,17 +50,19 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
 
         if (!res.assets || (res.assets && res.assets.length < 1))
           throw new Error();
-
         const compressedBase64 = await ImageCompressor.compress(
           (res.assets as Asset[])[0].uri as string,
           {
             returnableOutputType: 'base64',
-            maxHeight: 1024,
-            maxWidth: 1024,
+            maxHeight: 1440,
+            maxWidth: 800,
+            quality: 0.6,
           },
         );
 
         if (!compressedBase64) throw new Error();
+        // 当前socker message大小上限为2MB
+        console.log('size: ', compressedBase64.length);
 
         // 图片需要添加前缀并需要去掉换行符
         const image = `data:image/jpg;base64,${compressedBase64}`.replace(
