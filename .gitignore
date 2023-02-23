@@ -41,8 +41,8 @@ yarn-error.log
 # BUCK
 buck-out/
 \.buckd/
-# 测试流水线
-# *.keystore
+*.keystore
+*.jks
 !debug.keystore
 
 # fastlane
