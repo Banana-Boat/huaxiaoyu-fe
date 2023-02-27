@@ -12,6 +12,8 @@ import {getData} from '~utils';
 import LaunchScreen from '~screens/launch';
 import userStore from '~stores/user/userStore';
 import {getInterestDicts, getDepartmentDict, getUserInfo} from '~utils/api';
+import {LogBox} from 'react-native';
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 /** Native Base配置 */
 const customTheme = extendTheme({

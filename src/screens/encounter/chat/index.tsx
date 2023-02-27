@@ -94,6 +94,22 @@ const ChatScreen = () => {
     chatStore.addMessageSelf(message);
   }, []);
 
+  const onSendAudio = useCallback((audio: string) => {
+    const message: IMessage = {
+      _id: uuidv4(),
+      text: '',
+      audio: audio,
+      createdAt: new Date(),
+      user: {
+        _id: userStore.user.id,
+        avatar:
+          userStore.user.headPhoto ?? require('~assets/images/avatar.png'),
+      },
+    };
+    chatStore.sendMessage(message);
+    chatStore.addMessageSelf(message);
+  }, []);
+
   return (
     <PageContainer
       safeAreaBottom={0}
@@ -113,6 +129,7 @@ const ChatScreen = () => {
         onSend={onSend}
         onQuickReply={onQuickReply}
         onSendImage={onSendImage}
+        onSendAudio={onSendAudio}
         user={{
           _id: userStore.user.id,
           avatar:

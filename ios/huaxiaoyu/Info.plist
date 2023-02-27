@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>zh-CN</string>
 	<key>CFBundleDisplayName</key>
 	<string>华小遇</string>
 	<key>CFBundleExecutable</key>
@@ -59,7 +59,11 @@
 	<string>华小遇需要获取照片的权限</string>
 	<key>NSCameraUsageDescription</key>
 	<string>华小遇需要获取手机相机的权限</string>
-    <key>CFBundleDevelopmentRegion</key>
-    <string>zh-CN</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>华小遇需要获取手机麦克风的权限</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>华小遇需要获取读取文件的权限</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 </dict>
 </plist>

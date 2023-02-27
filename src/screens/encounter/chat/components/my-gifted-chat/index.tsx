@@ -1,4 +1,4 @@
-import {HStack, Icon, Pressable, Toast, useColorMode} from 'native-base';
+import {Box, HStack, Icon, Pressable, Toast, useColorMode} from 'native-base';
 import {useCallback, useState} from 'react';
 import {Keyboard} from 'react-native';
 import {
@@ -21,13 +21,15 @@ import {Image as ImageCompressor} from 'react-native-compressor';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import AudioModal from '../audio-modal';
+import AudioMessage from './components/audio-message';
 
 interface IMyGiftedChatProps {
   onSendImage: (image: string) => void;
+  onSendAudio: (audio: string) => void;
 }
 
 const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
-  const {onSendImage, ...restProps} = props;
+  const {onSendImage, onSendAudio, ...restProps} = props;
 
   const {colorMode} = useColorMode();
 
@@ -45,9 +47,10 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
 
   /* 音频信息 */
   const [isShowAudioModal, setIsShowAudioModal] = useState(false);
-  const audioBtnPressHandle = useCallback((audio: string) => {
-    // 发送音频信息
-  }, []);
+  const audioBtnPressHandle = useCallback(
+    (audio: string) => onSendAudio(audio),
+    [],
+  );
 
   /* 图片信息 */
   const imagePickerResHandle = useCallback(
@@ -226,6 +229,14 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
               }}>
               <Icon as={Ionicon} name="send" size="md" color="pink.600" />
             </Send>
+          );
+        }}
+        renderMessageAudio={props => {
+          return (
+            <AudioMessage
+              sendId={props.currentMessage?.user._id as number}
+              audioOfBase64={props.currentMessage?.audio}
+            />
           );
         }}
         renderBubble={props => (

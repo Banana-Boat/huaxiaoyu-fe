@@ -1,11 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Toast} from 'native-base';
 import Sound from 'react-native-sound';
+import RNFS from 'react-native-fs';
 
 /* 音频相关 */
-export const loadAudio = (audioFile: any) =>
+export const loadAudioInBundle = (audioFile: any) =>
   new Promise<Sound>((resolve, reject) => {
     const audio = new Sound(audioFile, err => {
+      if (err) reject();
+      resolve(audio);
+    });
+  });
+
+export const loadAudioInDocument = (audioFileName: string) =>
+  new Promise<Sound>((resolve, reject) => {
+    const audio = new Sound(audioFileName, RNFS.DocumentDirectoryPath, err => {
       if (err) reject();
       resolve(audio);
     });

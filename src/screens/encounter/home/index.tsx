@@ -24,7 +24,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Animated, Easing} from 'react-native';
 import Sound from 'react-native-sound';
-import {loadAudio} from '~utils';
+import {loadAudioInBundle} from '~utils';
 const BgMusic = require('~/assets/audios/city-of-stars.mp4');
 
 const HomeScreen = () => {
@@ -73,10 +73,8 @@ const HomeScreen = () => {
 
   // 初始化页面时播放音乐，注销登录时结束音乐
   useEffect(() => {
-    loadAudio(BgMusic).then(res => {
-      res.setNumberOfLoops(-1);
-      res.setVolume(0.5);
-      res.play();
+    loadAudioInBundle(BgMusic).then(res => {
+      res.setNumberOfLoops(-1).setVolume(0.5).play();
       audio.current = res;
 
       musicAnim.start();
