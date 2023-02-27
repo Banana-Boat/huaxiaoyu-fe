@@ -24,7 +24,8 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Animated, Easing} from 'react-native';
 import Sound from 'react-native-sound';
-import {getMusic} from './utils';
+import {loadAudio} from '~utils';
+const BgMusic = require('~/assets/audios/city-of-stars.mp4');
 
 const HomeScreen = () => {
   const navigation =
@@ -35,12 +36,12 @@ const HomeScreen = () => {
     if (chatStore.state === ChatStateType.CHATTING) {
       navigation.navigate('ChatScreen');
       musicAnim.reset();
-      music?.pause();
+      audio.current?.pause();
     }
   }, [chatStore.state]);
 
   /** 音乐相关 */
-  const [music, setMusic] = useState<Sound>();
+  const audio = useRef<Sound>();
   const [isPlayMusic, setIsPlayMusic] = useState(true);
   const musicRotateAnim = useRef(new Animated.Value(0)).current;
   const musicAnim = useRef(
@@ -58,32 +59,32 @@ const HomeScreen = () => {
     setIsPlayMusic(flag => {
       if (!flag) {
         musicAnim.start();
-        music?.play();
+        audio.current?.play();
 
         return true;
       } else {
         musicAnim.reset();
-        music?.pause();
+        audio.current?.pause();
 
         return false;
       }
     });
-  }, [musicAnim, music]);
+  }, [musicAnim]);
 
+  // 初始化页面时播放音乐，注销登录时结束音乐
   useEffect(() => {
-    getMusic().then(res => {
+    loadAudio(BgMusic).then(res => {
+      res.setNumberOfLoops(-1);
+      res.setVolume(0.5);
       res.play();
-      musicAnim.start();
-      setMusic(res);
-    });
-  }, []);
+      audio.current = res;
 
-  // 注销登录时，结束音乐
-  useEffect(() => {
+      musicAnim.start();
+    });
     return () => {
-      music?.release();
+      audio.current?.release();
     };
-  }, [music]);
+  }, []);
 
   /** 获取在线人数 & 随机已注册用户信息 */
   const [numOfOnline, setNumOfOnline] = useState(0);

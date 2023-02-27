@@ -1,5 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Toast} from 'native-base';
+import Sound from 'react-native-sound';
+
+/* 音频相关 */
+export const loadAudio = (audioFile: any) =>
+  new Promise<Sound>((resolve, reject) => {
+    const audio = new Sound(audioFile, err => {
+      if (err) reject();
+      resolve(audio);
+    });
+  });
 
 // 去除无效字段
 export const formatParams = (obj: {[x: string]: any}) => {
