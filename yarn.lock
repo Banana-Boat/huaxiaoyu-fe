@@ -2988,6 +2988,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmmirror.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+base-64@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmmirror.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
+  integrity sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==
+
 base64-js@^1.1.2, base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.npmmirror.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
@@ -6825,6 +6830,11 @@ react-is@^17.0.1:
   resolved "https://registry.npmmirror.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-audio-record@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.npmmirror.com/react-native-audio-record/-/react-native-audio-record-0.2.2.tgz#9cbb0ddd3cbdd18f5edfabae812c0bc9c680e928"
+  integrity sha512-+JEY3AWz21xylePbXZ81DLHcqU5oJYztn3Uel3ay53P3ZrvJlwfmOmyOuoavA9boPV1O0dLLQIu9gC7xbKwNvQ==
+
 react-native-codegen@^0.70.6:
   version "0.70.6"
   resolved "https://registry.npmmirror.com/react-native-codegen/-/react-native-codegen-0.70.6.tgz#2ce17d1faad02ad4562345f8ee7cbe6397eda5cb"
@@ -6844,6 +6854,14 @@ react-native-compressor@^1.6.1:
   version "1.6.1"
   resolved "https://registry.npmmirror.com/react-native-compressor/-/react-native-compressor-1.6.1.tgz#f1e4b765f172c649a453f39b3b7478554f825596"
   integrity sha512-SmyRPWIQY7RPz50bXkkhLcIjoMMIB62rJJls9cG7XCeMIN/I8TFijmXZjEWrgzRlUMBa0JMr7AIXSLvcMp9hfA==
+
+react-native-fs@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.npmmirror.com/react-native-fs/-/react-native-fs-2.20.0.tgz#05a9362b473bfc0910772c0acbb73a78dbc810f6"
+  integrity sha512-VkTBzs7fIDUiy/XajOSNk0XazFE9l+QlMAce7lGuebZcag5CnjszB+u4BdqzwaQOdcYb5wsJIsqq4kxInIRpJQ==
+  dependencies:
+    base-64 "^0.1.0"
+    utf8 "^3.0.0"
 
 react-native-get-random-values@^1.8.0:
   version "1.8.0"
@@ -7991,6 +8009,11 @@ use@^3.1.0:
   version "3.1.1"
   resolved "https://registry.npmmirror.com/use/-/use-3.1.1.tgz#d50c8cac79a19fbc20f2911f56eb973f4e10070f"
   integrity sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==
+
+utf8@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/utf8/-/utf8-3.0.0.tgz#f052eed1364d696e769ef058b183df88c87f69d1"
+  integrity sha512-E8VjFIQ/TyQgp+TZfS6l8yp/xWppSAHzidGiRrqe4bK4XP9pTRyKFgGJpO3SN7zdX4DeomTrwaseCHovfpFcqQ==
 
 util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   version "1.0.2"

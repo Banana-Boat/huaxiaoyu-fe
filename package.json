@@ -22,7 +22,9 @@
     "native-base": "^3.4.25",
     "react": "18.1.0",
     "react-native": "0.70.6",
+    "react-native-audio-record": "^0.2.2",
     "react-native-compressor": "^1.6.1",
+    "react-native-fs": "^2.20.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-gifted-chat": "^1.1.1",
     "react-native-image-picker": "^4.10.3",
@@ -55,6 +57,10 @@
     "react-test-renderer": "^18.2.0",
     "typescript": "^4.8.3"
   },
+  "reactNativePermissionsIOS": [
+    "Microphone",
+    "MediaLibrary"
+  ],
   "jest": {
     "preset": "react-native",
     "moduleFileExtensions": [
