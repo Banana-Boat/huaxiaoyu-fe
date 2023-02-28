@@ -1,6 +1,6 @@
-import {Box, HStack, Icon, Pressable, Toast, useColorMode} from 'native-base';
+import {HStack, Icon, Pressable, Toast, useColorMode} from 'native-base';
 import {useCallback, useState} from 'react';
-import {Keyboard} from 'react-native';
+import {Keyboard, Platform} from 'react-native';
 import {
   Actions,
   Avatar,
@@ -23,6 +23,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 import AudioModal from '../audio-modal';
 import AudioMessage from './components/audio-message';
 
+import {PERMISSIONS, requestMultiple} from 'react-native-permissions';
 interface IMyGiftedChatProps {
   onSendImage: (image: string) => void;
   onSendAudio: (audio: string) => void;
@@ -46,11 +47,33 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
   const [isShowOption, setIsShowOption] = useState(false);
 
   /* 音频信息 */
+  const [isGetRecordPermisson, setIsGetRecordPermisson] = useState(false);
   const [isShowAudioModal, setIsShowAudioModal] = useState(false);
-  const audioBtnPressHandle = useCallback(
-    (audio: string) => onSendAudio(audio),
-    [],
-  );
+  const submitAudio = useCallback((audio: string) => {
+    onSendAudio(audio);
+  }, []);
+
+  const audioBtnPressHandle = useCallback(async () => {
+    // Android 录音需要运行时权限
+    if (Platform.OS === 'android') {
+      const grants = await requestMultiple([
+        PERMISSIONS.ANDROID.RECORD_AUDIO,
+        PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+      ]);
+
+      console.log(grants);
+      if (
+        grants['android.permission.WRITE_EXTERNAL_STORAGE'] !== 'granted' ||
+        grants['android.permission.READ_EXTERNAL_STORAGE'] !== 'granted' ||
+        grants['android.permission.RECORD_AUDIO'] !== 'granted'
+      )
+        return;
+    }
+
+    setIsGetRecordPermisson(true);
+    setIsShowAudioModal(true);
+  }, []);
 
   /* 图片信息 */
   const imagePickerResHandle = useCallback(
@@ -110,11 +133,14 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
 
   return (
     <>
-      <AudioModal
-        isOpen={isShowAudioModal}
-        submit={audioBtnPressHandle}
-        close={() => setIsShowAudioModal(false)}
-      />
+      {isGetRecordPermisson && (
+        <AudioModal
+          isOpen={isShowAudioModal}
+          submit={submitAudio}
+          close={() => setIsShowAudioModal(false)}
+        />
+      )}
+
       <GiftedChat
         {...restProps}
         minInputToolbarHeight={safePaddingBottom * isNeedSafePB + 44 + 10}
@@ -179,7 +205,7 @@ const MyGiftedChat: React.FC<GiftedChatProps & IMyGiftedChatProps> = props => {
                     }
                   />
                 </Pressable>
-                <Pressable onPress={() => setIsShowAudioModal(true)}>
+                <Pressable onPress={audioBtnPressHandle}>
                   <Icon
                     as={Ionicon}
                     name="mic"
