@@ -28,8 +28,6 @@ interface IProps {
   submit: (audio: string) => void;
 }
 
-AudioRecord.init(options);
-
 const AudioModal = ({isOpen, close, submit}: IProps) => {
   const {colorMode} = useColorMode();
 
@@ -39,29 +37,38 @@ const AudioModal = ({isOpen, close, submit}: IProps) => {
 
   // 避免warning
   useEffect(() => {
+    AudioRecord.init(options);
     AudioRecord.on('data', () => {});
   }, []);
 
   const onPressIn = useCallback(() => {
     setIsBtnTouching(true);
-    AudioRecord.start();
-    timer.current = setTimeout(async () => {
-      Toast.show({description: '单条语音不可超过40秒', duration: 2000});
+    try {
+      AudioRecord.start();
+      timer.current = setTimeout(async () => {
+        Toast.show({description: '单条语音不可超过40秒', duration: 2000});
 
-      setIsBtnTouching(false);
-      const url = await AudioRecord.stop();
-      const res = await RNFS.readFile(url, 'base64');
-      setAudio(res);
+        setIsBtnTouching(false);
+        const url = await AudioRecord.stop();
+        const res = await RNFS.readFile(url, 'base64');
+        setAudio(res);
 
-      clearTimeout(timer.current);
-    }, 40000);
+        clearTimeout(timer.current);
+      }, 40000);
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   const onPressOut = useCallback(async () => {
     setIsBtnTouching(false);
-    const url = await AudioRecord.stop();
-    const res = await RNFS.readFile(url, 'base64');
-    setAudio(res);
+    try {
+      const url = await AudioRecord.stop();
+      const res = await RNFS.readFile(url, 'base64');
+      setAudio(res);
+    } catch (err) {
+      console.log(err);
+    }
     clearTimeout(timer.current);
   }, []);
 

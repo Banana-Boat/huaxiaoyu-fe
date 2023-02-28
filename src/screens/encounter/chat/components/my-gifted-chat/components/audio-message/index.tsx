@@ -1,12 +1,4 @@
-import {
-  Box,
-  HStack,
-  Icon,
-  IconButton,
-  Pressable,
-  Text,
-  useColorMode,
-} from 'native-base';
+import {Box, Icon, Pressable, Text, useColorMode} from 'native-base';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import RNFS from 'react-native-fs';
@@ -31,16 +23,20 @@ const AudioMessage = ({sendId, audioOfBase64}: IProps) => {
   useEffect(() => {
     if (!audioOfBase64) return;
 
-    RNFS.writeFile(
-      `${RNFS.DocumentDirectoryPath}/${fileName}`,
-      audioOfBase64,
-      'base64',
-    ).then(() => {
-      loadAudioInDocument(fileName).then(audio => {
-        audioRef.current = audio;
-        setSecond(Math.ceil(audio.getDuration()));
+    try {
+      RNFS.writeFile(
+        `${RNFS.DocumentDirectoryPath}/${fileName}`,
+        audioOfBase64,
+        'base64',
+      ).then(() => {
+        loadAudioInDocument(fileName).then(audio => {
+          audioRef.current = audio;
+          setSecond(Math.ceil(audio.getDuration()));
+        });
       });
-    });
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   const onPressHandle = useCallback(async () => {
